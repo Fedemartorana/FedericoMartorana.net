@@ -15,7 +15,7 @@ html, body {
   width: 100%;
   text-align: center;
   font-weight: bold;
-  font-size: 2vw;
+  font-size: 7vw;
   margin: 0;
   z-index: 10;
   user-select: none;
@@ -29,7 +29,7 @@ html, body {
   display: grid;
   justify-content: center;
   align-content: end;
-  gap: 0px;
+  gap: 1px;
   user-select: none;
 }
 
