@@ -1,51 +1,50 @@
-/* RESET & IMPOSTAZIONI BASE PER TUTTO IL DOCUMENTO */
 html, body {
-  margin: 0;                   /* Rimuove margini di default */
-  padding: 0;                  /* Rimuove padding di default */
-  width: 100vw;                /* Larghezza completa della finestra */
-  height: 100vh;               /* Altezza completa della finestra */
-  background: #000;            /* Sfondo nero */
-  font-family: Helvetica, Arial, sans-serif;  /* Font moderno e leggibile */
-  color: white;                /* Testo bianco */
-  display: flex;               /* Flexbox per centratura verticale */
-  flex-direction: column;      /* Elementi in colonna */
-  justify-content: center;     /* Centrati verticalmente */
-  align-items: center;         /* Centrati orizzontalmente */
-  overflow: hidden;            /* Nasconde contenuti fuori dallo schermo */
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  font-family: Helvetica, Arial, sans-serif;
+  color: white;
+  overflow: hidden;
 }
 
-/* STILE DEL TITOLO CENTRALE */
 #title {
-  font-weight: light;           /* Titolo in grassetto */
-  font-size: clamp(24px, 3vw, 48px);              /* Dimensione responsive (in base alla larghezza finestra) */
-  margin: 0 0 20px 0;          /* Distanza dal container dei blocchi */
-  user-select: none;           /* Impedisce la selezione del testo */
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 5vw;
+  margin: 0;
+  z-index: 10;
+  user-select: none;
 }
 
-/* GRIGLIA CONTENITORE DEI CUBETTI */
 #container {
-  position: relative;            /* Contesto di posizionamento per i blocchi */
-  width: 100vw;                  /* Occupa tutta la larghezza dello schermo */
-  height: 60vh;                  /* Altezza ridotta per lasciare spazio al titolo */
-  display: grid;                 /* Layout a griglia */
-  justify-content: center;      /* Centra le colonne orizzontalmente */
-  align-content: end;           /* I blocchi si allineano verso il basso */
-  gap: 1px;                      /* Spazio tra i blocchi */
-  user-select: none;            /* Impedisce la selezione del contenuto */
-  /* Le colonne e le righe saranno impostate dinamicamente da JavaScript */
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-content: end;
+  gap: 1px;
+  user-select: none;
 }
 
-
-/* STILE DI BASE PER OGNI BLOCCHETTO */
 .block {
-  width: 10px;                 /* Larghezza del blocco */
-  height: 10px;                /* Altezza del blocco */
-  background: white;           /* Colore bianco */
-  opacity: 0;                  /* Inizialmente invisibile */
-  transition: opacity 0.3s ease;  /* Appare gradualmente */
+  width: 10px;
+  height: 10px;
+  background: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-/* CLASSE AGGIUNTA PER RENDERLO VISIBILE */
 .block.visible {
-  opacity: 0.9;                /* Quasi opaco */
+  opacity: 0.9;
+}
+
+.block.hidden {
+  opacity: 0.1;
 }
