@@ -1,72 +1,45 @@
-const container = document.getElementById("container");
-const blockSize = 10; // dimensione del cubetto
-const cols = Math.floor(window.innerWidth / (blockSize + 1));
-const rows = Math.floor(window.innerHeight * 0.6 / (blockSize + 1));
-const total = cols * rows;
+const container = document.getElementById('container');
+const BLOCK_SIZE = 10;
+const COLS = Math.floor(window.innerWidth / BLOCK_SIZE);
+const ROWS = Math.floor((window.innerHeight * 0.6) / BLOCK_SIZE); // 60% container height
 
-let blocks = [];
+// Stato colonna per costruzione
+let filled = Array(COLS).fill(0);
 
-function createGrid() {
-  container.innerHTML = ""; // pulisce il contenitore
-  blocks = [];
+// Funzione per creare un blocco in colonna e riga specifica
+function createBlock(col, row) {
+  const block = document.createElement('div');
+  block.className = 'block';
+  block.style.gridColumnStart = col + 1;
+  block.style.gridRowStart = row;
+  container.appendChild(block);
+  return block;
+}
 
-  for (let i = 0; i < total; i++) {
-    const block = document.createElement("div");
-    block.classList.add("block");
-    container.appendChild(block);
-    blocks.push(block);
+// Funzione per aggiungere i blocchi con apparizione graduale
+async function buildBlocksGradually(totalBlocks = 500, delay = 20) {
+  for (let i = 0; i < totalBlocks; i++) {
+    // Scegli colonna casuale che non sia piena
+    let col;
+    do {
+      col = Math.floor(Math.random() * COLS);
+    } while (filled[col] >= ROWS);
+
+    const row = ROWS - filled[col];
+    const block = createBlock(col, row);
+    
+    // Piccolo delay prima di mostrare il blocco
+    await new Promise(r => setTimeout(r, delay));
+    block.classList.add('visible');
+
+    filled[col]++;
   }
 }
 
-function fillGradually(index = 0) {
-  if (index >= blocks.length) {
-    setTimeout(() => showHeart(), 500); // attiva il cuore dopo riempimento
-    return;
-  }
+// Avvio costruzione
+buildBlocksGradually();
 
-  blocks[index].classList.add("visible");
-
-  requestAnimationFrame(() => {
-    fillGradually(index + 1);
-  });
-}
-
-function showHeart() {
-  const heart = getHeartPattern(cols, rows);
-
-  // spegne tutti i blocchi
-  blocks.forEach((block, i) => {
-    const x = i % cols;
-    const y = Math.floor(i / cols);
-    if (!heart.some(([hx, hy]) => hx === x && hy === y)) {
-      block.classList.remove("visible");
-    }
-  });
-}
-
-function getHeartPattern(cols, rows) {
-  const centerX = Math.floor(cols / 2);
-  const centerY = Math.floor(rows / 2);
-
-  const heartCoords = [];
-
-  // disegna un cuore stilizzato con punti manuali rispetto al centro
-  const rawHeart = [
-    [0, -2], [-1, -2], [1, -2],
-    [-2, -1], [2, -1],
-    [-3, 0], [-2, 0], [2, 0], [3, 0],
-    [-2, 1], [2, 1],
-    [-1, 2], [1, 2],
-    [0, 3],
-  ];
-
-  rawHeart.forEach(([dx, dy]) => {
-    heartCoords.push([centerX + dx, centerY + dy]);
-  });
-
-  return heartCoords;
-}
-
-// inizializza
-createGrid();
-fillGradually();
+// Aggiorna pagina al resize
+window.addEventListener('resize', () => {
+  location.reload();
+});
