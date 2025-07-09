@@ -17,7 +17,7 @@ html, body {
 /* STILE DEL TITOLO CENTRALE */
 #title {
   font-weight: bold;           /* Titolo in grassetto */
-  font-size: 1vw;              /* Dimensione responsive (in base alla larghezza finestra) */
+  font-size: clamp(24px, 3vw, 48px);              /* Dimensione responsive (in base alla larghezza finestra) */
   margin: 0 0 20px 0;          /* Distanza dal container dei blocchi */
   user-select: none;           /* Impedisce la selezione del testo */
 }
