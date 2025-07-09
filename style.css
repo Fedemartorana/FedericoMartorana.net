@@ -1,49 +1,51 @@
-/* Reset & base */
+/* RESET & IMPOSTAZIONI BASE PER TUTTO IL DOCUMENTO */
 html, body {
-  margin: 0; 
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #000;
-  font-family: Helvetica, Arial, sans-serif;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+  margin: 0;                   /* Rimuove margini di default */
+  padding: 0;                  /* Rimuove padding di default */
+  width: 100vw;                /* Larghezza completa della finestra */
+  height: 100vh;               /* Altezza completa della finestra */
+  background: #000;            /* Sfondo nero */
+  font-family: Helvetica, Arial, sans-serif;  /* Font moderno e leggibile */
+  color: white;                /* Testo bianco */
+  display: flex;               /* Flexbox per centratura verticale */
+  flex-direction: column;      /* Elementi in colonna */
+  justify-content: center;     /* Centrati verticalmente */
+  align-items: center;         /* Centrati orizzontalmente */
+  overflow: hidden;            /* Nasconde contenuti fuori dallo schermo */
 }
 
-/* Titolo */
+/* STILE DEL TITOLO CENTRALE */
 #title {
-  font-weight: bold;
-  font-size: 5vw; /* grande ma non full screen */
-  margin: 0 0 20px 0;
-  user-select: none;
+  font-weight: bold;           /* Titolo in grassetto */
+  font-size: 5vw;              /* Dimensione responsive (in base alla larghezza finestra) */
+  margin: 0 0 20px 0;          /* Distanza dal container dei blocchi */
+  user-select: none;           /* Impedisce la selezione del testo */
 }
 
-/* Container per cubetti */
+/* GRIGLIA CONTENITORE DEI CUBETTI */
 #container {
-  position: relative;
-  width: 100vw;
-  height: 60vh;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 10px);
-  grid-auto-rows: 10px;
-  justify-content: center;
-  align-content: end;
-  gap: 1px;
-  user-select: none;
+  position: relative;          /* Posizionamento relativo per elementi figli */
+  width: 100vw;                /* Larghezza completa */
+  height: 60vh;                /* Altezza ridotta per lasciare spazio al titolo */
+  display: grid;               /* Usa CSS Grid */
+  grid-template-columns: repeat(auto-fill, 10px);  /* Colonne da 10px */
+  grid-auto-rows: 10px;        /* Righe da 10px */
+  justify-content: center;     /* Centra orizzontalmente la griglia */
+  align-content: end;          /* Allinea i blocchi in basso */
+  gap: 1px;                    /* Piccolo spazio tra i blocchi */
+  user-select: none;           /* Impedisce selezione dei blocchi */
 }
 
-/* Blocchi costruzione */
+/* STILE DI BASE PER OGNI BLOCCHETTO */
 .block {
-  width: 10px;
-  height: 10px;
-  background: white;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  width: 10px;                 /* Larghezza del blocco */
+  height: 10px;                /* Altezza del blocco */
+  background: white;           /* Colore bianco */
+  opacity: 0;                  /* Inizialmente invisibile */
+  transition: opacity 0.3s ease;  /* Appare gradualmente */
 }
+
+/* CLASSE AGGIUNTA PER RENDERLO VISIBILE */
 .block.visible {
-  opacity: 0.9;
+  opacity: 0.9;                /* Quasi opaco */
 }
