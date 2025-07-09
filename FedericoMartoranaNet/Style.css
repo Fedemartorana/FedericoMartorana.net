@@ -1,0 +1,41 @@
+body {
+  font-family: 'Inter', sans-serif;
+  background: #fff;
+  color: #111;
+  margin: 0;
+  padding: 0 2rem;
+  line-height: 1.6;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #ccc;
+  padding: 1rem 0;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: #111;
+}
+
+section {
+  padding: 2rem 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.project img {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  display: block;
+  margin-bottom: 0.5rem;
+}
