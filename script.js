@@ -17,7 +17,7 @@ function createBlock(col, row) {
 }
 
 // Funzione per aggiungere i blocchi con apparizione graduale
-async function buildBlocksGradually(totalBlocks = 800, delay = 40) {
+async function buildBlocksGradually(totalBlocks = 800, delay = 10) {
   for (let i = 0; i < totalBlocks; i++) {
     // Scegli colonna casuale che non sia piena
     let col;
