@@ -49,14 +49,12 @@ async function buildUntilFull(delay = 5) {
 // Disegna cuore stilizzato spegnendo alcuni blocchi
 function drawHeart() {
   const heartShape = [
-    "00100100",
-    "01111110",
-    "11111111",
-    "11111111",
-    "01111110",
-    "00111100",
     "00011000",
-    "00000000"
+    "01100110",
+    "00111100",
+    "10011001",
+    "11100110",
+    "11111111",
   ];
 
   const offsetX = Math.floor((COLS - 8) / 2);
