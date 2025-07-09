@@ -24,17 +24,17 @@ html, body {
 
 /* GRIGLIA CONTENITORE DEI CUBETTI */
 #container {
-  position: relative;          /* Posizionamento relativo per elementi figli */
-  width: 100vw;                /* Larghezza completa */
-  height: 60vh;                /* Altezza ridotta per lasciare spazio al titolo */
-  display: grid;               /* Usa CSS Grid */
-  grid-template-columns: repeat(auto-fill, 10px);  /* Colonne da 10px */
-  grid-auto-rows: 10px;        /* Righe da 10px */
-  justify-content: center;     /* Centra orizzontalmente la griglia */
-  align-content: end;          /* Allinea i blocchi in basso */
-  gap: 1px;                    /* Piccolo spazio tra i blocchi */
-  user-select: none;           /* Impedisce selezione dei blocchi */
+  position: relative;            /* Contesto di posizionamento per i blocchi */
+  width: 100vw;                  /* Occupa tutta la larghezza dello schermo */
+  height: 60vh;                  /* Altezza ridotta per lasciare spazio al titolo */
+  display: grid;                 /* Layout a griglia */
+  justify-content: center;      /* Centra le colonne orizzontalmente */
+  align-content: end;           /* I blocchi si allineano verso il basso */
+  gap: 1px;                      /* Spazio tra i blocchi */
+  user-select: none;            /* Impedisce la selezione del contenuto */
+  /* Le colonne e le righe saranno impostate dinamicamente da JavaScript */
 }
+
 
 /* STILE DI BASE PER OGNI BLOCCHETTO */
 .block {
