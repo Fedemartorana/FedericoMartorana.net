@@ -1,0 +1,49 @@
+/* Reset & base */
+html, body {
+  margin: 0; 
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+  font-family: Helvetica, Arial, sans-serif;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Titolo */
+#title {
+  font-weight: bold;
+  font-size: 5vw; /* grande ma non full screen */
+  margin: 0 0 20px 0;
+  user-select: none;
+}
+
+/* Container per cubetti */
+#container {
+  position: relative;
+  width: 100vw;
+  height: 60vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 10px);
+  grid-auto-rows: 10px;
+  justify-content: center;
+  align-content: end;
+  gap: 1px;
+  user-select: none;
+}
+
+/* Blocchi costruzione */
+.block {
+  width: 10px;
+  height: 10px;
+  background: white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.block.visible {
+  opacity: 0.9;
+}
