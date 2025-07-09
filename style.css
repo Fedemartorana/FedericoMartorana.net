@@ -16,7 +16,7 @@ html, body {
 
 /* Titolo */
 #title {
-  font-weight: roman;
+  font-weight: bold;
   font-size: 5vw; /* grande ma non full screen */
   margin: 0 0 20px 0;
   user-select: none;
