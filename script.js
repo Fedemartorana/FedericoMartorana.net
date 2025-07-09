@@ -69,8 +69,8 @@ function drawHeart() {
   
   ];
 
-  const offsetX = Math.floor((COLS - 8) / 2);
-  const offsetY = Math.floor((ROWS - 8) / 2);
+  const offsetX = Math.floor((COLS - 15) / 2);
+  const offsetY = Math.floor((ROWS - 16) / 2);
 
   for (let y = 0; y < heartShape.length; y++) {
     for (let x = 0; x < heartShape[y].length; x++) {
