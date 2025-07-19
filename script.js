@@ -47,7 +47,7 @@ selectedOrder.forEach(label => {
     });
   }
   textContainer.appendChild(span);
-});
+};
 
 
 // Aggiorna indicatore reality
