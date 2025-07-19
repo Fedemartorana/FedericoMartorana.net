@@ -43,6 +43,16 @@ selectedOrder.forEach(label => {
   textContainer.appendChild(span);
 });
 
+if (label === "works") {
+    span.style.cursor = "pointer";
+    span.addEventListener("click", () => {
+      window.location.href = "works/works.html"; // percorso corretto
+    });
+  }
+
+  container.appendChild(span);
+});
+
 // Aggiorna indicatore reality
 layoutText.textContent = `Reality ${layoutNum} / 240`;
 
