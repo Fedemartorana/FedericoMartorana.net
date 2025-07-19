@@ -45,7 +45,7 @@ selectedOrder.forEach(label => {
   if (label === "works") {
     span.style.cursor = "pointer";
     span.addEventListener("click", () => {
-      window.location.href = "/works/works.html"; // percorso corretto
+      window.location.href = "/Works/Works.html"; // percorso corretto
     });
   }
 
