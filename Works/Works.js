@@ -1,5 +1,21 @@
-// Prendi il colore della variante dalla home tramite URL o localStorage
-const themeColor = localStorage.getItem('themeColor') || "#000";
+// Funzione per ottenere i parametri URL
+function getQueryParam(param) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(param);
+}
+
+// Prendi il colore dal parametro URL
+const colorFromUrl = getQueryParam('color');
+
+// Se c'è il colore nell'URL, aggiornalo e salvalo in localStorage
+if (colorFromUrl) {
+  localStorage.setItem('themeColor', colorFromUrl);
+}
+
+// Se no, prendi il colore da localStorage oppure default nero
+const themeColor = colorFromUrl || localStorage.getItem('themeColor') || "#000";
+
+// Imposta la variabile CSS --theme-color
 document.documentElement.style.setProperty('--theme-color', themeColor);
 
 // Esempio di lavori
