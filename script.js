@@ -40,18 +40,15 @@ selectedOrder.forEach(label => {
   span.textContent = label;
   span.className = "word";
   span.style.color = color;
-  textContainer.appendChild(span);
-});
-
-if (label === "works") {
+   if (label === "works") {
     span.style.cursor = "pointer";
     span.addEventListener("click", () => {
       window.location.href = "works/works.html"; // percorso corretto
     });
   }
-
-  container.appendChild(span);
+  textContainer.appendChild(span);
 });
+
 
 // Aggiorna indicatore reality
 layoutText.textContent = `Reality ${layoutNum} / 240`;
