@@ -52,8 +52,6 @@ selectedOrder.forEach(label => {
   textContainer.appendChild(span);
 });
 
-
-
 // Aggiorna indicatore reality
 layoutText.textContent = `Reality ${layoutNum} / 240`;
 
@@ -63,6 +61,18 @@ cursor.id = 'custom-cursor';
 cursor.textContent = '+';
 document.body.appendChild(cursor);
 
+// Stile del cursore (qui risolviamo i problemi)
+cursor.style.position = 'fixed';
+cursor.style.top = '0';
+cursor.style.left = '0';
+cursor.style.transform = 'translate(-50%, -50%)';
+cursor.style.pointerEvents = 'none';
+cursor.style.color = color; // Cursore dello stesso colore del layout
+cursor.style.fontSize = '20px';
+cursor.style.fontFamily = 'monospace';
+cursor.style.zIndex = '9999';
+
+// Movimento del cursore
 window.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
