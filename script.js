@@ -40,14 +40,18 @@ selectedOrder.forEach(label => {
   span.textContent = label;
   span.className = "word";
   span.style.color = color;
-   if (label === "works") {
+
+  // Se il label è "works", rendilo cliccabile
+  if (label === "works") {
     span.style.cursor = "pointer";
     span.addEventListener("click", () => {
       window.location.href = "works/works.html"; // percorso corretto
     });
   }
+
   textContainer.appendChild(span);
-};
+});
+
 
 
 // Aggiorna indicatore reality
