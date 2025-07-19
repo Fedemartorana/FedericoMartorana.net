@@ -11,6 +11,10 @@ body {
     cursor: none;
 }
 
+.label {
+  cursor: none; /* Nessun cursore anche sopra le scritte */
+}
+
 .center-container {
     position: fixed;
     top: 50%;
@@ -64,12 +68,13 @@ body {
 }
 
 #custom-cursor {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    font-size: 20px;
-    color: rgb(51, 51, 51);
-    z-index: 9999;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  color: black;
+  font-size: 20px;
+  pointer-events: none; /* IMPORTANTISSIMO: il cursore non deve bloccare i click */
+  z-index: 9999; /* Il massimo per stare sopra a tutto */
 }
