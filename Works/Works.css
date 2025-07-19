@@ -5,9 +5,29 @@ body {
   color: var(--theme-color, #000);
 }
 
+#layout-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+  padding: 8px 20px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 40px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: var(--theme-color, #000);
+  z-index: 1000;
+  user-select: none;
+}
+
 .works-container {
   display: flex;
   height: 100vh;
+  padding-top: 40px; /* spazio per l’indicatore fisso in alto */
+  box-sizing: border-box;
 }
 
 .works-list {
