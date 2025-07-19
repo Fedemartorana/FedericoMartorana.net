@@ -68,7 +68,9 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Cursore personalizzato
+
+const oldCursor = document.getElementById('custom-cursor');
+if (oldCursor) oldCursor.remove();// Cursore personalizzato
 const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
