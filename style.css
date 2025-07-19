@@ -1,0 +1,72 @@
+:root {
+  --date-time-color: #333;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  font-family: monospace;
+  overflow: hidden;
+  cursor: none; /* Nasconde il cursore standard */
+}
+
+.center-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 100px;
+  flex-direction: row; /* default orizzontale */
+}
+
+.word {
+  font-size: 5vw;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+
+/* Versione verticale per schermi piccoli */
+@media (max-width: 768px) {
+  .center-container {
+    flex-direction: column; /* imposta verticale */
+    gap: 20px; /* distanza tra le scritte in verticale */
+  }
+
+  .word {
+    font-size: 5vw; /* aumenta un po' la dimensione per il mobile */
+  }
+}
+
+
+#layout-indicator {
+  position: fixed;
+  bottom: 10px;
+  width: 99%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  font-family: monospace;
+  font-size: 14px;
+  user-select: none;
+  z-index: 1000;
+  color: var(--date-time-color);
+}
+
+.date-time {
+  color: var(--date-time-color);
+}
+
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  font-size: 20px;
+  color: #333;
+  z-index: 9999;
+}
