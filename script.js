@@ -47,7 +47,7 @@ selectedOrder.forEach(label => {
 // Collegamenti a pagine esterne
 
 if (label === "works") {
-  span.onclick = () => window.location.href = "Works.html";
+  span.onclick = () => window.location.href = "/works/works.html";
 }
 
 // Aggiorna indicatore reality
