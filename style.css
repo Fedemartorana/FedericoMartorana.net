@@ -52,7 +52,7 @@ body {
   font-family: monospace;
   font-size: 14px;
   user-select: none;
-  z-index: 1000;
+  z-index: 500;
   color: var(--date-time-color);
 }
 
@@ -62,12 +62,13 @@ body {
 
 #custom-cursor {
   position: fixed;
-  pointer-events: none; /* Non blocca il mouse sugli elementi */
-  user-select: none;
-  font-size: 24px;
+  top: 0;
+  left: 0;
   transform: translate(-50%, -50%);
-  z-index: 1000; /* Basso ma sopra i contenuti */
-  color: black;
-  mix-blend-mode: difference; /* Opzionale: per vedere sempre il + anche su fondi scuri o chiari */
+  font-size: 24px;
+  color: black; /* O usa mix-blend-mode: difference per maggiore contrasto */
+  z-index: 9999; /* Più alto di tutto il resto */
+  pointer-events: none; /* Non blocca mai i click */
+  user-select: none; /* Nessuna selezione */
 }
 
