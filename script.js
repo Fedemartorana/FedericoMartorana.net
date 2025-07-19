@@ -42,12 +42,13 @@ selectedOrder.forEach(label => {
   span.style.color = color;
 
   // Se il label è "works", rendilo cliccabile
-  if (label === "works") {
-    span.style.cursor = "pointer";
-    span.addEventListener("click", () => {
-      window.location.href = "Works/works.html"; // percorso corretto
-    });
-  }
+if (label === "works") {
+  span.style.cursor = "pointer";
+  span.addEventListener("click", () => {
+    const colorParam = encodeURIComponent(color);
+    window.location.href = `Works/works.html?color=${colorParam}`;
+  });
+}
 
   textContainer.appendChild(span);
 });
