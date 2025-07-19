@@ -45,15 +45,7 @@ works.forEach((work, index) => {
   worksList.appendChild(item);
 });
 
-// ---------------------
-// Indicatori layout, data e cursore
-// ---------------------
-
-// Aggiorna testo reality (se vuoi passarne il numero da URL o altro, modifica qui)
-const layoutText = document.getElementById('layout-text');
-if (layoutText) {
-  layoutText.textContent = 'Reality -'; // oppure setta dinamicamente
-}
+// --------- Indicatori in basso (data, reality, posizione cursore) ---------
 
 // Aggiorna data e ora ogni secondo
 const dateTimeSpan = document.querySelector('.date-time');
@@ -68,9 +60,21 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
+// Numero reality (esempio, puoi cambiarlo dinamicamente)
+const realityNumber = document.getElementById('reality-number');
+const realityFromUrl = getQueryParam('reality') || 0;
+if (realityNumber) {
+  realityNumber.textContent = `Reality: ${realityFromUrl}`;
+}
 
+// Posizione cursore (testo in basso)
+const cursorPosDisplay = document.getElementById('cursor-pos');
+
+// Rimuovo eventuale cursore custom precedente
 const oldCursor = document.getElementById('custom-cursor');
-if (oldCursor) oldCursor.remove();// Cursore personalizzato
+if (oldCursor) oldCursor.remove();
+
+// Creo cursore personalizzato
 const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
@@ -80,17 +84,17 @@ cursor.style.top = '0';
 cursor.style.left = '0';
 cursor.style.transform = 'translate(-50%, -50%)';
 cursor.style.pointerEvents = 'none';
-cursor.style.color = themeColor; 
+cursor.style.color = themeColor;
 cursor.style.fontSize = '20px';
 cursor.style.fontFamily = 'monospace';
 cursor.style.zIndex = '9999';
 
-// Movimento cursore e aggiornamento posizione
-const cursorPosition = document.getElementById('cursor-position');
+// Movimento cursore e aggiornamento posizione testo
 window.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
-  if (cursorPosition) {
-    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+
+  if (cursorPosDisplay) {
+    cursorPosDisplay.textContent = `Cursor: ${e.clientX}, ${e.clientY}`;
   }
 });
