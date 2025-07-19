@@ -2,23 +2,20 @@
     --date-time-color: #333;
 }
 
+/* Nasconde il cursore di sistema ovunque */
+html, body, * {
+    cursor: none !important;
+}
+
 body {
     margin: 0px;
     padding: 0px;
     background: rgb(255, 255, 255);
     font-family: monospace;
     overflow: hidden;
-    cursor: none;
-}
-body, body * {
-  cursor: none !important; /* Nasconde il cursore su TUTTO */
 }
 
-
-.label {
-  cursor: none; /* Nessun cursore anche sopra le scritte */
-}
-
+/* Contenitore centrale */
 .center-container {
     position: fixed;
     top: 50%;
@@ -31,12 +28,14 @@ body, body * {
     flex-direction: row;
 }
 
+/* Parole */
 .word {
-    font-size: 3vw;
+    font-size: 5vw;
     text-transform: uppercase;
     transition: color 0.3s;
 }
 
+/* Responsive */
 @media (max-width: 768px) {
     .center-container {
         flex-direction: column;
@@ -48,12 +47,7 @@ body, body * {
     }
 }
 
-.word {
-    font-size: 5vw;
-    text-transform: uppercase;
-    transition: color 0.3s;
-}
-
+/* Indicatore layout e data */
 #layout-indicator {
     position: fixed;
     bottom: 10px;
@@ -71,14 +65,15 @@ body, body * {
     color: var(--date-time-color);
 }
 
+/* Cursore personalizzato */
 #custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  color: black;
-  font-size: 20px;
-  pointer-events: none; /* IMPORTANTISSIMO: il cursore non deve bloccare i click */
-  z-index: 9999; /* Il massimo per stare sopra a tutto */
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    color: black;
+    font-size: 20px;
+    pointer-events: none; /* Non blocca i click */
+    z-index: 9999; /* Sopra tutto */
 }
