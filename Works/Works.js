@@ -44,3 +44,51 @@ works.forEach((work, index) => {
 
   worksList.appendChild(item);
 });
+
+// ---------------------
+// Indicatori layout, data e cursore
+// ---------------------
+
+// Aggiorna testo reality (se vuoi passarne il numero da URL o altro, modifica qui)
+const layoutText = document.getElementById('layout-text');
+if (layoutText) {
+  layoutText.textContent = 'Reality -'; // oppure setta dinamicamente
+}
+
+// Aggiorna data e ora ogni secondo
+const dateTimeSpan = document.querySelector('.date-time');
+function updateDateTime() {
+  if (!dateTimeSpan) return;
+  const now = new Date();
+  const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
+                    ' ' +
+                    now.toLocaleTimeString('it-IT', { hour12: false });
+  dateTimeSpan.textContent = formatted;
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
+// Cursore personalizzato
+const cursor = document.createElement('div');
+cursor.id = 'custom-cursor';
+cursor.textContent = '+';
+document.body.appendChild(cursor);
+cursor.style.position = 'fixed';
+cursor.style.top = '0';
+cursor.style.left = '0';
+cursor.style.transform = 'translate(-50%, -50%)';
+cursor.style.pointerEvents = 'none';
+cursor.style.color = themeColor; 
+cursor.style.fontSize = '20px';
+cursor.style.fontFamily = 'monospace';
+cursor.style.zIndex = '9999';
+
+// Movimento cursore e aggiornamento posizione
+const cursorPosition = document.getElementById('cursor-position');
+window.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  if (cursorPosition) {
+    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+  }
+});
