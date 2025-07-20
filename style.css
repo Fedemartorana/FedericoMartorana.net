@@ -58,11 +58,11 @@ body {
     font-family: monospace;
     font-size: 10px;
     z-index: 1000;
-    color: var(--date-time-color);
 }
 
-.date-time {
-    color: var(--date-time-color);
+/* Colore dinamico gestito via JS */
+.date-time, #layout-text, #cursor-position {
+    transition: color 0.3s;
 }
 
 /* Cursore personalizzato */
@@ -72,10 +72,10 @@ body {
     top: 0;
     width: 20px;
     height: 20px;
-    color: black;
     font-size: 20px;
-    pointer-events: none; /* Il cursore personalizzato non blocca i click */
-    z-index: 9999; /* Sopra a tutto */
-    user-select: none; /* Impedisce selezioni accidentali */
-    transform: translate(-50%, -50%); /* Centra il simbolo sul puntatore */
+    pointer-events: none; 
+    z-index: 9999; 
+    user-select: none; 
+    transform: translate(-50%, -50%);
+    transition: color 0.3s;
 }
