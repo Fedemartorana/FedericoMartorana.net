@@ -10,18 +10,18 @@ body {
   overflow: hidden; /* evita scroll verticale per layout fisso */
 }
 
-/* Indicatore layout e data in basso */
+/* Indicatore layout e data */
 #layout-indicator {
-  position: fixed;
-  bottom: 10px;
-  width: 99%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 5px;
-  font-family: monospace;
-  font-size: 10px;
-  z-index: 1000;
-  color: var(--date-time-color);
+    position: fixed;
+    bottom: 10px;
+    width: 99%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+    font-family: monospace;
+    font-size: 10px;
+    z-index: 1000;
+    color: var(--date-time-color);
 }
 
 .date-time {
