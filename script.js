@@ -1,6 +1,7 @@
 const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const textContainer = document.getElementById("text-container");
+const dateTimeSpan = document.querySelector('.date-time');
 
 // Colori disponibili
 const colors = [
@@ -42,13 +43,13 @@ selectedOrder.forEach(label => {
   span.style.color = color;
 
   // Se il label è "works", rendilo cliccabile
-if (label === "works") {
-  span.style.cursor = "pointer";
-  span.addEventListener("click", () => {
-    const colorParam = encodeURIComponent(color);
-    window.location.href = `Works/works.html?color=${colorParam}`;
-  });
-}
+  if (label === "works") {
+    span.style.cursor = "pointer";
+    span.addEventListener("click", () => {
+      const colorParam = encodeURIComponent(color);
+      window.location.href = `Works/works.html?color=${colorParam}`;
+    });
+  }
 
   textContainer.appendChild(span);
 });
@@ -62,16 +63,8 @@ cursor.id = 'custom-cursor';
 cursor.textContent = '+';
 document.body.appendChild(cursor);
 
-// Stile del cursore (qui risolviamo i problemi)
-cursor.style.position = 'fixed';
-cursor.style.top = '0';
-cursor.style.left = '0';
-cursor.style.transform = 'translate(-50%, -50%)';
-cursor.style.pointerEvents = 'none';
-cursor.style.color = color; // Cursore dello stesso colore del layout
-cursor.style.fontSize = '20px';
-cursor.style.fontFamily = 'monospace';
-cursor.style.zIndex = '9999';
+// Stile cursore
+cursor.style.color = color;
 
 // Movimento del cursore
 window.addEventListener('mousemove', e => {
@@ -81,7 +74,6 @@ window.addEventListener('mousemove', e => {
 });
 
 // Data e ora
-const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
   const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
@@ -91,3 +83,8 @@ function updateDateTime() {
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
+
+// Colore dinamico anche per data e indicatore layout
+dateTimeSpan.style.color = color;
+layoutText.style.color = color;
+cursorPosition.style.color = color;
