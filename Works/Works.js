@@ -1,10 +1,9 @@
-// Funzione per ottenere i parametri URL
+// Prendi colore reality da URL o localStorage
 function getQueryParam(param) {
   const params = new URLSearchParams(window.location.search);
   return params.get(param);
 }
 
-// Gestione colore tema
 const colorFromUrl = getQueryParam('color');
 if (colorFromUrl) {
   localStorage.setItem('themeColor', colorFromUrl);
@@ -12,35 +11,39 @@ if (colorFromUrl) {
 const themeColor = colorFromUrl || localStorage.getItem('themeColor') || "#000";
 document.documentElement.style.setProperty('--theme-color', themeColor);
 
-// Dati esempio per i lavori
+// Esempio di works con immagini
 const works = [
-  { title: "Progetto 1", description: "Descrizione progetto 1" },
-  { title: "Progetto 2", description: "Descrizione progetto 2" },
-  { title: "Progetto 3", description: "Descrizione progetto 3" },
-  { title: "Progetto 4", description: "Descrizione progetto 4" }
+  { title: "Progetto 1", img: "img/progetto1.jpg" },
+  { title: "Progetto 2", img: "img/progetto2.jpg" },
+  { title: "Progetto 3", img: "img/progetto3.jpg" },
+  { title: "Progetto 4", img: "img/progetto4.jpg" }
 ];
 
-const worksList = document.getElementById("works-list");
-const workDetails = document.getElementById("work-details");
+const worksGrid = document.getElementById("works-grid");
 
-// Popola la lista lavori
 works.forEach(work => {
-  const item = document.createElement("div");
-  item.className = "work-item";
-  item.textContent = work.title;
+  const square = document.createElement("div");
+  square.className = "work-square";
 
-  item.addEventListener("click", () => {
-    workDetails.innerHTML = `<h2>${work.title}</h2><p>${work.description}</p>`;
-    document.querySelectorAll('.work-item').forEach(el => el.classList.add('dimmed'));
-    item.classList.remove('dimmed');
-  });
+  const img = document.createElement("img");
+  img.src = work.img;
+  img.alt = work.title;
 
-  worksList.appendChild(item);
+  const overlay = document.createElement("div");
+  overlay.className = "work-overlay";
+
+  const title = document.createElement("div");
+  title.className = "work-title";
+  title.textContent = work.title;
+
+  overlay.appendChild(title);
+  square.appendChild(img);
+  square.appendChild(overlay);
+
+  worksGrid.appendChild(square);
 });
 
-// --------- Indicatori in basso ---------
-
-// Data e ora
+// Indicatore data/ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   if (!dateTimeSpan) return;
@@ -53,29 +56,36 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Reality / layout indicator
-const layoutText = document.getElementById('layout-text');
+// Numero reality
+const realityNumber = document.getElementById('reality-number');
 const realityFromUrl = getQueryParam('reality') || 0;
-if (layoutText) {
-  layoutText.textContent = `Reality: ${realityFromUrl}`;
+if (realityNumber) {
+  realityNumber.textContent = `Reality: ${realityFromUrl}`;
 }
 
-// Cursore personalizzato
+// Cursor personalizzato
+const cursorPosDisplay = document.getElementById('cursor-pos');
+const oldCursor = document.getElementById('custom-cursor');
+if (oldCursor) oldCursor.remove();
+
 const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
 document.body.appendChild(cursor);
+cursor.style.position = 'fixed';
+cursor.style.top = '0';
+cursor.style.left = '0';
+cursor.style.transform = 'translate(-50%, -50%)';
+cursor.style.pointerEvents = 'none';
+cursor.style.color = themeColor;
+cursor.style.fontSize = '20px';
+cursor.style.fontFamily = 'monospace';
+cursor.style.zIndex = '9999';
 
-// Stile cursore
-cursor.style.color = color;
-
-// Movimento e posizione cursore
 window.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
-
   if (cursorPosDisplay) {
-    cursorPosDisplay.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+    cursorPosDisplay.textContent = `Cursor: ${e.clientX}, ${e.clientY}`;
   }
 });
- 
