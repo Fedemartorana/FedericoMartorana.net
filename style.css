@@ -1,62 +1,81 @@
 :root {
-  --theme-color: #000; /* fallback se non impostato */
+    --date-time-color: #333;
+}
+
+/* Nasconde il cursore di sistema ovunque */
+html, body, * {
+    cursor: none !important;
 }
 
 body {
-  margin: 0;
-  background: white;
-  font-family: sans-serif;
-  color: var(--theme-color);
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background: rgb(255, 255, 255);
+    font-family: monospace;
+    overflow: hidden;
 }
 
-/* Indicatore in basso */
+/* Contenitore centrale */
+.center-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    flex-direction: row;
+}
+
+/* Parole */
+.word {
+    font-size: 5vw;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .center-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .word {
+        font-size: 5vw;
+    }
+}
+
+/* Indicatore layout e data */
 #layout-indicator {
-  position: fixed;
-  bottom: 10px;
-  width: 99%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 5px;
-  font-family: monospace;
-  font-size: 10px;
-  z-index: 1000;
-  color: var(--theme-color);
+    position: fixed;
+    bottom: 10px;
+    width: 99%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+    font-family: monospace;
+    font-size: 10px;
+    z-index: 1000;
 }
 
-.date-time {
-  color: var(--theme-color);
+/* Colore dinamico gestito via JS */
+.date-time, #layout-text, #cursor-position {
+    transition: color 0.3s;
 }
 
-.works-container {
-  display: flex;
-  height: 100vh;
-  padding-bottom: 40px;
-  box-sizing: border-box;
-}
-
-.works-list {
-  width: 30%;
-  padding: 20px;
-  border-right: 1px solid #ddd;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.work-item {
-  cursor: pointer;
-  font-size: 1.5em;
-  transition: opacity 0.3s;
-}
-
-.work-item.dimmed {
-  opacity: 0.3;
-}
-
-.work-details {
-  width: 70%;
-  padding: 20px;
-  overflow-y: auto;
+/* Cursore personalizzato */
+#custom-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    pointer-events: none; 
+    z-index: 9999; 
+    user-select: none; 
+    transform: translate(-50%, -50%);
+    transition: color 0.3s;
 }
