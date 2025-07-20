@@ -4,21 +4,15 @@ function getQueryParam(param) {
   return params.get(param);
 }
 
-// Prendi il colore dal parametro URL
+// Gestione colore tema
 const colorFromUrl = getQueryParam('color');
-
-// Se c'è il colore nell'URL, aggiornalo e salvalo in localStorage
 if (colorFromUrl) {
   localStorage.setItem('themeColor', colorFromUrl);
 }
-
-// Se no, prendi il colore da localStorage oppure default nero
 const themeColor = colorFromUrl || localStorage.getItem('themeColor') || "#000";
-
-// Imposta la variabile CSS --theme-color
 document.documentElement.style.setProperty('--theme-color', themeColor);
 
-// Esempio di lavori
+// Dati esempio per i lavori
 const works = [
   { title: "Progetto 1", description: "Descrizione progetto 1" },
   { title: "Progetto 2", description: "Descrizione progetto 2" },
@@ -29,15 +23,14 @@ const works = [
 const worksList = document.getElementById("works-list");
 const workDetails = document.getElementById("work-details");
 
-works.forEach((work, index) => {
+// Popola la lista lavori
+works.forEach(work => {
   const item = document.createElement("div");
   item.className = "work-item";
   item.textContent = work.title;
 
   item.addEventListener("click", () => {
     workDetails.innerHTML = `<h2>${work.title}</h2><p>${work.description}</p>`;
-
-    // Sbiadisce gli altri elementi
     document.querySelectorAll('.work-item').forEach(el => el.classList.add('dimmed'));
     item.classList.remove('dimmed');
   });
@@ -45,9 +38,9 @@ works.forEach((work, index) => {
   worksList.appendChild(item);
 });
 
-// --------- Indicatori in basso (data, reality, posizione cursore) ---------
+// --------- Indicatori in basso ---------
 
-// Aggiorna data e ora ogni secondo
+// Data e ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   if (!dateTimeSpan) return;
@@ -60,25 +53,26 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Numero reality (esempio, puoi cambiarlo dinamicamente)
-const realityNumber = document.getElementById('reality-number');
+// Reality / layout indicator
+const layoutText = document.getElementById('layout-text');
 const realityFromUrl = getQueryParam('reality') || 0;
-if (realityNumber) {
-  realityNumber.textContent = `Reality: ${realityFromUrl}`;
+if (layoutText) {
+  layoutText.textContent = `Reality: ${realityFromUrl}`;
 }
 
-// Posizione cursore (testo in basso)
-const cursorPosDisplay = document.getElementById('cursor-pos');
+// Cursore personalizzato e posizione
+const cursorPosDisplay = document.getElementById('cursor-position');
 
-// Rimuovo eventuale cursore custom precedente
+// Rimuove eventuale cursore precedente
 const oldCursor = document.getElementById('custom-cursor');
 if (oldCursor) oldCursor.remove();
 
-// Creo cursore personalizzato
+// Cursore custom
 const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
 document.body.appendChild(cursor);
+
 cursor.style.position = 'fixed';
 cursor.style.top = '0';
 cursor.style.left = '0';
@@ -89,7 +83,7 @@ cursor.style.fontSize = '20px';
 cursor.style.fontFamily = 'monospace';
 cursor.style.zIndex = '9999';
 
-// Movimento cursore e aggiornamento posizione testo
+// Movimento e posizione cursore
 window.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
