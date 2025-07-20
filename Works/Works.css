@@ -19,15 +19,18 @@ body {
   box-sizing: border-box;
 }
 
-/* Ogni quadrato */
 .work-square {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* Mantiene i quadrati */
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   cursor: pointer;
-  border: 1px solid #ddd;
+
+  /* Bordo con il colore della reality */
+  border: 2px solid var(--theme-color);
+  transition: border-color 0.3s ease;
 }
+
 
 /* L'immagine */
 .work-square img {
