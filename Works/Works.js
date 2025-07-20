@@ -89,7 +89,7 @@ window.addEventListener('mousemove', e => {
   cursor.style.top = e.clientY + 'px';
 
   if (cursorPosDisplay) {
-    cursorPosDisplay.textContent = `Cursor: ${e.clientX}, ${e.clientY}`;
+    cursorPosDisplay.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
   }
 });
  
