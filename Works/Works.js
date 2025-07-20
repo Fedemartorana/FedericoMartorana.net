@@ -92,3 +92,4 @@ window.addEventListener('mousemove', e => {
     cursorPosDisplay.textContent = `Cursor: ${e.clientX}, ${e.clientY}`;
   }
 });
+ 
