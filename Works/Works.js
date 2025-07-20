@@ -60,28 +60,14 @@ if (layoutText) {
   layoutText.textContent = `Reality: ${realityFromUrl}`;
 }
 
-// Cursore personalizzato e posizione
-const cursorPosDisplay = document.getElementById('cursor-position');
-
-// Rimuove eventuale cursore precedente
-const oldCursor = document.getElementById('custom-cursor');
-if (oldCursor) oldCursor.remove();
-
-// Cursore custom
+// Cursore personalizzato
 const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
 document.body.appendChild(cursor);
 
-cursor.style.position = 'fixed';
-cursor.style.top = '0';
-cursor.style.left = '0';
-cursor.style.transform = 'translate(-50%, -50%)';
-cursor.style.pointerEvents = 'none';
-cursor.style.color = themeColor;
-cursor.style.fontSize = '20px';
-cursor.style.fontFamily = 'monospace';
-cursor.style.zIndex = '9999';
+// Stile cursore
+cursor.style.color = color;
 
 // Movimento e posizione cursore
 window.addEventListener('mousemove', e => {
