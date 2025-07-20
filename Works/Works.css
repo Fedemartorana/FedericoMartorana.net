@@ -1,37 +1,37 @@
 :root {
-  --date-time-color: var(--theme-color, #000);
+  --theme-color: #000; /* fallback se non impostato */
 }
 
 body {
   margin: 0;
   background: white;
   font-family: sans-serif;
-  color: var(--theme-color, #000);
-  overflow: hidden; /* evita scroll verticale per layout fisso */
+  color: var(--theme-color);
+  overflow: hidden;
 }
 
-/* Indicatore layout e data */
+/* Indicatore in basso */
 #layout-indicator {
-    position: fixed;
-    bottom: 10px;
-    width: 99%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 5px;
-    font-family: monospace;
-    font-size: 10px;
-    z-index: 1000;
-    color: var(--date-time-color);
+  position: fixed;
+  bottom: 10px;
+  width: 99%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 5px;
+  font-family: monospace;
+  font-size: 10px;
+  z-index: 1000;
+  color: var(--theme-color);
 }
 
 .date-time {
-  color: var(--date-time-color);
+  color: var(--theme-color);
 }
 
 .works-container {
   display: flex;
   height: 100vh;
-  padding-bottom: 40px; /* spazio per indicatore fisso in basso */
+  padding-bottom: 40px;
   box-sizing: border-box;
 }
 
