@@ -1,49 +1,80 @@
-// Funzione per ottenere i parametri URL
-function getQueryParam(param) {
-  const params = new URLSearchParams(window.location.search);
-  return params.get(param);
-}
+const layoutText = document.getElementById("layout-text");
+const cursorPosition = document.getElementById("cursor-position");
+const textContainer = document.getElementById("text-container");
+const dateTimeSpan = document.querySelector('.date-time');
 
-// Gestione colore tema
-const colorFromUrl = getQueryParam('color');
-if (colorFromUrl) {
-  localStorage.setItem('themeColor', colorFromUrl);
-}
-const themeColor = colorFromUrl || localStorage.getItem('themeColor') || "#000";
-document.documentElement.style.setProperty('--theme-color', themeColor);
-
-// Dati esempio per i lavori
-const works = [
-  { title: "Progetto 1", description: "Descrizione progetto 1" },
-  { title: "Progetto 2", description: "Descrizione progetto 2" },
-  { title: "Progetto 3", description: "Descrizione progetto 3" },
-  { title: "Progetto 4", description: "Descrizione progetto 4" }
+// Colori disponibili
+const colors = [
+  "#c2c1b6", "#878787", "#e1c57f", "#c76758", "#c1ce93",
+  "#88a07e", "#899eaa", "#9b9fc2", "#4d4639", "#1d1d1b"
 ];
 
-const worksList = document.getElementById("works-list");
-const workDetails = document.getElementById("work-details");
+// Scritte
+const labels = ["works", "papers", "info", "contacts"];
 
-// Popola la lista lavori
-works.forEach(work => {
-  const item = document.createElement("div");
-  item.className = "work-item";
-  item.textContent = work.title;
-
-  item.addEventListener("click", () => {
-    workDetails.innerHTML = `<h2>${work.title}</h2><p>${work.description}</p>`;
-    document.querySelectorAll('.work-item').forEach(el => el.classList.add('dimmed'));
-    item.classList.remove('dimmed');
+// Genera tutte le permutazioni delle 4 parole (24 combinazioni)
+function getAllPermutations(arr) {
+  if (arr.length <= 1) return [arr];
+  const perms = [];
+  arr.forEach((item, i) => {
+    const rest = arr.slice(0, i).concat(arr.slice(i + 1));
+    const subPerms = getAllPermutations(rest);
+    subPerms.forEach(p => perms.push([item, ...p]));
   });
+  return perms;
+}
 
-  worksList.appendChild(item);
+const textPermutations = getAllPermutations(labels);
+const totalLayouts = textPermutations.length * colors.length;
+
+// Genera layout casuale
+const randomColorIndex = Math.floor(Math.random() * colors.length);
+const randomTextPermutation = Math.floor(Math.random() * textPermutations.length);
+const layoutNum = randomColorIndex * textPermutations.length + randomTextPermutation + 1;
+
+const color = colors[randomColorIndex];
+const selectedOrder = textPermutations[randomTextPermutation];
+
+// Crea le scritte con ordine e colore casuali
+selectedOrder.forEach(label => {
+  const span = document.createElement("span");
+  span.textContent = label;
+  span.className = "word";
+  span.style.color = color;
+
+  // Se il label è "works", rendilo cliccabile
+  if (label === "works") {
+    span.style.cursor = "pointer";
+    span.addEventListener("click", () => {
+      const colorParam = encodeURIComponent(color);
+      window.location.href = `Works/works.html?color=${colorParam}`;
+    });
+  }
+
+  textContainer.appendChild(span);
 });
 
-// --------- Indicatori in basso ---------
+// Aggiorna indicatore reality
+layoutText.textContent = `Reality ${layoutNum} / 240`;
+
+// Cursore personalizzato
+const cursor = document.createElement('div');
+cursor.id = 'custom-cursor';
+cursor.textContent = '+';
+document.body.appendChild(cursor);
+
+// Stile cursore
+cursor.style.color = color;
+
+// Movimento del cursore
+window.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+});
 
 // Data e ora
-const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
-  if (!dateTimeSpan) return;
   const now = new Date();
   const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
                     ' ' +
@@ -53,42 +84,7 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Reality / layout indicator
-const layoutText = document.getElementById('layout-text');
-const realityFromUrl = getQueryParam('reality') || 0;
-if (layoutText) {
-  layoutText.textContent = `Reality: ${realityFromUrl}`;
-}
-
-// Cursore personalizzato e posizione
-const cursorPosDisplay = document.getElementById('cursor-position');
-
-// Rimuove eventuale cursore precedente
-const oldCursor = document.getElementById('custom-cursor');
-if (oldCursor) oldCursor.remove();
-
-// Cursore custom
-const cursor = document.createElement('div');
-cursor.id = 'custom-cursor';
-cursor.textContent = '+';
-document.body.appendChild(cursor);
-
-cursor.style.position = 'fixed';
-cursor.style.top = '0';
-cursor.style.left = '0';
-cursor.style.transform = 'translate(-50%, -50%)';
-cursor.style.pointerEvents = 'none';
-cursor.style.color = themeColor;
-cursor.style.fontSize = '20px';
-cursor.style.fontFamily = 'monospace';
-cursor.style.zIndex = '9999';
-
-// Movimento e posizione cursore
-window.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top = e.clientY + 'px';
-
-  if (cursorPosDisplay) {
-    cursorPosDisplay.textContent = `Cursor: ${e.clientX}, ${e.clientY}`;
-  }
-});
+// Colore dinamico anche per data e indicatore layout
+dateTimeSpan.style.color = color;
+layoutText.style.color = color;
+cursorPosition.style.color = color;
