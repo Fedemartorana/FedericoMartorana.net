@@ -45,8 +45,26 @@ works.forEach(work => {
   worksGrid.appendChild(square);
 });
 
-// Indicatore data/ora
-const dateTimeSpan = document.querySelector('.date-time');
+// Aggiorna indicatore reality
+layoutText.textContent = `Reality ${layoutNum} / 240`;
+
+// Cursore personalizzato
+const cursor = document.createElement('div');
+cursor.id = 'custom-cursor';
+cursor.textContent = '+';
+document.body.appendChild(cursor);
+
+// Stile cursore
+cursor.style.color = color;
+
+// Movimento del cursore
+window.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+});
+
+// Data e ora
 function updateDateTime() {
   const now = new Date();
   const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
@@ -57,26 +75,7 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Numero reality
-const realityNumber = document.getElementById('reality-number');
-const realityFromUrl = getQueryParam('reality') || 0;
-realityNumber.textContent = `Reality: ${realityFromUrl}`;
-
-// Cursore personalizzato
-const cursorPosDisplay = document.getElementById('cursor-pos');
-
-// Rimuovi eventuale cursore esistente
-const oldCursor = document.getElementById('custom-cursor');
-if (oldCursor) oldCursor.remove();
-
-const cursor = document.createElement('div');
-cursor.id = 'custom-cursor';
-cursor.textContent = '+';
-document.body.appendChild(cursor);
-cursor.style.color = themeColor;
-
-window.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top = e.clientY + 'px';
-  cursorPosDisplay.textContent = `Cursor: ${e.clientX}, ${e.clientY}`;
-});
+// Colore dinamico anche per data e indicatore layout
+dateTimeSpan.style.color = color;
+layoutText.style.color = color;
+cursorPosition.style.color = color;
