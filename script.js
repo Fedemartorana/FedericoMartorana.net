@@ -47,7 +47,7 @@ selectedOrder.forEach(label => {
     span.style.cursor = "pointer";
     span.addEventListener("click", () => {
       const colorParam = encodeURIComponent(color);
-      window.location.href = `./Works/Works.html?color=${colorParam}`;
+      window.location.href = `./Works/Works.html?color=${colorParam}&layout=${layoutNum}`;
     });
   }
 
