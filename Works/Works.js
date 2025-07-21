@@ -1,3 +1,6 @@
+const dateTimeSpan = document.querySelector('.date-time');
+const cursorPosition = document.getElementById("cursor-position");
+
 // Utility per query params
 function getQueryParam(param) {
   const params = new URLSearchParams(window.location.search);
