@@ -53,10 +53,16 @@ body {
 }
 
 .work-title {
-  color: white;
-  opacity: 0;
+  font-family: monospace;       /* Tipo di font (coerente con il resto) */
+  font-size: 3em;             /* Dimensione del testo */
+  font-weight: bold;            /* Grassetto */
+  letter-spacing: 0.05em;       /* Spaziatura tra lettere */
+  text-transform: uppercase;    /* Testo tutto maiuscolo (facoltativo) */
+  color: var(--theme-color);    /* Colore della reality */
+  opacity: 0;                   /* Nasconde di default */
   transition: opacity 0.3s ease;
-  font-size: 1em;
+  padding: 5px 10px;
+  border-radius: 0px;
   text-align: center;
 }
 
