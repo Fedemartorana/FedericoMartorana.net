@@ -14,10 +14,10 @@ document.documentElement.style.setProperty('--theme-color', themeColor);
 
 // Lista dei lavori
 const works = [
-  { title: "HYPOGEUM", img: "immagini/progetto1.jpg" },
-  { title: "MIESIAN HOUSE", img: "immagini/progetto2.jpg" },
-  { title: "LIVING SCUPLTURE", img: "immagini/progetto3.jpg" },
-  { title: "HOUSE ATELIER", img: "immagini/progetto4.jpg" }
+  { title: "Progetto 1", img: "immagini/progetto1.jpg" },
+  { title: "Progetto 2", img: "immagini/progetto2.jpg" },
+  { title: "Progetto 3", img: "immagini/progetto3.jpg" },
+  { title: "Progetto 4", img: "immagini/progetto4.jpg" }
 ];
 
 const worksGrid = document.getElementById("works-grid");
