@@ -1,74 +1,66 @@
-:root {
-  --theme-color: #000; /* Colore predefinito, modificabile via JS */
+/* Nasconde il cursore standard */
+html, body, * {
+    cursor: none !important;
 }
 
 body {
-  margin: 0;
-  background: white;
-  font-family: monospace;
-  color: var(--theme-color);
-  overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: monospace;
+    overflow: hidden;
 }
 
-.works-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 5px;
-  padding: 20px;
-  height: calc(100vh - 40px);
-  box-sizing: border-box;
+/* Container quadrati */
+.works-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 50px;
 }
 
-.work-square {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  overflow: hidden;
-  cursor: pointer;
-  border: 10px solid var(--theme-color);
+/* Singolo quadrato */
+.project-square {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    transition: transform 0.3s;
 }
 
-.work-square img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.3s ease;
+/* Immagine del progetto */
+.project-square img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
-.work-square:hover img {
-  transform: scale(1.05);
+/* Overlay */
+.project-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0);
+    color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    transition: background 0.3s, color 0.3s;
 }
 
-.work-overlay {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--theme-color);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.work-title {
-  color: var(--theme-color);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  font-size: 1em;
-  text-align: center;
-}
-
-.work-square:hover .work-overlay {
-  opacity: 0.4;
-}
-
-.work-square:hover .work-title {
-  opacity: 0.5;
-  color: var(--theme-color);
-  background: white;
-  padding: 5px 10px;
-  border-radius: 5px;
+/* Responsive */
+@media (max-width: 768px) {
+    .project-square {
+        width: 150px;
+        height: 150px;
+    }
 }
 
 /* Indicatore layout e data */
@@ -84,12 +76,7 @@ body {
     z-index: 1000;
 }
 
-/* Colore dinamico gestito via JS */
-.date-time, #layout-text, #cursor-position {
-    transition: color 0.3s;
-}
-
-/* Cursore personalizzato */
+/* Cursore custom */
 #custom-cursor {
     position: fixed;
     left: 0;
@@ -97,9 +84,9 @@ body {
     width: 20px;
     height: 20px;
     font-size: 20px;
-    pointer-events: none; 
-    z-index: 9999; 
-    user-select: none; 
+    pointer-events: none;
+    z-index: 9999;
+    user-select: none;
     transform: translate(-50%, -50%);
     transition: color 0.3s;
 }
