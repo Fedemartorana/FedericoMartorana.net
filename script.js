@@ -41,15 +41,14 @@ selectedOrder.forEach(label => {
   span.textContent = label;
   span.className = "word";
   span.style.color = color;
+  span.style.cursor = "pointer";
 
-  // Se il label è "works", rendilo cliccabile
-  if (label === "works") {
-    span.style.cursor = "pointer";
-    span.addEventListener("click", () => {
-      const colorParam = encodeURIComponent(color);
-      window.location.href = `./Works/Works.html?color=${colorParam}&layout=${layoutNum}`;
-    });
-  }
+  // Aggiungi il comportamento cliccabile per ogni sezione
+  span.addEventListener("click", () => {
+    const colorParam = encodeURIComponent(color);
+    const section = label.toLowerCase();
+    window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
+  });
 
   textContainer.appendChild(span);
 });
