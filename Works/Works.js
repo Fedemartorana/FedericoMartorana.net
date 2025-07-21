@@ -1,6 +1,9 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
-const color = urlParams.get('color') || '#000'; // Default fallback
+
+// Legge parametri URL: colore e layout (reality)
+const color = urlParams.get('color') || '#000000';  // fallback nero
+const layoutNum = urlParams.get('layout') || '1';   // fallback layout 1
 
 const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
@@ -44,21 +47,23 @@ projects.forEach(project => {
     worksContainer.appendChild(square);
 });
 
-// Indicatore layout (solo indicativo in questa pagina)
-layoutText.textContent = "Reality - Works View";
+// Aggiorna indicatore layout con reality e colore
+layoutText.textContent = `Reality ${layoutNum} / 240`;
+layoutText.style.color = color;
 
 // Cursore custom
 const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
-document.body.appendChild(cursor);
 cursor.style.color = color;
+document.body.appendChild(cursor);
 
 // Movimento cursore
 window.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
     cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+    cursorPosition.style.color = color;
 });
 
 // Data e ora
@@ -68,11 +73,7 @@ function updateDateTime() {
                       ' ' +
                       now.toLocaleTimeString('it-IT', { hour12: false });
     dateTimeSpan.textContent = formatted;
+    dateTimeSpan.style.color = color;
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
-
-// Colore dinamico per indicatori
-dateTimeSpan.style.color = color;
-layoutText.style.color = color;
-cursorPosition.style.color = color;
