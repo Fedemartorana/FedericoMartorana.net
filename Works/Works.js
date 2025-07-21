@@ -27,6 +27,7 @@ projects.forEach(project => {
     const square = document.createElement('div');
     square.className = 'project-square';
     square.style.border = `1px solid ${color}`;
+    square.style.background = '#fff'; // Sfondo bianco fisso
 
     const img = document.createElement('img');
     img.src = project.image;
@@ -36,15 +37,15 @@ projects.forEach(project => {
     overlay.className = 'project-overlay';
     overlay.textContent = project.title;
 
-    // Hover effect con patina colorata
+    // Hover effect con patina colorata e testo bianco
     square.addEventListener('mouseenter', () => {
-        overlay.style.background = hexToRgba(color, 0.5); // Colore reality semitrasparente
-        overlay.style.color = color; // Testo dello stesso colore pieno
+        overlay.style.background = hexToRgba(color, 0.5); // Patina colore reality trasparente
+        overlay.style.color = '#fff'; // Testo bianco per leggibilità
     });
 
     square.addEventListener('mouseleave', () => {
-        overlay.style.background = 'rgba(0,0,0,0)';
-        overlay.style.color = 'transparent';
+        overlay.style.background = 'rgba(0,0,0,0)'; // Patina trasparente
+        overlay.style.color = 'transparent'; // Nasconde testo
     });
 
     square.appendChild(img);
@@ -52,7 +53,7 @@ projects.forEach(project => {
     worksContainer.appendChild(square);
 });
 
-// Indicatore layout (solo indicativo in questa pagina)
+// Indicatore layout
 layoutText.textContent = "Reality - Works View";
 
 // Cursore custom
