@@ -1,13 +1,18 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
-
-// Legge parametri URL: colore e layout (reality)
-const color = urlParams.get('color') || '#000000';  // fallback nero
-const layoutNum = urlParams.get('layout') || '1';   // fallback layout 1
+const color = urlParams.get('color') || '#000'; // Default fallback
 
 const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
+
+// Funzione helper per convertire HEX in RGBA con alpha
+function hexToRgba(hex, alpha) {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r},${g},${b},${alpha})`;
+}
 
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
@@ -31,14 +36,14 @@ projects.forEach(project => {
     overlay.className = 'project-overlay';
     overlay.textContent = project.title;
 
-    // Hover effect
+    // Hover effect con patina colorata
     square.addEventListener('mouseenter', () => {
-        overlay.style.background = `rgba(0,0,0,0.5)`;
-        overlay.style.color = color;
+        overlay.style.background = hexToRgba(color, 0.5); // Colore reality semitrasparente
+        overlay.style.color = color; // Testo dello stesso colore pieno
     });
 
     square.addEventListener('mouseleave', () => {
-        overlay.style.background = `rgba(0,0,0,0)`;
+        overlay.style.background = 'rgba(0,0,0,0)';
         overlay.style.color = 'transparent';
     });
 
@@ -47,23 +52,21 @@ projects.forEach(project => {
     worksContainer.appendChild(square);
 });
 
-// Aggiorna indicatore layout con reality e colore
-layoutText.textContent = `Reality ${layoutNum} / 240`;
-layoutText.style.color = color;
+// Indicatore layout (solo indicativo in questa pagina)
+layoutText.textContent = "Reality - Works View";
 
 // Cursore custom
 const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
-cursor.style.color = color;
 document.body.appendChild(cursor);
+cursor.style.color = color;
 
 // Movimento cursore
 window.addEventListener('mousemove', e => {
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
     cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
-    cursorPosition.style.color = color;
 });
 
 // Data e ora
@@ -73,7 +76,11 @@ function updateDateTime() {
                       ' ' +
                       now.toLocaleTimeString('it-IT', { hour12: false });
     dateTimeSpan.textContent = formatted;
-    dateTimeSpan.style.color = color;
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
+
+// Colore dinamico per indicatori
+dateTimeSpan.style.color = color;
+layoutText.style.color = color;
+cursorPosition.style.color = color;
