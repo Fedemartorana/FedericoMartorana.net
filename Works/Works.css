@@ -53,18 +53,16 @@ body {
 }
 
 .work-title {
-  font-family: monospace;       /* Tipo di font (coerente con il resto) */
-  font-size: 5em;             /* Dimensione del testo */
-  font-weight: bold;            /* Grassetto */
-  letter-spacing: 0.05em;       /* Spaziatura tra lettere */
-  text-transform: uppercase;    /* Testo tutto maiuscolo (facoltativo) */
-  color: var(--theme-color);    /* Colore della reality */
-  opacity: 0;                   /* Nasconde di default */
+  font-family: monospace;
+  font-size: 2em; /* Grandezza del testo centrale */
+  font-weight: bold;
+  color: var(--theme-color); /* Colore della reality */
+  opacity: 0; /* Invisibile di default */
   transition: opacity 0.3s ease;
-  padding: 5px 10px;
-  border-radius: 0px;
   text-align: center;
+  pointer-events: none; /* Non interferisce con il mouse */
 }
+
 
 .work-square:hover .work-overlay {
   opacity: 0.4;
