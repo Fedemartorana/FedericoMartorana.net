@@ -85,3 +85,4 @@ setInterval(updateDateTime, 1000);
 dateTimeSpan.style.color = color;
 layoutText.style.color = color;
 cursorPosition.style.color = color;
+ 
