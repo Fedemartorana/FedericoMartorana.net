@@ -71,7 +71,7 @@ body {
   border-radius: 5px;
 }
 
-/* Indicatore basso */
+/* Indicatore layout e data */
 #layout-indicator {
     position: fixed;
     bottom: 10px;
@@ -82,17 +82,24 @@ body {
     font-family: monospace;
     font-size: 10px;
     z-index: 1000;
-    color: var(--theme-color);
+}
+
+/* Colore dinamico gestito via JS */
+.date-time, #layout-text, #cursor-position {
+    transition: color 0.3s;
 }
 
 /* Cursore personalizzato */
 #custom-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  font-size: 20px;
-  font-family: monospace;
-  z-index: 9999;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    pointer-events: none; 
+    z-index: 9999; 
+    user-select: none; 
+    transform: translate(-50%, -50%);
+    transition: color 0.3s;
 }
