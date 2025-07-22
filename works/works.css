@@ -1,3 +1,7 @@
+/* Nasconde il cursore di sistema ovunque */
+html, body, * {
+    cursor: none !important;
+}
 /* Container rettangoli */
 .works-container {
     display: grid;
