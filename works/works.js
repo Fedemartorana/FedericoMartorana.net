@@ -7,7 +7,7 @@ const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
 
 // Imposta il colore di sfondo dinamicamente nel body
-document.body.style.background = color;
+document.body.style.background = transparent;
 
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
