@@ -43,15 +43,15 @@ selectedOrder.forEach(label => {
   span.style.color = color;
   span.style.cursor = "pointer";
 
-// Aggiungi il comportamento cliccabile per ogni sezione
-span.addEventListener("click", () => {
-  const colorParam = encodeURIComponent(color);
-  const section = label.toLowerCase();
+  // Aggiungi il comportamento cliccabile per ogni sezione
+  span.addEventListener("click", () => {
+    const colorParam = encodeURIComponent(color);
+    const section = label.toLowerCase();
+    window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
+  });
 
-    window.location.href = `${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
+  textContainer.appendChild(span);
 });
-
-textContainer.appendChild(span);
 
 
 // Aggiorna indicatore reality
