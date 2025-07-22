@@ -10,15 +10,12 @@ const dateTimeSpan = document.querySelector('.date-time');
 
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
-    { title: "Progetto 1", image: "img/progetto1.jpg" },
-    { title: "Progetto 2", image: "img/progetto2.jpg" },
-    { title: "Progetto 3", image: "img/progetto3.jpg" },
-    { title: "Progetto 4", image: "img/progetto4.jpg" },
-    { title: "Progetto 5", image: "img/progetto5.jpg" },
-    { title: "Progetto 6", image: "img/progetto6.jpg" },
-    { title: "Progetto 7", image: "img/progetto7.jpg" },
-    { title: "Progetto 8", image: "img/progetto8.jpg" },
-    { title: "Progetto 9", image: "img/progetto9.jpg" }
+    { title: "Miesian House", image: "img/progetto1.jpg" },
+    { title: "Hypogeum", image: "img/progetto2.jpg" },
+    { title: "House Atelier", image: "img/progetto3.jpg" },
+    { title: "Archive, Exhibit, Inhabit", image: "img/progetto4.jpg" },
+    { title: "Tetra", image: "img/progetto5.jpg" }
+
 ];
 
 // Genera quadrati progetto
