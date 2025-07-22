@@ -75,3 +75,27 @@ function updateDateTime() {
     const now = new Date();
     const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
                       ' ' +
+                      now.toLocaleTimeString('it-IT', { hour12: false });
+    dateTimeSpan.textContent = formatted;
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
+// Colore dinamico per indicatori
+dateTimeSpan.style.color = '#000';
+layoutText.style.color = '#000';
+cursorPosition.style.color = '#000';
+
+// Funzione per convertire HEX in RGBA con opacità
+function hexToRgba(hex, alpha) {
+    let c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c = hex.substring(1).split('');
+        if(c.length==3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+    }
+    return 'rgba(0,0,0,'+alpha+')'; // fallback nero
+}
