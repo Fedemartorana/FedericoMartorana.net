@@ -50,7 +50,7 @@ selectedOrder.forEach(label => {
 
     // Percorso personalizzato per WORKS
     if (section === "works") {
-      window.location.href = `./Works/Works.html?color=${colorParam}&layout=${layoutNum}`;
+      window.location.href = `./works/works.html?color=${colorParam}&layout=${layoutNum}`;
     } else {
       window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
     }
