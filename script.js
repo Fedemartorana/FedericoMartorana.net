@@ -42,15 +42,12 @@ selectedOrder.forEach(label => {
   span.style.color = color;
   span.style.cursor = "pointer";
 
-  // Comportamento cliccabile per ogni sezione
-  span.addEventListener("click", () => {
-    const colorParam = encodeURIComponent(color);
-    const section = label.toLowerCase();
-    window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
-  });
-
-  textContainer.appendChild(span);
+span.addEventListener("click", () => {
+  const colorParam = encodeURIComponent(color);
+  const section = label.toLowerCase();
+  window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
 });
+
 
 // Aggiorna indicatore reality
 layoutText.textContent = `Reality ${layoutNum} / ${totalLayouts}`;
