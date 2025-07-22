@@ -18,8 +18,7 @@ function getAllPermutations(arr) {
   const perms = [];
   arr.forEach((item, i) => {
     const rest = arr.slice(0, i).concat(arr.slice(i + 1));
-    const subPerms = getAllPermutations(rest);
-    subPerms.forEach(p => perms.push([item, ...p]));
+    getAllPermutations(rest).forEach(p => perms.push([item, ...p]));
   });
   return perms;
 }
@@ -43,24 +42,18 @@ selectedOrder.forEach(label => {
   span.style.color = color;
   span.style.cursor = "pointer";
 
-  // Aggiungi il comportamento cliccabile per ogni sezione
+  // Comportamento cliccabile per ogni sezione
   span.addEventListener("click", () => {
     const colorParam = encodeURIComponent(color);
     const section = label.toLowerCase();
-
-    // Percorso personalizzato per WORKS
-    if (section === "works") {
-      window.location.href = `./works/works.html?color=${colorParam}&layout=${layoutNum}`;
-    } else {
-      window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
-    }
+    window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
   });
 
   textContainer.appendChild(span);
 });
 
 // Aggiorna indicatore reality
-layoutText.textContent = `Reality ${layoutNum} / 240`;
+layoutText.textContent = `Reality ${layoutNum} / ${totalLayouts}`;
 
 // Cursore personalizzato
 const cursor = document.createElement('div');
@@ -89,7 +82,7 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Colore dinamico per indicatore data, layout e posizione cursore
+// Colore dinamico per data, layout e cursore
 dateTimeSpan.style.color = color;
 layoutText.style.color = color;
 cursorPosition.style.color = color;
