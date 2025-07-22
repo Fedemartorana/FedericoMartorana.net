@@ -41,6 +41,35 @@
     color: transparent; /* Inizialmente invisibile */
 }
 
+/* Indicatore layout e data */
+#layout-indicator {
+    position: fixed;
+    bottom: 10px;
+    width: 99%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+    font-family: monospace;
+    font-size: 10px;
+    z-index: 1000;
+}
+
+/* Cursore custom */
+#custom-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 9999;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    transition: color 0.3s;
+}
+
+
 /* Responsive per tablet e mobile */
 @media (max-width: 768px) {
     .works-container {
