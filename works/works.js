@@ -1,6 +1,8 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000'; // Default fallback nero
+const LayoutNum = urlParams.get('color') || '#000';
+
 
 const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
