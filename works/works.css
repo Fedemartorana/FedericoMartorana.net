@@ -45,7 +45,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: #color;
+    background: transparent;
     color: #color;
     display: flex;
     justify-content: center;
