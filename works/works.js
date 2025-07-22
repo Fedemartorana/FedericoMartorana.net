@@ -6,6 +6,9 @@ const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
 
+// Imposta il colore di sfondo dinamicamente nel body
+document.body.style.background = color;
+
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
     { title: "Progetto 1", image: "img/progetto1.jpg" },
@@ -32,15 +35,16 @@ projects.forEach(project => {
     const overlay = document.createElement('div');
     overlay.className = 'project-overlay';
     overlay.textContent = project.title;
+    overlay.style.color = 'transparent';
 
     // Hover effect
     square.addEventListener('mouseenter', () => {
-        overlay.style.background = `rgba(0,0,0,0.5)`;
-        overlay.style.color = color;
+        overlay.style.background = hexToRgba(color, 0.5);
+        overlay.style.color = '#000'; // testo nero sull'overlay colorato
     });
 
     square.addEventListener('mouseleave', () => {
-        overlay.style.background = `rgba(0,0,0,0)`;
+        overlay.style.background = 'transparent';
         overlay.style.color = 'transparent';
     });
 
@@ -49,7 +53,7 @@ projects.forEach(project => {
     worksContainer.appendChild(square);
 });
 
-// Indicatore layout (solo indicativo in questa pagina)
+// Indicatore layout
 layoutText.textContent = "Reality - Works View";
 
 // Cursore custom
@@ -57,7 +61,7 @@ const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
 document.body.appendChild(cursor);
-cursor.style.color = color;
+cursor.style.color = '#000'; // sempre nero
 
 // Movimento cursore
 window.addEventListener('mousemove', e => {
@@ -71,13 +75,3 @@ function updateDateTime() {
     const now = new Date();
     const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
                       ' ' +
-                      now.toLocaleTimeString('it-IT', { hour12: false });
-    dateTimeSpan.textContent = formatted;
-}
-updateDateTime();
-setInterval(updateDateTime, 1000);
-
-// Colore dinamico per indicatori
-dateTimeSpan.style.color = color;
-layoutText.style.color = color;
-cursorPosition.style.color = color;
