@@ -48,11 +48,7 @@ span.addEventListener("click", () => {
   const colorParam = encodeURIComponent(color);
   const section = label.toLowerCase();
 
-  if (section === "works") {
-    window.location.href = `Works/Works.html?color=${colorParam}&layout=${layoutNum}`;
-  } else {
     window.location.href = `${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
-  }
 });
 
 textContainer.appendChild(span);
