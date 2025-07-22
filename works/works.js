@@ -52,7 +52,7 @@ projects.forEach(project => {
 });
 
 // Indicatore layout
-layoutText.textContent = `Reality #${layoutNum};
+layoutText.textContent = `Reality #${layoutNum}`;
 
 // Cursore custom
 const cursor = document.createElement('div');
