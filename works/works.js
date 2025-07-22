@@ -10,11 +10,11 @@ const dateTimeSpan = document.querySelector('.date-time');
 
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
-    { title: "Miesian House", image: "img/progetto1.jpg" },
-    { title: "Hypogeum", image: "img/progetto2.jpg" },
-    { title: "House Atelier", image: "img/progetto3.jpg" },
-    { title: "Archive, Exhibit, Inhabit", image: "img/progetto4.jpg" },
-    { title: "Tetra", image: "img/progetto5.jpg" }
+    { title: "Miesian House", image: "img/miesianhouse.jpg" },
+    { title: "Hypogeum", image: "img/hypogeum.jpg" },
+    { title: "House Atelier", image: "img/houseatelier.jpg" },
+    { title: "Archive, Exhibit, Inhabit", image: "img/archiveexhibitinhabit.jpg" },
+    { title: "Tetra", image: "img/tetra.jpg" }
 
 ];
 
