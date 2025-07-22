@@ -25,7 +25,7 @@ const projects = [
 projects.forEach(project => {
     const square = document.createElement('div');
     square.className = 'project-square';
-    square.style.border = `1px solid ${color}`;
+    square.style.border = `0px solid ${color}`;
 
     const img = document.createElement('img');
     img.src = project.image;
