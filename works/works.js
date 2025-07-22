@@ -10,7 +10,7 @@ const dateTimeSpan = document.querySelector('.date-time');
 
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
-    { title: "Progetto 1", image: "works/img/progetto1.jpeg" },
+    { title: "Progetto 1", image: "img/progetto1.jpg" },
     { title: "Progetto 2", image: "img/progetto2.jpg" },
     { title: "Progetto 3", image: "img/progetto3.jpg" },
     { title: "Progetto 4", image: "img/progetto4.jpg" },
