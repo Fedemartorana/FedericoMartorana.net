@@ -1,0 +1,92 @@
+/* Nasconde il cursore standard */
+html, body, * {
+    cursor: none !important;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: monospace;
+    overflow: hidden;
+}
+
+/* Container quadrati */
+.works-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 50px;
+}
+
+/* Singolo quadrato */
+.project-square {
+    position: relative;
+    width: 250px;
+    height: 250px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+/* Immagine del progetto */
+.project-square img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* Overlay */
+.project-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0);
+    color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    font-size: 1.2rem;
+    transition: background 0.3s, color 0.3s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .project-square {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* Indicatore layout e data */
+#layout-indicator {
+    position: fixed;
+    bottom: 10px;
+    width: 99%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 5px;
+    font-family: monospace;
+    font-size: 10px;
+    z-index: 1000;
+}
+
+/* Cursore custom */
+#custom-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 9999;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    transition: color 0.3s;
+}
