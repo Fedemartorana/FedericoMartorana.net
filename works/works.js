@@ -52,7 +52,7 @@ projects.forEach(project => {
 });
 
 // Indicatore layout
-layoutText.textContent = `Reality #${combinationNumber};
+layoutText.textContent = `Reality #${layoutNum};
 
 // Cursore custom
 const cursor = document.createElement('div');
