@@ -39,7 +39,7 @@ projects.forEach(project => {
     // Hover effect
     square.addEventListener('mouseenter', () => {
         overlay.style.background = hexToRgba(color, 0.5);
-        overlay.style.color = '#000'; // testo nero sull'overlay colorato
+        overlay.style.color = color; 
     });
 
     square.addEventListener('mouseleave', () => {
