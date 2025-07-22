@@ -60,7 +60,7 @@ const cursor = document.createElement('div');
 cursor.id = 'custom-cursor';
 cursor.textContent = '+';
 document.body.appendChild(cursor);
-cursor.style.color = '#000'; // sempre nero
+cursor.style.color = color;
 
 // Movimento cursore
 window.addEventListener('mousemove', e => {
