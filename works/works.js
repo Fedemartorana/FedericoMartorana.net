@@ -11,7 +11,12 @@ const projects = [
     { title: "Progetto 1", image: "img/progetto1.jpg" },
     { title: "Progetto 2", image: "img/progetto2.jpg" },
     { title: "Progetto 3", image: "img/progetto3.jpg" },
-    { title: "Progetto 4", image: "img/progetto4.jpg" }
+    { title: "Progetto 4", image: "img/progetto4.jpg" },
+    { title: "Progetto 5", image: "img/progetto5.jpg" },
+    { title: "Progetto 6", image: "img/progetto6.jpg" },
+    { title: "Progetto 7", image: "img/progetto7.jpg" },
+    { title: "Progetto 8", image: "img/progetto8.jpg" },
+    { title: "Progetto 9", image: "img/progetto9.jpg" }
 ];
 
 // Genera quadrati progetto
