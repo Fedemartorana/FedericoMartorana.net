@@ -1,13 +1,12 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
-const color = urlParams.get('color') || '#000'; // Default fallback
+const color = urlParams.get('color') || '#000'; // Default fallback nero
 
 const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
 
-// Imposta il colore di sfondo dinamicamente nel body
-document.body.style.background = transparent;
+// Non modificare lo sfondo del body: resta bianco come da CSS
 
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
@@ -81,7 +80,7 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Colore dinamico per indicatori
+// Colore dinamico per indicatori (nero fisso)
 dateTimeSpan.style.color = '#000';
 layoutText.style.color = '#000';
 cursorPosition.style.color = '#000';
@@ -91,11 +90,11 @@ function hexToRgba(hex, alpha) {
     let c;
     if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
         c = hex.substring(1).split('');
-        if(c.length==3){
-            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        if(c.length === 3){
+            c = [c[0], c[0], c[1], c[1], c[2], c[2]];
         }
-        c= '0x'+c.join('');
-        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+alpha+')';
+        c = '0x' + c.join('');
+        return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
     }
-    return 'rgba(0,0,0,'+alpha+')'; // fallback nero
+    return 'rgba(0,0,0,' + alpha + ')'; // fallback nero
 }
