@@ -95,3 +95,8 @@ function hexToRgba(hex, alpha) {
     }
     return 'rgba(0,0,0,' + alpha + ')'; // fallback nero
 }
+
+// Colore dinamico per data, layout e cursore
+dateTimeSpan.style.color = color;
+layoutText.style.color = color;
+cursorPosition.style.color = color;
