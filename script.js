@@ -43,15 +43,20 @@ selectedOrder.forEach(label => {
   span.style.color = color;
   span.style.cursor = "pointer";
 
-  // Aggiungi il comportamento cliccabile per ogni sezione
-  span.addEventListener("click", () => {
-    const colorParam = encodeURIComponent(color);
-    const section = label.toLowerCase();
-    window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
-  });
+// Aggiungi il comportamento cliccabile per ogni sezione
+span.addEventListener("click", () => {
+  const colorParam = encodeURIComponent(color);
+  const section = label.toLowerCase();
 
-  textContainer.appendChild(span);
+  if (section === "works") {
+    window.location.href = `Works/Works.html?color=${colorParam}&layout=${layoutNum}`;
+  } else {
+    window.location.href = `${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
+  }
 });
+
+textContainer.appendChild(span);
+
 
 // Aggiorna indicatore reality
 layoutText.textContent = `Reality ${layoutNum} / 240`;
