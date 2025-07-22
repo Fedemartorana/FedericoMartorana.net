@@ -47,12 +47,17 @@ selectedOrder.forEach(label => {
   span.addEventListener("click", () => {
     const colorParam = encodeURIComponent(color);
     const section = label.toLowerCase();
-    window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
+
+    // Percorso personalizzato per WORKS
+    if (section === "works") {
+      window.location.href = `./Works/Works.html?color=${colorParam}&layout=${layoutNum}`;
+    } else {
+      window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
+    }
   });
 
   textContainer.appendChild(span);
 });
-
 
 // Aggiorna indicatore reality
 layoutText.textContent = `Reality ${layoutNum} / 240`;
@@ -84,7 +89,7 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Colore dinamico anche per data e indicatore layout
+// Colore dinamico per indicatore data, layout e posizione cursore
 dateTimeSpan.style.color = color;
 layoutText.style.color = color;
 cursorPosition.style.color = color;
