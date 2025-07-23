@@ -1,7 +1,7 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000'; // Default fallback nero
-const layoutNum = urlParams.get('layoutNum');
+const realityNum = urlParams.get('layoutNum');
 
 
 const layoutText = document.getElementById("layout-text");
@@ -52,7 +52,7 @@ projects.forEach(project => {
 });
 
 // Indicatore layout
-layoutText.textContent = `Reality #${layoutNum}`;
+layoutText.textContent = `Reality #${realityNum}`;
 
 // Cursore custom
 const cursor = document.createElement('div');
