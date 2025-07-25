@@ -22,9 +22,11 @@ html, body, * {
 
 /* Immagine del progetto */
 .project-square img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    width: 50%;
+    height: auto;
+    margin: 0 auto;
+    position: relative;
+    transform: translateY(-50%);
     display: block;
 }
 
