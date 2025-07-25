@@ -45,7 +45,7 @@ selectedOrder.forEach(label => {
   span.addEventListener("click", () => {
     const colorParam = encodeURIComponent(color);
     const section = label.toLowerCase();
-    window.location.href = `./${section}/${section}.html?color=${colorParam}&layout=${layoutNum}`;
+    window.location.href = `./${section}/${section}.html?color=${colorParam}&layoutNum=${layoutNum}`;
   });
 
   textContainer.appendChild(span);
