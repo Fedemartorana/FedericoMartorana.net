@@ -17,8 +17,9 @@ html, body, * {
     position: relative;
     width: 100%;
     height: 100%;
-    justify-content: center;  /* centro orizzontale */
-    align-items: center; 
+    display: flex;           /* <-- aggiungi questo */
+    justify-content: center;
+    align-items: center;
     overflow: hidden;
 }
 
@@ -26,11 +27,9 @@ html, body, * {
 .project-square img {
     width: 50%;
     height: auto;
-    margin: 0 auto;
-    position: relative;
-    allign-items: center;
     display: block;
 }
+
 
 /* Overlay */
 .project-overlay {
