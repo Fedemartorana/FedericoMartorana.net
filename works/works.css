@@ -26,7 +26,7 @@ html, body, * {
     height: auto;
     margin: 0 auto;
     position: relative;
-    transform: translateY(-50%);
+    allign-items: center;
     display: block;
 }
 
