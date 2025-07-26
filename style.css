@@ -1,6 +1,6 @@
 :root {
     --date-time-color: #ffffff; /* bianco */
-    --reality-color: #000000; /* valore aggiornato via JS */
+    --reality-color: #000000;   /* aggiornato via JS */
 }
 
 /* Nasconde il cursore di sistema ovunque */
@@ -11,7 +11,7 @@ html, body, * {
 body {
     margin: 0;
     padding: 0;
-    background: rgb(255, 255, 255);
+    background: #ffffff;
     font-family: monospace;
     overflow: hidden;
 }
@@ -48,7 +48,7 @@ body {
     }
 }
 
-/* Fascia inferiore fissa colorata (della reality) */
+/* Fascia inferiore fissa colorata */
 #layout-indicator {
     position: fixed;
     bottom: 0;
@@ -64,7 +64,7 @@ body {
     box-sizing: border-box;
 }
 
-/* Colore del testo bianco */
+/* Scritte bianche nella fascia */
 .date-time, #layout-text, #cursor-position {
     color: var(--date-time-color);
     transition: color 0.3s;
