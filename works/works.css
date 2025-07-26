@@ -2,6 +2,7 @@
 html, body, * {
     cursor: none !important;
 }
+
 /* Container rettangoli */
 .works-container {
     display: grid;
@@ -17,7 +18,7 @@ html, body, * {
     position: relative;
     width: 100%;
     height: 100%;
-    display: flex;           /* <-- aggiungi questo */
+    display: flex;           
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -29,7 +30,6 @@ html, body, * {
     height: auto;
     display: block;
 }
-
 
 /* Overlay */
 .project-overlay {
@@ -46,7 +46,7 @@ html, body, * {
     text-transform: uppercase;
     font-size: 2.5rem;
     transition: background 0.3s, color 0.3s;
-    color: transparent; /* Inizialmente invisibile */
+    color: transparent;
 }
 
 /* Fascia colorata in basso */
@@ -63,7 +63,7 @@ html, body, * {
   align-items: center;
   font-family: monospace;
   font-size: 10px;
-  color: white;
+  color: white; /* testo bianco */
   padding: 0 5px;
   pointer-events: none; /* non interferisce con click o hover */
 }
@@ -83,11 +83,10 @@ html, body, * {
     transition: color 0.3s;
 }
 
-
 /* Responsive per tablet e mobile */
 @media (max-width: 768px) {
     .works-container {
         grid-template-columns: 1fr;
-        grid-auto-rows: 50vh; /* Rettangoli sempre metà viewport */
+        grid-auto-rows: 50vh;
     }
 }
