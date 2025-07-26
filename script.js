@@ -9,10 +9,10 @@ const colors = [
   "#88a07e", "#899eaa", "#9b9fc2", "#4d4639", "#1d1d1b"
 ];
 
-// Scritte
+// Etichette
 const labels = ["works", "papers", "info", "contacts"];
 
-// Genera tutte le permutazioni delle 4 parole (24 combinazioni)
+// Tutte le permutazioni delle parole (24 combinazioni)
 function getAllPermutations(arr) {
   if (arr.length <= 1) return [arr];
   const perms = [];
@@ -26,7 +26,7 @@ function getAllPermutations(arr) {
 const textPermutations = getAllPermutations(labels);
 const totalLayouts = textPermutations.length * colors.length;
 
-// Genera layout casuale
+// Layout casuale
 const randomColorIndex = Math.floor(Math.random() * colors.length);
 const randomTextPermutation = Math.floor(Math.random() * textPermutations.length);
 const layoutNum = randomColorIndex * textPermutations.length + randomTextPermutation + 1;
@@ -34,10 +34,10 @@ const layoutNum = randomColorIndex * textPermutations.length + randomTextPermuta
 const color = colors[randomColorIndex];
 const selectedOrder = textPermutations[randomTextPermutation];
 
-// ⬇️ Imposta il colore della reality come variabile CSS globale
+// ⬇️ Imposta il colore della reality (fascia)
 document.documentElement.style.setProperty('--reality-color', color);
 
-// Crea le scritte con ordine e colore casuali
+// Crea le scritte in ordine casuale
 selectedOrder.forEach(label => {
   const span = document.createElement("span");
   span.textContent = label;
@@ -66,7 +66,7 @@ document.body.appendChild(cursor);
 // Stile cursore
 cursor.style.color = color;
 
-// Movimento del cursore
+// Movimento cursore
 window.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top = e.clientY + 'px';
@@ -83,8 +83,3 @@ function updateDateTime() {
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
-
-// Colore dinamico per data, layout e cursore
-dateTimeSpan.style.color = color;
-layoutText.style.color = color;
-cursorPosition.style.color = color;
