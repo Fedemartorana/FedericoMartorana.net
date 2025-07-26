@@ -10,7 +10,7 @@ const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
 
-// Lista progetti (sostituisci con i tuoi dati reali)
+// Lista progetti
 const projects = [
     { title: "Miesian House", image: "/img/miesianhouse.jpg" },
     { title: "Hypogeum", image: "/img/hypogeum.jpg" },
@@ -32,15 +32,19 @@ projects.forEach(project => {
     const overlay = document.createElement('div');
     overlay.className = 'project-overlay';
 
-    // Creo il link cliccabile per il titolo
+    // Genera nome cartella/HTML basato sul titolo
+    const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
+    const projectUrl = `projects/${projectFolder}/${projectFolder}.html`;
+
+    // Crea il link cliccabile per il titolo
     const titleLink = document.createElement('a');
     titleLink.textContent = project.title;
-    titleLink.href = `project.html?project=${encodeURIComponent(project.title)}`;
+    titleLink.href = projectUrl;
     titleLink.style.color = 'transparent'; // invisibile inizialmente
     titleLink.style.textDecoration = 'none';
     titleLink.style.cursor = 'pointer';
 
-    // Hover effect per overlay e link insieme
+    // Hover effect
     square.addEventListener('mouseenter', () => {
         overlay.style.background = hexToRgba(color, 0.5);
         overlay.style.color = color;
@@ -54,7 +58,6 @@ projects.forEach(project => {
     });
 
     overlay.appendChild(titleLink);
-
     square.appendChild(img);
     square.appendChild(overlay);
     worksContainer.appendChild(square);
