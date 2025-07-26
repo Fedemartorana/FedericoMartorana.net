@@ -73,7 +73,7 @@ html, body, * {
     pointer-events: none;
     z-index: 9999;
     user-select: none;
-    transform: translate(-50%, -50%);
+    transform: translate(-0%, -0%);
     transition: color 0.3s;
 }
 
