@@ -36,13 +36,14 @@ projects.forEach(project => {
     const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
     const projectUrl = `projects/${projectFolder}/${projectFolder}.html`;
 
-    // Crea il link cliccabile per il titolo
-    const titleLink = document.createElement('a');
-    titleLink.textContent = project.title;
-    titleLink.href = projectUrl;
-    titleLink.style.color = 'transparent'; // invisibile inizialmente
-    titleLink.style.textDecoration = 'none';
-    titleLink.style.cursor = 'pointer';
+const titleLink = document.createElement('a');
+titleLink.textContent = project.title;
+const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
+titleLink.href = `/projects/${projectFolder}/${projectFolder}.html`;
+titleLink.style.color = 'transparent';
+titleLink.style.textDecoration = 'none';
+titleLink.style.cursor = 'pointer';
+
 
     // Hover effect
     square.addEventListener('mouseenter', () => {
