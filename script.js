@@ -34,6 +34,9 @@ const layoutNum = randomColorIndex * textPermutations.length + randomTextPermuta
 const color = colors[randomColorIndex];
 const selectedOrder = textPermutations[randomTextPermutation];
 
+// ⬇️ Imposta il colore della reality come variabile CSS globale
+document.documentElement.style.setProperty('--reality-color', color);
+
 // Crea le scritte con ordine e colore casuali
 selectedOrder.forEach(label => {
   const span = document.createElement("span");
