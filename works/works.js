@@ -1,6 +1,6 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
-const color = urlParams.get('color') || '#000'; // Default fallback nero
+const color = urlParams.get('color') || '#000'; // Colore fallback nero
 const realityNum = urlParams.get('layoutNum');
 
 // Imposta colore dinamico per il footer tramite variabile CSS
@@ -10,7 +10,7 @@ const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
 
-// Lista progetti
+// Lista dei progetti
 const projects = [
     { title: "Miesian House", image: "/img/miesianhouse.jpg" },
     { title: "Hypogeum", image: "/img/hypogeum.jpg" },
@@ -19,7 +19,7 @@ const projects = [
     { title: "Tetra", image: "/img/tetra.jpg" }
 ];
 
-// Genera quadrati progetto
+// Generazione dinamica dei riquadri
 projects.forEach(project => {
     const square = document.createElement('div');
     square.className = 'project-square';
@@ -32,18 +32,13 @@ projects.forEach(project => {
     const overlay = document.createElement('div');
     overlay.className = 'project-overlay';
 
-    // Genera nome cartella/HTML basato sul titolo
     const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
-    const projectUrl = `projects/${projectFolder}/${projectFolder}.html`;
-
-const titleLink = document.createElement('a');
-titleLink.textContent = project.title;
-const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
-titleLink.href = `/projects/${projectFolder}/${projectFolder}.html`;
-titleLink.style.color = 'transparent';
-titleLink.style.textDecoration = 'none';
-titleLink.style.cursor = 'pointer';
-
+    const titleLink = document.createElement('a');
+    titleLink.textContent = project.title;
+    titleLink.href = `/projects/${projectFolder}/${projectFolder}.html`;
+    titleLink.style.color = 'transparent';
+    titleLink.style.textDecoration = 'none';
+    titleLink.style.cursor = 'pointer';
 
     // Hover effect
     square.addEventListener('mouseenter', () => {
@@ -64,7 +59,7 @@ titleLink.style.cursor = 'pointer';
     worksContainer.appendChild(square);
 });
 
-// Indicatore layout
+// Imposta numero layout
 layoutText.textContent = `Reality #${realityNum}`;
 
 // Cursore custom
@@ -92,12 +87,12 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Colore dinamico per data, layout e cursore (testo bianco)
+// Colore testo elementi del footer
 dateTimeSpan.style.color = '#ffffff';
 layoutText.style.color = '#ffffff';
 cursorPosition.style.color = '#ffffff';
 
-// Funzione per convertire HEX in RGBA con opacità
+// Funzione HEX → RGBA
 function hexToRgba(hex, alpha) {
     let c;
     if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
