@@ -3,12 +3,12 @@ const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000'; // Default fallback nero
 const realityNum = urlParams.get('layoutNum');
 
+// Imposta colore dinamico per il footer tramite variabile CSS
+document.documentElement.style.setProperty('--reality-color', color);
 
 const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
-
-// Non modificare lo sfondo del body: resta bianco come da CSS
 
 // Lista progetti (sostituisci con i tuoi dati reali)
 const projects = [
@@ -17,7 +17,6 @@ const projects = [
     { title: "House Atelier", image: "img/houseatelier.jpg" },
     { title: "Archive, Exhibit, Inhabit", image: "img/archiveexhibitinhabit.jpg" },
     { title: "Tetra", image: "img/tetra.jpg" }
-
 ];
 
 // Genera quadrati progetto
@@ -38,7 +37,7 @@ projects.forEach(project => {
     // Hover effect
     square.addEventListener('mouseenter', () => {
         overlay.style.background = hexToRgba(color, 0.5);
-        overlay.style.color = color; 
+        overlay.style.color = color;
     });
 
     square.addEventListener('mouseleave', () => {
@@ -79,10 +78,10 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Colore dinamico per indicatori (nero fisso)
-dateTimeSpan.style.color = '#000';
-layoutText.style.color = '#000';
-cursorPosition.style.color = '#000';
+// Colore dinamico per data, layout e cursore (testo bianco)
+dateTimeSpan.style.color = '#ffffff';
+layoutText.style.color = '#ffffff';
+cursorPosition.style.color = '#ffffff';
 
 // Funzione per convertire HEX in RGBA con opacità
 function hexToRgba(hex, alpha) {
@@ -93,12 +92,4 @@ function hexToRgba(hex, alpha) {
             c = [c[0], c[0], c[1], c[1], c[2], c[2]];
         }
         c = '0x' + c.join('');
-        return 'rgba(' + [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') + ',' + alpha + ')';
-    }
-    return 'rgba(0,0,0,' + alpha + ')'; // fallback nero
-}
-
-// Colore dinamico per data, layout e cursore
-dateTimeSpan.style.color = '#ffffff';
-layoutText.style.color = '#ffffff';
-cursorPosition.style.color = '#ffffff';
+        return 'rgba(' + [(c >> 16) & 255, (c]()
