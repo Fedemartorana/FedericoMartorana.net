@@ -99,6 +99,6 @@ function hexToRgba(hex, alpha) {
 }
 
 // Colore dinamico per data, layout e cursore
-dateTimeSpan.style.color = #ffffff;
-layoutText.style.color = #ffffff;
-cursorPosition.style.color = #ffffff;
+dateTimeSpan.style.color = '#ffffff';
+layoutText.style.color = '#ffffff';
+cursorPosition.style.color = '#ffffff';
