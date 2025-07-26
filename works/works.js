@@ -31,19 +31,29 @@ projects.forEach(project => {
 
     const overlay = document.createElement('div');
     overlay.className = 'project-overlay';
-    overlay.textContent = project.title;
-    overlay.style.color = 'transparent';
 
-    // Hover effect
+    // Creo il link cliccabile per il titolo
+    const titleLink = document.createElement('a');
+    titleLink.textContent = project.title;
+    titleLink.href = `project.html?project=${encodeURIComponent(project.title)}`;
+    titleLink.style.color = 'transparent'; // invisibile inizialmente
+    titleLink.style.textDecoration = 'none';
+    titleLink.style.cursor = 'pointer';
+
+    // Hover effect per overlay e link insieme
     square.addEventListener('mouseenter', () => {
         overlay.style.background = hexToRgba(color, 0.5);
         overlay.style.color = color;
+        titleLink.style.color = color;
     });
 
     square.addEventListener('mouseleave', () => {
         overlay.style.background = 'transparent';
         overlay.style.color = 'transparent';
+        titleLink.style.color = 'transparent';
     });
+
+    overlay.appendChild(titleLink);
 
     square.appendChild(img);
     square.appendChild(overlay);
