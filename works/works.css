@@ -73,9 +73,9 @@ html, body, * {
     position: fixed;
     left: 0;
     top: 0;
-    width: 200px;
-    height: 200px;
-    font-size: 200px;
+    width: 30px;
+    height: 30px;
+    font-size: 30px;
     pointer-events: none;
     z-index: 9999;
     user-select: none;
