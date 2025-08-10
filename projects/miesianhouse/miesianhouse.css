@@ -60,22 +60,6 @@ html, body {
   user-select: none;
 }
 
-/* Se usi ancora #layout-indicator per testo sopra la fascia (opzionale) */
-#layout-indicator {
-  position: fixed;
-  bottom: 30px; /* leggermente sopra la fascia */
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 15px;
-  font-family: monospace;
-  font-size: 10px;
-  color: white;
-  z-index: 1000;
-  pointer-events: none;
-}
-
 /* Cursore personalizzato */
 #custom-cursor {
   position: fixed;
