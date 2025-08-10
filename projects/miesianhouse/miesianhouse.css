@@ -6,6 +6,9 @@ html, body {
   color: black;
   cursor: none;
 }
+a {
+  cursor: none;
+}
 
 .project-container {
   padding: 3rem 2rem;
