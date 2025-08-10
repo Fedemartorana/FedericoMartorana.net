@@ -32,8 +32,9 @@ html, body {
 .project-description {
   font-size: 1rem;
   line-height: 1.6;
-  white-space: pre-wrap;  /* Rispetta spazi e a capo nel testo */
+  white-space: pre-wrap;
 }
+
 /* Contenitore immagini aggiuntive */
 .additional-images {
   display: flex;
@@ -43,11 +44,11 @@ html, body {
 
 .additional-image {
   position: relative;  /* serve per posizionare il ::after */
-  cursor: pointer;
+  cursor: default;     /* cursore predefinito sulle immagini aggiuntive */
   border-radius: 4px;
   overflow: hidden;
   display: block;
-  transition: transform 0.3s ease; /* opzionale per effetto leggero */
+  transition: transform 0.3s ease;
 }
 
 /* Pseudo-elemento overlay colorato */
@@ -60,15 +61,13 @@ html, body {
   transition: opacity 0.3s ease;
   pointer-events: none;
   border-radius: 4px;
-  mix-blend-mode: multiply; /* o prova overlay, soft-light a piacere */
+  mix-blend-mode: multiply;
 }
 
 /* Al passaggio del mouse, mostra la patina colorata */
 .additional-image:hover::after {
-  opacity: 0.35;  /* intensità della patina, modifica a piacere */
+  opacity: 0.35;
 }
-
-/* Per rendere l’immagine responsive basta width 100% e height auto */
 
 /* Fullscreen overlay */
 #fullscreen-overlay {
@@ -106,7 +105,7 @@ html, body {
   font-size: 0.9rem;
   border: none;
   align-self: flex-start;
-  cursor: pointer; /* mostra cursore puntatore */
+  cursor: pointer;
 }
 
 /* Fascia inferiore fissa colorata con testo bianco */
