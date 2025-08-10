@@ -1,87 +1,106 @@
-html, body {
+:root {
+  --reality-color: #000000;
+}
+
+body {
   margin: 0;
   padding: 0;
-  font-family: Helvetica, sans-serif;
-  background: white;
+  background-color: white;
   color: black;
-  cursor: none; /* Nasconde cursore di default */
+  font-family: sans-serif;
+  cursor: none; /* nasconde cursore di sistema */
 }
 
-.project-container {
-  padding: 3rem 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+a {
+  text-decoration: none;
+  color: inherit;
+  cursor: none; /* nasconde cursore di sistema anche su link */
 }
 
-.project-title {
-  font-size: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-}
-
-.project-image {
-  width: 100%;
+img {
+  max-width: 100%;
   height: auto;
-  object-fit: contain;
+  cursor: none; /* nasconde cursore di sistema sulle immagini */
 }
 
-.project-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
-/* Contenitore immagini aggiuntive */
-.additional-images {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.additional-image {
-  position: relative;  /* serve per posizionare il ::after */
-  cursor: default;     /* cursore predefinito sulle immagini aggiuntive */
-  border-radius: 4px;
-  overflow: hidden;
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-/* Pseudo-elemento overlay colorato */
-.additional-image::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--reality-color);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* Cursore personalizzato */
+#custom-cursor {
+  position: fixed;
   pointer-events: none;
-  border-radius: 4px;
-  mix-blend-mode: multiply;
+  font-size: 14px;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  transition: transform 0.15s ease, color 0.15s ease;
 }
 
-/* Al passaggio del mouse, mostra la patina colorata */
-.additional-image:hover::after {
-  opacity: 0.35;
+/* Posizione coordinate */
+#cursor-position {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  font-size: 12px;
+  z-index: 9999;
+  pointer-events: none;
 }
 
-/* Fullscreen overlay */
+/* Barra superiore Reality */
+#layout-text {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: var(--reality-color);
+  padding: 5px 10px;
+  color: white;
+  font-weight: bold;
+}
+
+/* Data e ora */
+.date-time {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background-color: var(--reality-color);
+  padding: 5px 10px;
+  color: white;
+}
+
+/* Titolo progetto */
+.project-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+/* Link Back */
+#back-link {
+  display: inline-block;
+  margin: 20px 0;
+  font-weight: bold;
+}
+
+/* Immagini aggiuntive */
+.additional-image {
+  display: block;
+  margin: 20px 0;
+  transition: opacity 0.3s ease;
+}
+
+.additional-image:hover {
+  opacity: 0.8;
+}
+
+/* Overlay fullscreen */
 #fullscreen-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.9);
+  background-color: rgba(0,0,0,0.9);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 10000;
-  cursor: zoom-out;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -93,51 +112,16 @@ html, body {
 }
 
 #fullscreen-overlay img {
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: 6px;
-  box-shadow: 0 0 20px rgba(255,255,255,0.5);
+  max-width: 90%;
+  max-height: 90%;
 }
 
-#back-link {
-  text-decoration: none;
-  font-size: 0.9rem;
-  border: none;
-  align-self: flex-start;
-  cursor: pointer;
-}
-
-/* Fascia inferiore fissa colorata con testo bianco */
-#layout-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: var(--reality-color, #000);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 15px;
-  font-family: monospace;
-  font-size: 12px;
-  color: white;
-  z-index: 1000;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-/* Cursore personalizzato */
-#custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  transition: color 0.3s;
+/* Responsive */
+@media (max-width: 768px) {
+  .project-title {
+    font-size: 1.5rem;
+  }
+  #layout-text, .date-time {
+    font-size: 0.9rem;
+  }
 }
