@@ -39,6 +39,8 @@ html, body {
   font-size: 0.9rem;
   border: none;
   align-self: flex-start;
+  cursor: none; /* elimina cursore default */
+  color: inherit; /* mantiene colore dinamico */
 }
 
 /* Fascia inferiore fissa colorata con testo bianco */
