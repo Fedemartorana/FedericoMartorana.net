@@ -1,19 +1,17 @@
+// Leggi parametri URL per colore e layout
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
-const layout = urlParams.get('layoutNum') || '–';  // Legge il parametro corretto
+const layout = urlParams.get('layoutNum') || '–';
 
-// Elementi DOM
+// Imposta variabile CSS per colore fascia
+document.documentElement.style.setProperty('--reality-color', color);
+
+// Aggiorna testo Reality
 const layoutText = document.getElementById("layout-text");
-const dateTimeSpan = document.querySelector('.date-time');
-const cursor = document.getElementById('custom-cursor');
-const cursorPosition = document.getElementById('cursor-position');
-const backLink = document.getElementById('back-link');
-const projectTitle = document.querySelector('.project-title');
-
-// Imposta testo Reality con numero
 layoutText.textContent = `Reality #${layout}`;
 
-// Funzione aggiornamento data e ora
+// Aggiorna data e ora
+const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
   const formatted = now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', { hour12: false });
@@ -22,20 +20,26 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Imposta colori dinamici
+// Cursore personalizzato e coordinate
+const cursor = document.getElementById('custom-cursor');
+const cursorPosition = document.getElementById('cursor-position');
 cursor.style.color = color;
-layoutText.style.color = '#fff';          // sempre bianco nella barra
-dateTimeSpan.style.color = '#fff';        // sempre bianco nella barra
-cursorPosition.style.color = '#fff';      // sempre bianco nella barra
-projectTitle.style.color = color;
-backLink.style.color = color;
+layoutText.style.color = 'white';       // testo fascia sempre bianco
+dateTimeSpan.style.color = 'white';
+cursorPosition.style.color = 'white';
 
-// Muovi cursore personalizzato
 window.addEventListener('mousemove', e => {
   cursor.style.left = `${e.clientX}px`;
   cursor.style.top = `${e.clientY}px`;
   cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
 });
 
-// Mantieni parametri nel link "back to works"
-backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+// Colore dinamico su elementi della pagina
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
+
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+}
