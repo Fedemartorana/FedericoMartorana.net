@@ -1,8 +1,9 @@
+// Leggi parametri URL per colore e layout
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
-const layout = urlParams.get('layout') || '–';
+const layout = urlParams.get('layoutNum') || '–';
 
-// Imposta variabile CSS per colore reality (usata nel footer)
+// Imposta variabile CSS per colore fascia
 document.documentElement.style.setProperty('--reality-color', color);
 
 // Aggiorna testo Reality
@@ -23,9 +24,9 @@ setInterval(updateDateTime, 1000);
 const cursor = document.getElementById('custom-cursor');
 const cursorPosition = document.getElementById('cursor-position');
 cursor.style.color = color;
-layoutText.style.color = color;
-dateTimeSpan.style.color = 'white';        // testo in fascia bianco
-cursorPosition.style.color = 'white';     // testo in fascia bianco
+layoutText.style.color = 'white';       // testo fascia sempre bianco
+dateTimeSpan.style.color = 'white';
+cursorPosition.style.color = 'white';
 
 window.addEventListener('mousemove', e => {
   cursor.style.left = `${e.clientX}px`;
