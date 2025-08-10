@@ -54,6 +54,23 @@ html, body {
   z-index: 1000;
 }
 
+/* Fascia inferiore fissa colorata */
+#layout-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--reality-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    font-family: monospace;
+    font-size: 10px;
+    z-index: 1000;
+    box-sizing: border-box;
+
+}
+
 #custom-cursor {
   position: fixed;
   left: 0;
