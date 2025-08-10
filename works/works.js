@@ -1,7 +1,7 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
-const color = urlParams.get('color') || '#000'; // Colore fallback nero
-const realityNum = urlParams.get('layoutNum');
+const color = urlParams.get('color') || '#000'; // fallback nero
+const realityNum = urlParams.get('layoutNum') || '–';
 
 // Imposta colore dinamico per il footer tramite variabile CSS
 document.documentElement.style.setProperty('--reality-color', color);
@@ -35,7 +35,15 @@ projects.forEach(project => {
     const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
     const titleLink = document.createElement('a');
     titleLink.textContent = project.title;
-    titleLink.href = `/projects/${projectFolder}/${projectFolder}.html`;
+
+    // Costruisco l'url con parametri per mantenere colore e layout
+    const params = new URLSearchParams();
+    params.set('color', color);
+    if (realityNum) {
+        params.set('layout', realityNum);
+    }
+    titleLink.href = `/projects/${projectFolder}/${projectFolder}.html?${params.toString()}`;
+
     titleLink.style.color = 'transparent';
     titleLink.style.textDecoration = 'none';
     titleLink.style.cursor = 'pointer';
