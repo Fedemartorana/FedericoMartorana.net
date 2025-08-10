@@ -41,5 +41,6 @@ if (projectTitle) projectTitle.style.color = color;
 const backLink = document.getElementById('back-link');
 if (backLink) {
   backLink.style.color = color;
-  backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+  // Imposta link relativo semplice per evitare 404, ma mantiene i parametri URL corretti
+  backLink.href = `./works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
 }
