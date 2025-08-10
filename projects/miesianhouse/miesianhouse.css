@@ -4,7 +4,7 @@ html, body {
   font-family: Helvetica, sans-serif;
   background: white;
   color: black;
-  cursor: none; /* nasconde cursore di default */
+  cursor: none; /* Nasconde il cursore di sistema */
 }
 
 .project-container {
@@ -44,14 +44,14 @@ html, body {
 
 .additional-image {
   position: relative;
-  cursor: none; /* mantiene il cursore personalizzato */
+  cursor: none; /* mantiene cursore personalizzato */
   border-radius: 4px;
   overflow: hidden;
   display: block;
   transition: transform 0.3s ease;
 }
 
-/* Patina colorata */
+/* Patina colorata in hover */
 .additional-image::after {
   content: "";
   position: absolute;
@@ -65,22 +65,15 @@ html, body {
 }
 
 .additional-image:hover::after {
-  opacity: 0.35;
+  opacity: 0.35; /* visibilità patina */
 }
 
-/* Cursore personalizzato */
-#custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  transition: color 0.3s;
+/* Link Back to works */
+#back-link {
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: none;
+  cursor: none; /* cursore personalizzato anche qui */
 }
 
 /* Fascia inferiore */
@@ -100,4 +93,19 @@ html, body {
   z-index: 1000;
   box-sizing: border-box;
   user-select: none;
+}
+
+/* Cursore personalizzato */
+#custom-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  pointer-events: none;
+  z-index: 9999;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: color 0.3s;
 }
