@@ -51,3 +51,26 @@ if (backLink) {
     window.location.href = targetURL;
   });
 }
+// CREA L'ELEMENTO OVERLAY FULLSCREEN
+const fullscreenOverlay = document.createElement('div');
+fullscreenOverlay.id = 'fullscreen-overlay';
+document.body.appendChild(fullscreenOverlay);
+
+// Quando clicco sull'overlay, lo chiudo
+fullscreenOverlay.addEventListener('click', () => {
+  fullscreenOverlay.classList.remove('active');
+  fullscreenOverlay.innerHTML = '';
+});
+
+// Gestione click sulle immagini aggiuntive per aprire fullscreen
+document.querySelectorAll('.additional-image').forEach(img => {
+  img.addEventListener('click', () => {
+    const fullscreenImg = document.createElement('img');
+    fullscreenImg.src = img.src;
+    fullscreenImg.alt = img.alt;
+    fullscreenOverlay.innerHTML = '';  // svuoto prima
+    fullscreenOverlay.appendChild(fullscreenImg);
+    fullscreenOverlay.classList.add('active');
+  });
+});
+
