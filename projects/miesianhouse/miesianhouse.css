@@ -41,24 +41,31 @@ html, body {
   gap: 1.5rem;
 }
 
-/* Immagini aggiuntive - responsivi e con patina hover */
 .additional-image {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+  position: relative;  /* serve per posizionare il ::after */
   cursor: pointer;
-  position: relative;
-  transition: filter 0.3s ease;
   border-radius: 4px;
   overflow: hidden;
   display: block;
+  transition: transform 0.3s ease; /* opzionale per effetto leggero */
 }
 
-/* Patina colore reality al passaggio del mouse */
-.additional-image:hover {
-  filter: brightness(0.6);
-  /* alternativa con overlay pseudo-elemento se vuoi patina semitrasparente */
-  /* oppure usare box-shadow o background overlay con position absolute */
+/* Pseudo-elemento overlay colorato */
+.additional-image::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--reality-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 4px;
+  mix-blend-mode: multiply; /* o prova overlay, soft-light a piacere */
+}
+
+/* Al passaggio del mouse, mostra la patina colorata */
+.additional-image:hover::after {
+  opacity: 0.35;  /* intensità della patina, modifica a piacere */
 }
 
 /* Per rendere l’immagine responsive basta width 100% e height auto */
