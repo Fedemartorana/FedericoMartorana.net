@@ -1,7 +1,7 @@
 // Leggi parametri URL per colore e layout
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
-const layout = urlParams.get('layoutNum') || '–';  // Prendiamo layoutNum per il numero reality
+const layout = urlParams.get('layoutNum') || '–';  // default se assente
 
 // Imposta variabile CSS per colore fascia
 document.documentElement.style.setProperty('--reality-color', color);
@@ -44,10 +44,8 @@ if (backLink) {
   backLink.style.color = color;
   backLink.style.cursor = 'pointer';
 
-  // Uso event listener click per correggere 404: reindirizza con window.location
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
-    // Costruisci URL con parametri mantenendo percorso corretto
     const targetURL = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
     window.location.href = targetURL;
   });
