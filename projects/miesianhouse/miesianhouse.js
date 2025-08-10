@@ -34,6 +34,6 @@ window.addEventListener('mousemove', e => {
 document.querySelector('.project-title').style.color = color;
 document.querySelector('#back-link').style.color = color;
 
-// Mantieni i parametri nella navigazione
+// Mantieni i parametri nella navigazione per il back
 const backLink = document.getElementById('back-link');
-backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${layout}`;
+backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
