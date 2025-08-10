@@ -1,89 +1,94 @@
-// Leggi parametri URL per colore e layout
-const urlParams = new URLSearchParams(window.location.search);
-const color = urlParams.get('color') || '#000000';
-const layout = urlParams.get('layoutNum') || '–';  // default se assente
+// Funzione per ottenere i parametri URL
+function getQueryParam(param) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(param);
+}
 
-// Imposta variabile CSS per colore fascia
-document.documentElement.style.setProperty('--reality-color', color);
+// Gestione colore tema
+const colorFromUrl = getQueryParam('color');
+if (colorFromUrl) {
+  localStorage.setItem('themeColor', colorFromUrl);
+}
+const themeColor = colorFromUrl || localStorage.getItem('themeColor') || "#000";
+document.documentElement.style.setProperty('--theme-color', themeColor);
 
-// Aggiorna testo Reality con numero
-const layoutText = document.getElementById("layout-text");
-layoutText.textContent = `Reality #${layout}`;
+// Dati esempio per i lavori
+const works = [
+  { title: "Progetto 1", description: "Descrizione progetto 1" },
+  { title: "Progetto 2", description: "Descrizione progetto 2" },
+  { title: "Progetto 3", description: "Descrizione progetto 3" },
+  { title: "Progetto 4", description: "Descrizione progetto 4" }
+];
 
-// Aggiorna data e ora
+const worksList = document.getElementById("works-list");
+const workDetails = document.getElementById("work-details");
+
+// Popola la lista lavori
+works.forEach(work => {
+  const item = document.createElement("div");
+  item.className = "work-item";
+  item.textContent = work.title;
+
+  item.addEventListener("click", () => {
+    workDetails.innerHTML = `<h2>${work.title}</h2><p>${work.description}</p>`;
+    document.querySelectorAll('.work-item').forEach(el => el.classList.add('dimmed'));
+    item.classList.remove('dimmed');
+  });
+
+  worksList.appendChild(item);
+});
+
+// --------- Indicatori in basso ---------
+
+// Data e ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
+  if (!dateTimeSpan) return;
   const now = new Date();
-  const formatted = now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', { hour12: false });
+  const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
+                    ' ' +
+                    now.toLocaleTimeString('it-IT', { hour12: false });
   dateTimeSpan.textContent = formatted;
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Cursore personalizzato e coordinate
-const cursor = document.getElementById('custom-cursor');
-const cursorPosition = document.getElementById('cursor-position');
-cursor.style.color = color;
-layoutText.style.color = 'white';       // testo fascia sempre bianco
-dateTimeSpan.style.color = 'white';
-cursorPosition.style.color = 'white';
-
-window.addEventListener('mousemove', e => {
-  cursor.style.left = `${e.clientX}px`;
-  cursor.style.top = `${e.clientY}px`;
-  cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
-});
-
-// Colore dinamico su elementi della pagina
-const projectTitle = document.querySelector('.project-title');
-if (projectTitle) projectTitle.style.color = color;
-
-// Link "Back to works": uso evento click per evitare problemi di routing 404
-const backLink = document.getElementById('back-link');
-if (backLink) {
-  backLink.style.color = color;
-  backLink.style.cursor = 'pointer';
-
-  backLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
-    window.location.href = targetURL;
-  });
+// Reality / layout indicator
+const layoutText = document.getElementById('layout-text');
+const realityFromUrl = getQueryParam('reality') || 0;
+if (layoutText) {
+  layoutText.textContent = `Reality: ${realityFromUrl}`;
 }
 
-// CREA L'ELEMENTO OVERLAY FULLSCREEN
-const fullscreenOverlay = document.createElement('div');
-fullscreenOverlay.id = 'fullscreen-overlay';
-document.body.appendChild(fullscreenOverlay);
+// Cursore personalizzato e posizione
+const cursorPosDisplay = document.getElementById('cursor-position');
 
-// Quando clicco sull'overlay, lo chiudo
-fullscreenOverlay.addEventListener('click', () => {
-  fullscreenOverlay.classList.remove('active');
-  fullscreenOverlay.innerHTML = '';
-});
+// Rimuove eventuale cursore precedente
+const oldCursor = document.getElementById('custom-cursor');
+if (oldCursor) oldCursor.remove();
 
-// Gestione click sulle immagini aggiuntive per aprire fullscreen
-document.querySelectorAll('.additional-image').forEach(img => {
-  img.addEventListener('click', () => {
-    const fullscreenImg = document.createElement('img');
-    fullscreenImg.src = img.src;
-    fullscreenImg.alt = img.alt;
-    fullscreenOverlay.innerHTML = '';
-    fullscreenOverlay.appendChild(fullscreenImg);
-    fullscreenOverlay.classList.add('active');
-  });
-});
+// Cursore custom
+const cursor = document.createElement('div');
+cursor.id = 'custom-cursor';
+cursor.textContent = '+';
+document.body.appendChild(cursor);
 
-// Gestione cursore personalizzato: cambio aspetto su elementi cliccabili (immagini + link)
-const clickableElements = document.querySelectorAll('.additional-image, a');
+cursor.style.position = 'fixed';
+cursor.style.top = '0';
+cursor.style.left = '0';
+cursor.style.transform = 'translate(-50%, -50%)';
+cursor.style.pointerEvents = 'none';
+cursor.style.color = themeColor;
+cursor.style.fontSize = '20px';
+cursor.style.fontFamily = 'monospace';
+cursor.style.zIndex = '9999';
 
-clickableElements.forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.style.color = '#FF0000';  // colore rosso per evidenziare
-    cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.style.color = color;       // colore originale dal parametro URL
-    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-  });
+// Movimento e posizione cursore
+window.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+
+  if (cursorPosDisplay) {
+    cursorPosDisplay.textContent = `Cursor: ${e.clientX}, ${e.clientY}`;
+  }
 });
