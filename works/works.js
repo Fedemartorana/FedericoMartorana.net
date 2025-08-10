@@ -1,6 +1,6 @@
 const worksContainer = document.getElementById('works-container');
 const urlParams = new URLSearchParams(window.location.search);
-const color = urlParams.get('color') || '#000'; // fallback nero
+const color = urlParams.get('color') || '#000000'; // fallback nero
 const realityNum = urlParams.get('layoutNum') || '–';
 
 // Imposta colore dinamico per il footer tramite variabile CSS
@@ -9,6 +9,7 @@ document.documentElement.style.setProperty('--reality-color', color);
 const layoutText = document.getElementById("layout-text");
 const cursorPosition = document.getElementById("cursor-position");
 const dateTimeSpan = document.querySelector('.date-time');
+const customCursor = document.getElementById('custom-cursor');
 
 // Lista dei progetti
 const projects = [
@@ -18,87 +19,6 @@ const projects = [
     { title: "Archive, Exhibit, Inhabit", image: "/img/archiveexhibitinhabit.jpg" },
     { title: "Tetra", image: "/img/tetra.jpg" }
 ];
-
-// Generazione dinamica dei riquadri
-projects.forEach(project => {
-    const square = document.createElement('div');
-    square.className = 'project-square';
-    square.style.border = `0px solid ${color}`;
-
-    const img = document.createElement('img');
-    img.src = project.image;
-    img.alt = project.title;
-
-    const overlay = document.createElement('div');
-    overlay.className = 'project-overlay';
-
-    const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
-    const titleLink = document.createElement('a');
-    titleLink.textContent = project.title;
-
-    // Costruisco l'url con parametri per mantenere colore e layout
-    const params = new URLSearchParams();
-    params.set('color', color);
-    if (realityNum) {
-        params.set('layout', realityNum);
-    }
-    titleLink.href = `/projects/${projectFolder}/${projectFolder}.html?${params.toString()}`;
-
-    titleLink.style.color = 'transparent';
-    titleLink.style.textDecoration = 'none';
-    titleLink.style.cursor = 'pointer';
-
-    // Hover effect
-    square.addEventListener('mouseenter', () => {
-        overlay.style.background = hexToRgba(color, 0.5);
-        overlay.style.color = color;
-        titleLink.style.color = color;
-    });
-
-    square.addEventListener('mouseleave', () => {
-        overlay.style.background = 'transparent';
-        overlay.style.color = 'transparent';
-        titleLink.style.color = 'transparent';
-    });
-
-    overlay.appendChild(titleLink);
-    square.appendChild(img);
-    square.appendChild(overlay);
-    worksContainer.appendChild(square);
-});
-
-// Imposta numero layout
-layoutText.textContent = `Reality #${realityNum}`;
-
-// Cursore custom
-const cursor = document.createElement('div');
-cursor.id = 'custom-cursor';
-cursor.textContent = '+';
-document.body.appendChild(cursor);
-cursor.style.color = color;
-
-// Movimento cursore
-window.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
-});
-
-// Data e ora
-function updateDateTime() {
-    const now = new Date();
-    const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
-                      ' ' +
-                      now.toLocaleTimeString('it-IT', { hour12: false });
-    dateTimeSpan.textContent = formatted;
-}
-updateDateTime();
-setInterval(updateDateTime, 1000);
-
-// Colore testo elementi del footer
-dateTimeSpan.style.color = '#ffffff';
-layoutText.style.color = '#ffffff';
-cursorPosition.style.color = '#ffffff';
 
 // Funzione HEX → RGBA
 function hexToRgba(hex, alpha) {
@@ -113,3 +33,77 @@ function hexToRgba(hex, alpha) {
     }
     throw new Error('Invalid HEX color.');
 }
+
+// Generazione dinamica dei riquadri
+projects.forEach(project => {
+    const square = document.createElement('div');
+    square.className = 'project-square';
+
+    const img = document.createElement('img');
+    img.src = project.image;
+    img.alt = project.title;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'project-overlay';
+
+    // Link con parametri per mantenere colore e layout, percorso coerente
+    const projectFolder = project.title.toLowerCase().replace(/\s+/g, '');
+    const titleLink = document.createElement('a');
+    titleLink.textContent = project.title;
+    const params = new URLSearchParams();
+    params.set('color', color);
+    if (realityNum) {
+        params.set('layoutNum', realityNum);
+    }
+    titleLink.href = `/projects/${projectFolder}/${projectFolder}.html?${params.toString()}`;
+
+    titleLink.style.color = 'transparent';
+    titleLink.style.textDecoration = 'none';
+    titleLink.style.cursor = 'pointer';
+
+    // Hover effect
+    square.addEventListener('mouseenter', () => {
+        overlay.style.background = hexToRgba(color, 0.5);
+        overlay.style.color = color;
+        titleLink.style.color = color;
+        customCursor.style.color = color;
+    });
+
+    square.addEventListener('mouseleave', () => {
+        overlay.style.background = 'transparent';
+        overlay.style.color = 'transparent';
+        titleLink.style.color = 'transparent';
+        customCursor.style.color = color;
+    });
+
+    overlay.appendChild(titleLink);
+    square.appendChild(img);
+    square.appendChild(overlay);
+    worksContainer.appendChild(square);
+});
+
+// Imposta numero layout nel footer
+layoutText.textContent = `Reality #${realityNum}`;
+
+// Movimento cursore custom e coordinate
+window.addEventListener('mousemove', e => {
+    customCursor.style.left = e.clientX + 'px';
+    customCursor.style.top = e.clientY + 'px';
+    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+});
+
+// Data e ora aggiornate ogni secondo
+function updateDateTime() {
+    const now = new Date();
+    const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
+                      ' ' +
+                      now.toLocaleTimeString('it-IT', { hour12: false });
+    dateTimeSpan.textContent = formatted;
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
+// Colore testo footer sempre bianco
+dateTimeSpan.style.color = '#ffffff';
+layoutText.style.color = '#ffffff';
+cursorPosition.style.color = '#ffffff';
