@@ -1,85 +1,89 @@
-const layoutText = document.getElementById("layout-text");
-const cursorPosition = document.getElementById("cursor-position");
-const textContainer = document.getElementById("text-container");
-const dateTimeSpan = document.querySelector('.date-time');
+// Leggi parametri URL per colore e layout
+const urlParams = new URLSearchParams(window.location.search);
+const color = urlParams.get('color') || '#000000';
+const layout = urlParams.get('layoutNum') || '–';  // default se assente
 
-// Colori disponibili
-const colors = [
-  "#c2c1b6", "#878787", "#e1c57f", "#c76758", "#c1ce93",
-  "#88a07e", "#899eaa", "#9b9fc2", "#4d4639", "#1d1d1b"
-];
-
-// Etichette
-const labels = ["works", "papers", "info", "contacts"];
-
-// Tutte le permutazioni delle parole (24 combinazioni)
-function getAllPermutations(arr) {
-  if (arr.length <= 1) return [arr];
-  const perms = [];
-  arr.forEach((item, i) => {
-    const rest = arr.slice(0, i).concat(arr.slice(i + 1));
-    getAllPermutations(rest).forEach(p => perms.push([item, ...p]));
-  });
-  return perms;
-}
-
-const textPermutations = getAllPermutations(labels);
-const totalLayouts = textPermutations.length * colors.length;
-
-// Layout casuale
-const randomColorIndex = Math.floor(Math.random() * colors.length);
-const randomTextPermutation = Math.floor(Math.random() * textPermutations.length);
-const layoutNum = randomColorIndex * textPermutations.length + randomTextPermutation + 1;
-
-const color = colors[randomColorIndex];
-const selectedOrder = textPermutations[randomTextPermutation];
-
-// ⬇️ Imposta il colore della reality (fascia)
+// Imposta variabile CSS per colore fascia
 document.documentElement.style.setProperty('--reality-color', color);
 
-// Crea le scritte in ordine casuale
-selectedOrder.forEach(label => {
-  const span = document.createElement("span");
-  span.textContent = label;
-  span.className = "word";
-  span.style.color = color;
-  span.style.cursor = "pointer";
+// Aggiorna testo Reality con numero
+const layoutText = document.getElementById("layout-text");
+layoutText.textContent = `Reality #${layout}`;
 
-  span.addEventListener("click", () => {
-    const colorParam = encodeURIComponent(color);
-    const section = label.toLowerCase();
-    window.location.href = `./${section}/${section}.html?color=${colorParam}&layoutNum=${layoutNum}`;
-  });
-
-  textContainer.appendChild(span);
-});
-
-// Aggiorna indicatore reality
-layoutText.textContent = `Reality ${layoutNum} / ${totalLayouts}`;
-
-// Cursore personalizzato
-const cursor = document.createElement('div');
-cursor.id = 'custom-cursor';
-cursor.textContent = '+';
-document.body.appendChild(cursor);
-
-// Stile cursore
-cursor.style.color = color;
-
-// Movimento cursore
-window.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top = e.clientY + 'px';
-  cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
-});
-
-// Data e ora
+// Aggiorna data e ora
+const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
-  const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
-                    ' ' +
-                    now.toLocaleTimeString('it-IT', { hour12: false });
+  const formatted = now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', { hour12: false });
   dateTimeSpan.textContent = formatted;
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
+
+// Cursore personalizzato e coordinate
+const cursor = document.getElementById('custom-cursor');
+const cursorPosition = document.getElementById('cursor-position');
+cursor.style.color = color;
+layoutText.style.color = 'white';       // testo fascia sempre bianco
+dateTimeSpan.style.color = 'white';
+cursorPosition.style.color = 'white';
+
+window.addEventListener('mousemove', e => {
+  cursor.style.left = `${e.clientX}px`;
+  cursor.style.top = `${e.clientY}px`;
+  cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+});
+
+// Colore dinamico su elementi della pagina
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
+
+// Link "Back to works": uso evento click per evitare problemi di routing 404
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.style.cursor = 'pointer';
+
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    window.location.href = targetURL;
+  });
+}
+
+// CREA L'ELEMENTO OVERLAY FULLSCREEN
+const fullscreenOverlay = document.createElement('div');
+fullscreenOverlay.id = 'fullscreen-overlay';
+document.body.appendChild(fullscreenOverlay);
+
+// Quando clicco sull'overlay, lo chiudo
+fullscreenOverlay.addEventListener('click', () => {
+  fullscreenOverlay.classList.remove('active');
+  fullscreenOverlay.innerHTML = '';
+});
+
+// Gestione click sulle immagini aggiuntive per aprire fullscreen
+document.querySelectorAll('.additional-image').forEach(img => {
+  img.addEventListener('click', () => {
+    const fullscreenImg = document.createElement('img');
+    fullscreenImg.src = img.src;
+    fullscreenImg.alt = img.alt;
+    fullscreenOverlay.innerHTML = '';
+    fullscreenOverlay.appendChild(fullscreenImg);
+    fullscreenOverlay.classList.add('active');
+  });
+});
+
+// Gestione cursore personalizzato: cambio aspetto su elementi cliccabili (immagini + link)
+const clickableElements = document.querySelectorAll('.additional-image, a');
+
+clickableElements.forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.color = '#FF0000';  // colore rosso per evidenziare
+    cursor.style.transform = 'translate(-50%, -50%) scale(1.5)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.color = color;       // colore originale dal parametro URL
+    cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+  });
+});
