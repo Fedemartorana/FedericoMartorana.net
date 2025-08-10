@@ -2,11 +2,14 @@ const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
 const layout = urlParams.get('layout') || '–';
 
-// Indicatori
+// Imposta variabile CSS per colore reality (usata nel footer)
+document.documentElement.style.setProperty('--reality-color', color);
+
+// Aggiorna testo Reality
 const layoutText = document.getElementById("layout-text");
 layoutText.textContent = `Reality #${layout}`;
 
-// Data e ora
+// Aggiorna data e ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
@@ -16,13 +19,13 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Cursore
+// Cursore personalizzato e coordinate
 const cursor = document.getElementById('custom-cursor');
 const cursorPosition = document.getElementById('cursor-position');
 cursor.style.color = color;
 layoutText.style.color = color;
-dateTimeSpan.style.color = color;
-cursorPosition.style.color = color;
+dateTimeSpan.style.color = 'white';        // testo in fascia bianco
+cursorPosition.style.color = 'white';     // testo in fascia bianco
 
 window.addEventListener('mousemove', e => {
   cursor.style.left = `${e.clientX}px`;
@@ -30,10 +33,12 @@ window.addEventListener('mousemove', e => {
   cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
 });
 
-// Colore dinamico su elementi
-document.querySelector('.project-title').style.color = color;
-document.querySelector('#back-link').style.color = color;
+// Colore dinamico su elementi della pagina
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
 
-// Mantieni i parametri nella navigazione per il back
 const backLink = document.getElementById('back-link');
-backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+if (backLink) {
+  backLink.style.color = color;
+  backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+}
