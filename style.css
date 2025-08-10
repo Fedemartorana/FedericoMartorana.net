@@ -3,9 +3,17 @@
     --reality-color: #000000;   /* aggiornato via JS */
 }
 
-/* Nasconde il cursore di sistema ovunque */
-html, body, * {
-    cursor: none !important;
+/* Nasconde cursore di default su tutta la pagina */
+html, body {
+  cursor: none !important;
+}
+
+/* Rimuovi tutti i cursori predefiniti da immagini cliccabili e link */
+.additional-image,
+.additional-image:hover,
+a,
+a:hover {
+  cursor: none !important;
 }
 
 body {
