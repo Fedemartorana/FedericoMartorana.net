@@ -46,11 +46,11 @@ if (backLink) {
 
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
-    // Qui va ../../works/works.htm perché la pagina progetto è in /projects/[project]/
     const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
     window.location.href = targetURL;
   });
 }
+
 // CREA L'ELEMENTO OVERLAY FULLSCREEN
 const fullscreenOverlay = document.createElement('div');
 fullscreenOverlay.id = 'fullscreen-overlay';
@@ -68,9 +68,8 @@ document.querySelectorAll('.additional-image').forEach(img => {
     const fullscreenImg = document.createElement('img');
     fullscreenImg.src = img.src;
     fullscreenImg.alt = img.alt;
-    fullscreenOverlay.innerHTML = '';  // svuoto prima
+    fullscreenOverlay.innerHTML = '';
     fullscreenOverlay.appendChild(fullscreenImg);
     fullscreenOverlay.classList.add('active');
   });
 });
-
