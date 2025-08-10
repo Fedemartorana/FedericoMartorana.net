@@ -1,6 +1,9 @@
 /* Nasconde il cursore di sistema ovunque */
 html, body, * {
     cursor: none !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 /* Container rettangoli */
@@ -9,6 +12,7 @@ html, body, * {
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: 50vh; /* Ogni rettangolo occupa metà altezza della viewport */
     width: 100vw;
+    height: 100vh;
     margin: 0;
     padding: 0;
 }
@@ -42,11 +46,12 @@ html, body, * {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: helvetica;
+    font-family: Helvetica, sans-serif;
     text-transform: uppercase;
     font-size: 2.5rem;
     transition: background 0.3s, color 0.3s;
     color: transparent;
+    pointer-events: none;
 }
 
 /* Fascia colorata in basso */
@@ -56,7 +61,7 @@ html, body, * {
   left: 0;
   width: 100%;
   height: 25px;
-  background-color: var(--reality-color); /* usiamo questa variabile via JS */
+  background-color: var(--reality-color, #000); /* variabile CSS impostata via JS */
   z-index: 1000;
   display: flex;
   justify-content: space-between;
@@ -64,8 +69,9 @@ html, body, * {
   font-family: monospace;
   font-size: 10px;
   color: white; /* testo bianco */
-  padding: 0 5px;
-  pointer-events: none; /* non interferisce con click o hover */
+  padding: 0 10px;
+  user-select: none;
+  pointer-events: none;
 }
 
 /* Cursore custom */
@@ -73,9 +79,9 @@ html, body, * {
     position: fixed;
     left: 0;
     top: 0;
-    width: 30px;
-    height: 30px;
-    font-size: 30px;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
     pointer-events: none;
     z-index: 9999;
     user-select: none;
@@ -88,5 +94,6 @@ html, body, * {
     .works-container {
         grid-template-columns: 1fr;
         grid-auto-rows: 50vh;
+        height: auto;
     }
 }
