@@ -1,143 +1,102 @@
-html, body {
+body {
   margin: 0;
-  padding: 0;
-  font-family: Helvetica, sans-serif;
-  background: white;
-  color: black;
-  cursor: none; /* Nasconde cursore di default */
+  background: black;
+  font-family: sans-serif;
+  color: white;
+  cursor: none; /* nasconde cursore di default */
 }
 
 .project-container {
-  padding: 3rem 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
 }
 
 .project-title {
-  font-size: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
 .project-image {
   width: 100%;
+  max-width: 900px;
   height: auto;
-  object-fit: contain;
+  display: block;
+  margin-bottom: 20px;
 }
 
 .project-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  white-space: pre-wrap;
+  white-space: pre-line; /* rispetta i ritorni a capo */
+  line-height: 1.5;
+  margin-bottom: 30px;
 }
 
-/* Contenitore immagini aggiuntive */
+.project-description strong {
+  display: block;
+  margin-top: 10px;
+}
+
 .additional-images {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
 }
 
 .additional-image {
-  position: relative;  /* serve per posizionare il ::after */
-  cursor: default;     /* cursore predefinito sulle immagini aggiuntive */
-  border-radius: 4px;
-  overflow: hidden;
-  display: block;
-  transition: transform 0.3s ease;
+  width: calc(33.333% - 10px);
+  cursor: none; /* niente cursore di default */
 }
 
-/* Pseudo-elemento overlay colorato */
-.additional-image::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--reality-color);
-  opacity: 0;
-  transition: opacity 0.3s ease;
+#back-link {
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 20px;
+  cursor: none; /* anche qui cursore default nascosto */
+}
+
+/* FOOTER */
+#layout-footer {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  display: flex;
+  gap: 15px;
+  font-size: 0.9rem;
+}
+
+/* CURSORE PERSONALIZZATO */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
   pointer-events: none;
-  border-radius: 4px;
-  mix-blend-mode: multiply;
+  font-size: 20px;
+  font-weight: bold;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
 }
 
-/* Al passaggio del mouse, mostra la patina colorata */
-.additional-image:hover::after {
-  opacity: 0.35;
-}
-
-/* Fullscreen overlay */
+/* FULLSCREEN OVERLAY */
 #fullscreen-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.9);
-  display: flex;
-  justify-content: center;
+  background: rgba(0, 0, 0, 0.95);
+  display: none;
   align-items: center;
+  justify-content: center;
   z-index: 10000;
-  cursor: zoom-out;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
 }
 
 #fullscreen-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
+  display: flex;
 }
 
 #fullscreen-overlay img {
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: 6px;
-  box-shadow: 0 0 20px rgba(255,255,255,0.5);
-}
-
-#back-link {
-  text-decoration: none;
-  font-size: 0.9rem;
-  border: none;
-  align-self: flex-start;
-  cursor: pointer;
-}
-
-/* Fascia inferiore fissa colorata con testo bianco */
-#layout-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: var(--reality-color, #000);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 15px;
-  font-family: monospace;
-  font-size: 12px;
-  color: white;
-  z-index: 1000;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-/* Cursore personalizzato */
-#custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  transition: color 0.3s;
+  max-width: 90%;
+  max-height: 90%;
 }
