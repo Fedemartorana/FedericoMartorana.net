@@ -41,36 +41,42 @@ html, body {
   align-self: flex-start;
 }
 
-/* Layout & time indicator */
-#layout-indicator {
+/* Fascia inferiore fissa colorata con testo bianco */
+#layout-footer {
   position: fixed;
-  bottom: 10px;
-  width: 99%;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--reality-color, #000);
   display: flex;
   justify-content: space-between;
-  padding: 0 5px;
+  align-items: center;
+  padding: 6px 15px;
+  font-family: monospace;
+  font-size: 12px;
+  color: white;
+  z-index: 1000;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+/* Se usi ancora #layout-indicator per testo sopra la fascia (opzionale) */
+#layout-indicator {
+  position: fixed;
+  bottom: 30px; /* leggermente sopra la fascia */
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
   font-family: monospace;
   font-size: 10px;
+  color: white;
   z-index: 1000;
+  pointer-events: none;
 }
 
-/* Fascia inferiore fissa colorata */
-#layout-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: var(--reality-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 10px;
-    font-family: monospace;
-    font-size: 10px;
-    z-index: 1000;
-    box-sizing: border-box;
-
-}
-
+/* Cursore personalizzato */
 #custom-cursor {
   position: fixed;
   left: 0;
