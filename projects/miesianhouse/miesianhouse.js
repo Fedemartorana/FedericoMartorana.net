@@ -2,14 +2,14 @@ const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
 const layout = urlParams.get('layoutNum') || '–';
 
-// Imposta colore reality
+// Imposta variabile CSS per colore reality
 document.documentElement.style.setProperty('--reality-color', color);
 
 // Aggiorna testo Reality
 const layoutText = document.getElementById("layout-text");
 layoutText.textContent = `Reality #${layout}`;
 
-// Data e ora
+// Aggiorna data e ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
@@ -35,15 +35,14 @@ window.addEventListener('mousemove', e => {
   cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
 });
 
-// Titolo progetto in colore reality
+// Colore titolo progetto
 const projectTitle = document.querySelector('.project-title');
 if (projectTitle) projectTitle.style.color = color;
 
-// Link "Back to works"
+// Link Back to works
 const backLink = document.getElementById('back-link');
 if (backLink) {
   backLink.style.color = color;
-  backLink.style.cursor = 'pointer';
   backLink.addEventListener('click', e => {
     e.preventDefault();
     const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
