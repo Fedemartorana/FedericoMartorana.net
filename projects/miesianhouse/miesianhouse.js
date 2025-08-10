@@ -46,7 +46,8 @@ if (backLink) {
 
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
-    const targetURL = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    // Qui va ../../works/works.htm perché la pagina progetto è in /projects/[project]/
+    const targetURL = `../../works/works.htm?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
     window.location.href = targetURL;
   });
 }
