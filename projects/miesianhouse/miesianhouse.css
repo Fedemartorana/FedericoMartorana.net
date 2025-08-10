@@ -6,9 +6,6 @@ html, body {
   color: black;
   cursor: none;
 }
-a {
-  cursor: none;
-}
 
 .project-container {
   padding: 3rem 2rem;
@@ -42,24 +39,30 @@ a {
   font-size: 0.9rem;
   border: none;
   align-self: flex-start;
+  cursor: none; /* disabilita il cursore predefinito su link */
 }
 
-/* Fascia inferiore fissa colorata con testo bianco */
+/* Fascia inferiore fissa colorata */
 #layout-footer {
   position: fixed;
   bottom: 0;
-  left: 0;
   width: 100%;
-  background-color: var(--reality-color, #000);
+  background-color: var(--reality-color, #000); /* fallback nero se non settato */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 15px;
+  padding: 6px 10px;
   font-family: monospace;
-  font-size: 12px;
-  color: white;
+  font-size: 10px;
   z-index: 1000;
   box-sizing: border-box;
+  color: white; /* testo bianco */
+}
+
+/* Layout & time indicator dentro la fascia */
+#layout-indicator {
+  display: flex;
+  gap: 10px;
   user-select: none;
 }
 
