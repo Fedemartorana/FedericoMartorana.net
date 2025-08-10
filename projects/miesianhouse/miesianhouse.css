@@ -4,7 +4,7 @@ html, body {
   font-family: Helvetica, sans-serif;
   background: white;
   color: black;
-  cursor: none;
+  cursor: none; /* Nasconde cursore di default */
 }
 
 .project-container {
@@ -39,8 +39,7 @@ html, body {
   font-size: 0.9rem;
   border: none;
   align-self: flex-start;
-  cursor: none; /* elimina cursore default */
-  color: inherit; /* mantiene colore dinamico */
+  cursor: pointer; /* mostra cursore puntatore */
 }
 
 /* Fascia inferiore fissa colorata con testo bianco */
