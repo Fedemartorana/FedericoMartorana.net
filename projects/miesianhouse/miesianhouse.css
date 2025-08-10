@@ -4,7 +4,7 @@ html, body {
   font-family: Helvetica, sans-serif;
   background: white;
   color: black;
-  cursor: none; /* Nasconde cursore di default */
+  cursor: none; /* nasconde cursore di default */
 }
 
 .project-container {
@@ -43,20 +43,20 @@ html, body {
 }
 
 .additional-image {
-  position: relative;  /* serve per posizionare il ::after */
-  cursor: default;     /* cursore predefinito sulle immagini aggiuntive */
+  position: relative;
+  cursor: none; /* mantiene il cursore personalizzato */
   border-radius: 4px;
   overflow: hidden;
   display: block;
   transition: transform 0.3s ease;
 }
 
-/* Pseudo-elemento overlay colorato */
+/* Patina colorata */
 .additional-image::after {
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--reality-color);
+  background-color: var(--reality-color, #000);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -64,51 +64,26 @@ html, body {
   mix-blend-mode: multiply;
 }
 
-/* Al passaggio del mouse, mostra la patina colorata */
 .additional-image:hover::after {
   opacity: 0.35;
 }
 
-/* Fullscreen overlay */
-#fullscreen-overlay {
+/* Cursore personalizzato */
+#custom-cursor {
   position: fixed;
-  top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.9);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10000;
-  cursor: zoom-out;
-  opacity: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  z-index: 9999;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: color 0.3s;
 }
 
-#fullscreen-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-#fullscreen-overlay img {
-  max-width: 90vw;
-  max-height: 90vh;
-  object-fit: contain;
-  border-radius: 6px;
-  box-shadow: 0 0 20px rgba(255,255,255,0.5);
-}
-
-#back-link {
-  text-decoration: none;
-  font-size: 0.9rem;
-  border: none;
-  align-self: flex-start;
-  cursor: pointer;
-}
-
-/* Fascia inferiore fissa colorata con testo bianco */
+/* Fascia inferiore */
 #layout-footer {
   position: fixed;
   bottom: 0;
@@ -125,19 +100,4 @@ html, body {
   z-index: 1000;
   box-sizing: border-box;
   user-select: none;
-}
-
-/* Cursore personalizzato */
-#custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  transition: color 0.3s;
 }
