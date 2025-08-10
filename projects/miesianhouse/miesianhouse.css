@@ -1,82 +1,45 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: Helvetica, sans-serif;
-  background: white;
-  color: black;
-  cursor: none;
-}
+// Leggi parametri URL per colore e layout
+const urlParams = new URLSearchParams(window.location.search);
+const color = urlParams.get('color') || '#000000';
+const layout = urlParams.get('layoutNum') || '–';
 
-.project-container {
-  padding: 3rem 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
+// Imposta variabile CSS per colore fascia
+document.documentElement.style.setProperty('--reality-color', color);
 
-.project-title {
-  font-size: 2.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-}
+// Aggiorna testo Reality
+const layoutText = document.getElementById("layout-text");
+layoutText.textContent = `Reality #${layout}`;
 
-.project-image {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
+// Aggiorna data e ora
+const dateTimeSpan = document.querySelector('.date-time');
+function updateDateTime() {
+  const now = new Date();
+  const formatted = now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', { hour12: false });
+  dateTimeSpan.textContent = formatted;
 }
+updateDateTime();
+setInterval(updateDateTime, 1000);
 
-.project-description {
-  font-size: 1rem;
-  line-height: 1.6;
-}
+// Cursore personalizzato e coordinate
+const cursor = document.getElementById('custom-cursor');
+const cursorPosition = document.getElementById('cursor-position');
+cursor.style.color = color;
+layoutText.style.color = 'white';       // testo fascia sempre bianco
+dateTimeSpan.style.color = 'white';
+cursorPosition.style.color = 'white';
 
-#back-link {
-  text-decoration: none;
-  font-size: 0.9rem;
-  border: none;
-  align-self: flex-start;
-  cursor: none; /* disabilita il cursore predefinito su link */
-}
+window.addEventListener('mousemove', e => {
+  cursor.style.left = `${e.clientX}px`;
+  cursor.style.top = `${e.clientY}px`;
+  cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+});
 
-/* Fascia inferiore fissa colorata */
-#layout-footer {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: var(--reality-color, #000); /* fallback nero se non settato */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 10px;
-  font-family: monospace;
-  font-size: 10px;
-  z-index: 1000;
-  box-sizing: border-box;
-  color: white; /* testo bianco */
-}
+// Colore dinamico su elementi della pagina
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
 
-/* Layout & time indicator dentro la fascia */
-#layout-indicator {
-  display: flex;
-  gap: 10px;
-  user-select: none;
-}
-
-/* Cursore personalizzato */
-#custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  transition: color 0.3s;
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
 }
