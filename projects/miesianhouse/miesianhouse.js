@@ -1,12 +1,12 @@
 // Leggi parametri URL per colore e layout
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
-const layout = urlParams.get('layoutNum') || '–';
+const layout = urlParams.get('layoutNum') || '–';  // qui prendiamo layoutNum (assicurati che venga passato così)
 
 // Imposta variabile CSS per colore fascia
 document.documentElement.style.setProperty('--reality-color', color);
 
-// Aggiorna testo Reality
+// Aggiorna testo Reality con numero
 const layoutText = document.getElementById("layout-text");
 layoutText.textContent = `Reality #${layout}`;
 
@@ -38,9 +38,13 @@ window.addEventListener('mousemove', e => {
 const projectTitle = document.querySelector('.project-title');
 if (projectTitle) projectTitle.style.color = color;
 
+// Link "Back to works" - correggo href per evitare 404 e aggiungo query string con parametri
 const backLink = document.getElementById('back-link');
 if (backLink) {
   backLink.style.color = color;
-  // Imposta link relativo semplice per evitare 404, ma mantiene i parametri URL corretti
-  backLink.href = `./works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+  // Usa percorso corretto e aggiungi parametri
+  backLink.href = `../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+
+  // Disabilito il cursore predefinito sul link
+  backLink.style.cursor = 'pointer';
 }
