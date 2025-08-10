@@ -32,6 +32,14 @@ window.addEventListener('mousemove', e => {
   cursor.style.left = `${e.clientX}px`;
   cursor.style.top = `${e.clientY}px`;
   cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+
+  // Nascondi cursore personalizzato se il puntatore è sopra un'immagine aggiuntiva
+  const elemUnder = document.elementFromPoint(e.clientX, e.clientY);
+  if (elemUnder && elemUnder.classList.contains('additional-image')) {
+    cursor.style.display = 'none';
+  } else {
+    cursor.style.display = 'block';
+  }
 });
 
 // Colore dinamico su elementi della pagina
@@ -51,25 +59,8 @@ if (backLink) {
   });
 }
 
-// CREA L'ELEMENTO OVERLAY FULLSCREEN
-const fullscreenOverlay = document.createElement('div');
-fullscreenOverlay.id = 'fullscreen-overlay';
-document.body.appendChild(fullscreenOverlay);
+// Rimosso click zoom fullscreen sulle immagini aggiuntive
+// Quindi nessun event listener sulle immagini aggiuntive
 
-// Quando clicco sull'overlay, lo chiudo
-fullscreenOverlay.addEventListener('click', () => {
-  fullscreenOverlay.classList.remove('active');
-  fullscreenOverlay.innerHTML = '';
-});
-
-// Gestione click sulle immagini aggiuntive per aprire fullscreen
-document.querySelectorAll('.additional-image').forEach(img => {
-  img.addEventListener('click', () => {
-    const fullscreenImg = document.createElement('img');
-    fullscreenImg.src = img.src;
-    fullscreenImg.alt = img.alt;
-    fullscreenOverlay.innerHTML = '';
-    fullscreenOverlay.appendChild(fullscreenImg);
-    fullscreenOverlay.classList.add('active');
-  });
-});
+// Rimosso anche l'overlay fullscreen (non più usato)
+// Se vuoi riabilitare il fullscreen, basta ripristinare quel codice
