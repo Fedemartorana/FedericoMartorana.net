@@ -1,16 +1,17 @@
-/* Nasconde il cursore di sistema ovunque */
+/* Nasconde il cursore di sistema e reset base */
 html, body, * {
     cursor: none !important;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    color: var(--reality-color); /* tutti i testi prendono il colore della reality */
 }
 
 /* Container rettangoli */
 .works-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 50vh; /* Ogni rettangolo occupa metà altezza della viewport */
+    grid-auto-rows: 50vh;
     width: 100vw;
     height: 100vh;
     margin: 0;
@@ -42,21 +43,19 @@ html, body, * {
     left: 0;
     width: 100%;
     height: 100%;
-    background: transparent;
     display: flex;
     justify-content: center;
     align-items: center;
     font-family: Helvetica, sans-serif;
     text-transform: uppercase;
     font-size: 2.5rem;
-    transition: background 0.3s, color 0.3s;
-    color: transparent;
-    pointer-events: none; /* DISABILITA eventi mouse sul container */
+    pointer-events: none;
+    color: inherit; /* colore overlay testo = colore reality */
 }
 
-/* Rendi il link dentro overlay cliccabile */
+/* Rendi link cliccabile */
 .project-overlay a {
-    pointer-events: auto; /* ABILITA eventi mouse sul link */
+    pointer-events: auto;
     color: inherit;
     text-decoration: none;
     cursor: pointer;
@@ -69,14 +68,14 @@ html, body, * {
   left: 0;
   width: 100%;
   height: 25px;
-  background-color: var(--reality-color, #000); /* variabile CSS impostata via JS */
+  background-color: var(--reality-color, #000);
   z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: monospace;
   font-size: 10px;
-  color: white; /* testo bianco */
+  color: white;
   padding: 0 10px;
   user-select: none;
   pointer-events: none;
