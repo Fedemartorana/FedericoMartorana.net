@@ -69,7 +69,7 @@ html, body, * {
   left: 0;
   width: 100%;
   height: 25px;
-  background-color: var(--reality-color, #000); /* variabile CSS impostata via JS */
+  background-color: var(--reality-color, #000); /* colore dinamico */
   z-index: 1000;
   display: flex;
   justify-content: space-between;
@@ -79,7 +79,11 @@ html, body, * {
   color: white; /* testo bianco */
   padding: 0 10px;
   user-select: none;
-  pointer-events: none;
+  pointer-events: none; /* footer non blocca click */
+}
+
+.date-time, #layout-text, #cursor-position {
+  color: #ffffff;
 }
 
 /* Cursore custom */
