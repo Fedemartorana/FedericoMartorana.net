@@ -13,11 +13,11 @@ const customCursor = document.getElementById('custom-cursor');
 
 // Lista dei progetti
 const projects = [
-    { title: "Miesian House", image: "/img/miesianhouse.jpg" },
-    { title: "Hypogeum", image: "/img/hypogeum.jpg" },
-    { title: "House Atelier", image: "/img/houseatelier.jpg" },
-    { title: "Archive, Exhibit, Inhabit", image: "/img/archiveexhibitinhabit.jpg" },
-    { title: "Tetra", image: "/img/tetra.jpg" }
+    { title: "Miesian House", image: "/img/miesianhouse/miesianhouse.jpg" },
+    { title: "Hypogeum", image: "/img/hypogeum/hypogeum.jpg" },
+    { title: "House Atelier", image: "/img/houseatelier/houseatelier.jpg" },
+    { title: "Archive, Exhibit, Inhabit", image: "/img/archiveexhibitinhabit/archiveexhibitinhabit.jpg" },
+    { title: "Tetra", image: "/img/tetra/tetra.jpg" }
 ];
 
 // Funzione HEX → RGBA
