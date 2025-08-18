@@ -46,18 +46,22 @@ document.body.appendChild(fullscreenOverlay);
 const fullscreenImg = document.createElement('img');
 fullscreenOverlay.appendChild(fullscreenImg);
 
-// Apre immagine a schermo intero al click
+// Funzione per aprire fullscreen
+function openFullscreen(img) {
+  fullscreenImg.src = img.src;
+  fullscreenOverlay.classList.add('active');
+}
+
+// Seleziona tutte le immagini aggiuntive
 document.querySelectorAll('.additional-image img').forEach(img => {
-  img.addEventListener('click', () => {
-    fullscreenImg.src = img.src;
-    fullscreenOverlay.classList.add('active');
-  });
+  img.addEventListener('click', () => openFullscreen(img));
+  img.addEventListener('touchstart', () => openFullscreen(img)); // compatibilità mobile
 });
 
-// Chiudi overlay al click
-fullscreenOverlay.addEventListener('click', () => {
-  fullscreenOverlay.classList.remove('active');
-});
+// Chiudi overlay al click/touch
+fullscreenOverlay.addEventListener('click', () => fullscreenOverlay.classList.remove('active'));
+fullscreenOverlay.addEventListener('touchstart', () => fullscreenOverlay.classList.remove('active'));
+
 
 
 // Colore dinamico titolo e link back
