@@ -1,55 +1,51 @@
 :root {
-  --date-time-color: #ffffff; /* bianco */
-  --reality-color: #000000;   /* aggiornato via JS */
+    --reality-color: #000000; /* aggiornato via JS */
 }
 
-/* Nasconde cursore di default */
-html, body {
-  cursor: none !important;
-  margin: 0;
-  padding: 0;
-  background: #ffffff;
-  font-family: monospace;
-  overflow: hidden;
+/* Nasconde cursore di sistema ovunque */
+html, body, * {
+    cursor: none !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* Evita che immagini/link abbiano cursori propri */
-.additional-image,
-.additional-image:hover,
-a,
-a:hover {
-  cursor: none !important;
+body {
+    background: #ffffff;
+    font-family: monospace;
+    overflow: hidden;
 }
 
 /* Contenitore centrale */
 .center-container {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 100px;
-  flex-direction: row;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 100px;
+    flex-direction: row;
 }
 
-/* Parole centrali */
+/* Parole */
 .word {
-  font-size: 5vw;
-  text-transform: uppercase;
-  transition: color 0.3s;
+    font-size: 5vw;
+    text-transform: uppercase;
+    transition: color 0.3s;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .center-container {
-    flex-direction: column;
-    gap: 20px;
-  }
-  .word {
-    font-size: 5vw;
-  }
+    .center-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .word {
+        font-size: 5vw;
+    }
 }
 
 /* Fascia colorata in basso */
@@ -59,7 +55,7 @@ a:hover {
   left: 0;
   width: 100%;
   height: 25px;
-  background-color: var(--reality-color, #000);
+  background-color: var(--reality-color, #000); /* colore dinamico */
   z-index: 1000;
   display: flex;
   justify-content: space-between;
@@ -69,26 +65,25 @@ a:hover {
   color: white;
   padding: 0 10px;
   user-select: none;
-  pointer-events: none; /* non blocca click e cursore */
-}
-
-.date-time,
-#layout-text,
-#cursor-position {
-  color: #ffffff;
-}
-
-/* Cursore personalizzato */
-#custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 30px;
-  height: 30px;
-  font-size: 30px;
   pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  transition: color 0.3s;
+}
+
+/* Cursore custom */
+#custom-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 9999;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    transition: color 0.3s;
+}
+
+/* Colore fisso bianco per il testo del footer */
+.date-time, #layout-text, #cursor-position {
+  color: #ffffff;
 }
