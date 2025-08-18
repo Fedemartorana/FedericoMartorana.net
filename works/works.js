@@ -16,7 +16,7 @@ const projects = [
     { title: "Miesian House", image: "/img/miesianhouse/miesianhouse.jpg" },
     { title: "Hypogeum", image: "/img/hypogeum/hypogeum.jpg" },
     { title: "House Atelier", image: "/img/houseatelier/houseatelier.jpg" },
-    { title: "Archive, Exhibit, Inhabit", image: "/img/archiveexhibitinhabit/archiveexhibitinhabit.jpg" },
+    { title: "Archive Exhibit Inhabit", image: "/img/archiveexhibitinhabit/archiveexhibitinhabit.jpg" },
     { title: "Tetra", image: "/img/tetra/tetra.jpg" }
 ];
 
