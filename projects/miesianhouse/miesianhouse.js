@@ -46,21 +46,19 @@ document.body.appendChild(fullscreenOverlay);
 const fullscreenImg = document.createElement('img');
 fullscreenOverlay.appendChild(fullscreenImg);
 
-// Funzione per aprire fullscreen
-function openFullscreen(img) {
-  fullscreenImg.src = img.src;
-  fullscreenOverlay.classList.add('active');
-}
-
-// Seleziona tutte le immagini aggiuntive
+// Apre immagine a schermo intero al click
 document.querySelectorAll('.additional-image img').forEach(img => {
-  img.addEventListener('click', () => openFullscreen(img));
-  img.addEventListener('touchstart', () => openFullscreen(img)); // compatibilità mobile
+  img.addEventListener('click', () => {
+    fullscreenImg.src = img.src;
+    fullscreenOverlay.classList.add('active');
+  });
 });
 
-// Chiudi overlay al click/touch
-fullscreenOverlay.addEventListener('click', () => fullscreenOverlay.classList.remove('active'));
-fullscreenOverlay.addEventListener('touchstart', () => fullscreenOverlay.classList.remove('active'));
+// Chiudi overlay al click
+fullscreenOverlay.addEventListener('click', () => {
+  fullscreenOverlay.classList.remove('active');
+});
+
 
 
 
