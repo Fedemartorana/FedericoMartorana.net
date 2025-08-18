@@ -38,6 +38,28 @@ window.addEventListener('mousemove', e => {
   }
 });
 
+// Crea overlay fullscreen
+const fullscreenOverlay = document.createElement('div');
+fullscreenOverlay.id = 'fullscreen-overlay';
+document.body.appendChild(fullscreenOverlay);
+
+const fullscreenImg = document.createElement('img');
+fullscreenOverlay.appendChild(fullscreenImg);
+
+// Apre immagine a schermo intero al click
+document.querySelectorAll('.additional-image img').forEach(img => {
+  img.addEventListener('click', () => {
+    fullscreenImg.src = img.src;
+    fullscreenOverlay.classList.add('active');
+  });
+});
+
+// Chiudi overlay al click
+fullscreenOverlay.addEventListener('click', () => {
+  fullscreenOverlay.classList.remove('active');
+});
+
+
 // Colore dinamico titolo e link back
 const projectTitle = document.querySelector('.project-title');
 if (projectTitle) projectTitle.style.color = color;
