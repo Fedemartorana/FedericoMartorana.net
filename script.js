@@ -43,7 +43,6 @@ selectedOrder.forEach(label => {
   span.textContent = label;
   span.className = "word";
   span.style.color = color;
-  span.style.cursor = "pointer";
 
   span.addEventListener("click", () => {
     const colorParam = encodeURIComponent(color);
