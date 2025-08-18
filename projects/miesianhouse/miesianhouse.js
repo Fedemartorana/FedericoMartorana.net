@@ -1,8 +1,8 @@
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
-const layout = urlParams.get('layoutNum') || '–';  // default se assente
+const layout = urlParams.get('layoutNum') || '–';
 
-// Imposta variabile CSS per colore fascia
+// Imposta colore dinamico per tutti i testi e variabile CSS
 document.documentElement.style.setProperty('--reality-color', color);
 
 // Aggiorna testo Reality con numero
@@ -36,19 +36,16 @@ window.addEventListener('mousemove', e => {
   if(cursorPosition){
     cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
   }
-  
-  // Sempre mostrare il cursore personalizzato, nessuna condizione di nascondimento
 });
 
-// Colore dinamico su elementi della pagina
+// Colore dinamico titolo e link back
 const projectTitle = document.querySelector('.project-title');
 if (projectTitle) projectTitle.style.color = color;
 
-// Link "Back to works": uso evento click per evitare problemi di routing 404
 const backLink = document.getElementById('back-link');
 if (backLink) {
   backLink.style.color = color;
-  backLink.style.cursor = 'none';  // usa cursore personalizzato
+  backLink.style.cursor = 'none'; 
 
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
