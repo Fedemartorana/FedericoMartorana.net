@@ -8,17 +8,19 @@
 </head>
 <body>
 
-  <!-- Contenitore centrale (parole generate da JS) -->
-  <div class="center-container" id="text-container"></div>
+  <div class="center-container" id="text-container">
+    <!-- Le scritte saranno generate con JS -->
+  </div>
 
   <!-- Fascia in basso -->
   <div id="layout-footer">
     <span class="date-time"></span>
-    <div>
-      <span id="layout-text"></span>
-      <span id="cursor-position" style="margin-left: 15px;"></span>
-    </div>
+    <span id="layout-text">Reality</span>
+    <span id="cursor-position"></span>
   </div>
+
+  <!-- Cursore custom -->
+  <div id="custom-cursor">+</div>
 
   <script src="script.js"></script>
 </body>
