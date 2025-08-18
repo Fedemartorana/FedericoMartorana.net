@@ -21,14 +21,16 @@ html, body {
 }
 
 .project-title {
-    position: sticky;
+  position: sticky;
   top: 20px;  
-    font-family: Helvetica;
+  font-family: Helvetica;
   font-size: clamp(2rem, 10vw, 10rem);;
   text-transform: uppercase;
   margin: 0;
-    z-index: 1000;
-    animation: titleFade 0.8s ease-out forwards;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: titleFade 0.8s ease-out forwards;
 }
 
 @keyframes titleFade {
