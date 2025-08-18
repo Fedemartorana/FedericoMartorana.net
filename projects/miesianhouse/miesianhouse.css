@@ -78,9 +78,9 @@ html, body {
 
 /* Didascalia in basso a sinistra */
 .additional-image figcaption {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
+  position: relative;
+  bottom: 0px;
+  left: 0px;
   font-family: monospace;
   font-size: 0.9rem;
   color: var(--reality-color);
