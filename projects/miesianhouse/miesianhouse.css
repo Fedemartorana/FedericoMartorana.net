@@ -3,8 +3,8 @@ html, body {
   padding: 0;
   font-family: Helvetica, sans-serif;
   background: white;
-  color: var(--reality-color);
-  cursor: none; /* Nasconde cursore di default */
+  color: var(--reality-color); /* tutti i testi prendono il colore della reality */
+  cursor: none; 
 }
 
 .project-container {
@@ -55,11 +55,11 @@ html, body {
   gap: 1.5rem;
 }
 
-/* Singola immagine con descrizione */
+/* Singola immagine con didascalia */
 .additional-image {
   position: relative;
   display: inline-block;
-  cursor: none; /* usa cursore personalizzato */
+  cursor: none;
   border-radius: 4px;
   overflow: hidden;
 }
@@ -71,21 +71,9 @@ html, body {
   border-radius: 4px;
 }
 
-/* Overlay al passaggio del mouse */
+/* Eliminata patina colorata sulle immagini */
 .additional-image::after {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--reality-color, rgba(0,0,0,0.7));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  border-radius: 4px;
-  z-index: 1;
-}
-
-.additional-image:hover::after {
-  opacity: 0.35;
+  content: none;
 }
 
 /* Didascalia in basso a sinistra */
@@ -96,14 +84,13 @@ html, body {
   font-family: monospace;
   font-size: 0.9rem;
   color: var(--reality-color);
-
 }
 
 #back-link {
   text-decoration: none;
   font-size: 0.9rem;
   align-self: flex-start;
-  cursor: none; /* cursore personalizzato */
+  cursor: none;
   color: inherit;
 }
 
