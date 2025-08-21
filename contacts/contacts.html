@@ -1,49 +1,36 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacts</title>
-  <link rel="stylesheet" href="contacts.css" />
+  <link rel="stylesheet" href="contacts.css">
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="contacts.js" defer></script>
 </head>
 <body>
-  <div class="project-container">
-    <h1 class="project-title">CONTACTS</h1>
+  <h1 class="page-title">contacts</h1>
 
-    <!-- Modulo contatti -->
-    <form id="contact-form" class="contact-form">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="from_name" required />
-
-      <label for="email">Email</label>
-      <input type="email" id="email" name="reply_to" required />
-
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="6" required></textarea>
-
+  <div class="form-container">
+    <form id="contact-form">
+      <input type="text" name="from_name" placeholder="Your name" required>
+      <input type="email" name="reply_to" placeholder="Your email" required>
+      <textarea name="message" placeholder="Your message" required></textarea>
       <button type="submit">Send</button>
     </form>
-
-    <!-- Numero di telefono -->
-    <div class="contact-info">
-      <strong>Phone</strong><br>
-      +39 327 202 4340
-    </div>
-
-    <a href="#" id="back-link">← Back to works</a>
+    <p id="form-status"></p>
   </div>
 
-  <!-- Fascia footer -->
-  <div id="layout-footer">
-    <span class="date-time"></span>
-    <span id="layout-text">Reality</span>
-    <span id="cursor-position"></span>
+  <div class="info-bar">
+    <span id="reality-number">Reality #0</span>
+    <span id="date-time"></span>
+    <span id="cursor-position">x:0 y:0</span>
+    <a href="index.html" class="back-link">back to home</a>
   </div>
 
-  <!-- Cursore personalizzato -->
-  <div id="custom-cursor">+</div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="contacts.js"></script>
+  <!-- Overlay GOTCHA -->
+  <div id="gotcha-overlay">
+    <span>GOTCHA</span>
+  </div>
 </body>
 </html>
