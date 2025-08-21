@@ -58,7 +58,6 @@ if (backLink) {
 /* -------------------
    Modal immagini
 ------------------- */
-
 const modal = document.getElementById('imageModal');
 const modalImg = modal.querySelector('img');
 const closeBtn = modal.querySelector('.close-btn');
