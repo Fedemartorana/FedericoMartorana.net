@@ -1,141 +1,71 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: Helvetica, sans-serif;
-  background: white;
-  color: var(--reality-color);
-  cursor: none;
-}
+// Parametri da URL
+const urlParams = new URLSearchParams(window.location.search);
+const color = urlParams.get('color') || '#000000';
+const layout = urlParams.get('layoutNum') || '–';
 
-.project-container {
-  padding: 3rem 2rem;
-  max-width: 700px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
+// Imposta colore dinamico
+document.documentElement.style.setProperty('--reality-color', color);
 
-.project-title {
-  position: sticky;
-  top: 20px;
-  font-size: clamp(2rem, 10vw, 8rem);
-  text-transform: uppercase;
-  margin: 0;
-  z-index: 1000;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: titleFade 0.8s ease-out forwards;
-}
+// Aggiorna "Reality #"
+const layoutText = document.getElementById("layout-text");
+if (layoutText) layoutText.textContent = `Reality #${layout}`;
 
-@keyframes titleFade {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+// Data e ora
+const dateTimeSpan = document.querySelector('.date-time');
+function updateDateTime() {
+  const now = new Date();
+  const formatted = now.toLocaleDateString('it-IT') + ' ' +
+    now.toLocaleTimeString('it-IT', { hour12: false });
+  if (dateTimeSpan) dateTimeSpan.textContent = formatted;
+}
+updateDateTime();
+setInterval(updateDateTime, 1000);
+
+// Cursore custom
+const cursor = document.getElementById('custom-cursor');
+const cursorPosition = document.getElementById('cursor-position');
+window.addEventListener('mousemove', e => {
+  if (cursor) {
+    cursor.style.left = `${e.clientX}px`;
+    cursor.style.top = `${e.clientY}px`;
   }
+  if (cursorPosition) {
+    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+  }
+});
+
+// Colore titolo e link back
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
+
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.style.cursor = 'none';
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetURL = `../../index.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    window.location.href = targetURL;
+  });
 }
 
-.contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+/* -------------------
+   EmailJS integrazione
+------------------- */
+(function() {
+  emailjs.init("Hwzu2esk_kltPrwsd"); // sostituisci con la tua Public Key
+})();
 
-.contact-form label {
-  font-weight: light;
-  font-size: 0.9rem;
-}
+const contactForm = document.getElementById("contact-form");
+if (contactForm) {
+  contactForm.addEventListener("submit", function(e) {
+    e.preventDefault();
 
-.contact-form input,
-.contact-form textarea {
-  padding: 10px;
-  border: 0.5px solid var(--reality-color);
-  border-radius: 0px;
-  font-size: 1rem;
-  outline: none;
-  background: white;
-  color: var(--reality-color);
-}
-
-.contact-form button {
-  padding: 10px 20px;
-  background: var(--reality-color);
-  color: white;
-  border: none;
-  border-radius: 0px;
-  cursor: none;
-  font-size: 1rem;
-}
-
-.contact-form button:hover {
-  opacity: 0.8;
-}
-
-.contact-info {
-  font-size: 1rem;
-  line-height: 1.4;
-}
-
-/* Footer */
-#layout-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: var(--reality-color, #000);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 15px;
-  font-family: monospace;
-  font-size: 12px;
-  color: white;
-  z-index: 1000;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-/* Cursore personalizzato */
-#custom-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
-  transform: translate(-50%, -50%);
-  transition: color 0.3s;
-}
-
-#gotcha-overlay {
-  position: fixed;
-  inset: 0;
-  background: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--reality-color);
-  font-size: clamp(3rem, 15vw, 10rem);
-  font-weight: bold;
-  text-transform: uppercase;
-  flex-direction: column;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.6s ease;
-  z-index: 5000;
-}
-
-#gotcha-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-#gotcha-overlay #gotcha-close {
-  margin-top: 2rem;
-  font-size: clamp(1rem, 5vw, 2rem);
-  cursor: none;
-  color: var(--reality-color);
-}
+    emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
+      .then(() => {
+        contactForm.reset();
+        const overlay = document.getElementById("gotcha-overlay");
+        overlay.classList.add("active"); // mostra overlay
+      })
+      .catch((error) => {
+        alert("Failed to send message: " + JSON.stringify(error));
