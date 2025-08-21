@@ -110,31 +110,32 @@ html, body {
   transition: color 0.3s;
 }
 
-/* Overlay GOTCHA */
 #gotcha-overlay {
   position: fixed;
   inset: 0;
   background: white;
-  display: none; /* nascosto di default */
+  display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  z-index: 9999;
-}
-
-.gotcha-text {
-  font-size: 8vw;
-  font-weight: bold;
   color: var(--reality-color);
+  font-size: clamp(3rem, 15vw, 10rem);
+  font-weight: bold;
   text-transform: uppercase;
-  text-align: center;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease;
+  z-index: 5000;
 }
 
-.gotcha-close {
-  margin-top: 4rem;
-  font-size: 3rem;
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-  text-align: center;
+#gotcha-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+#gotcha-overlay #gotcha-close {
+  margin-top: 2rem;
+  font-size: clamp(1rem, 5vw, 2rem);
+  cursor: none;
+  color: var(--reality-color);
 }
