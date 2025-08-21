@@ -2,40 +2,46 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacts</title>
   <link rel="stylesheet" href="contacts.css">
 </head>
 <body>
-  <!-- Fascia superiore -->
-  <div id="layout-text"></div>
-  <div class="date-time"></div>
-  <div id="cursor-position"></div>
-  <div id="custom-cursor">+</div>
-  <a href="#" id="back-link">← back</a>
+  <!-- Titolo -->
+  <h1 class="page-title">contacts</h1>
 
-  <!-- Contenuto principale -->
-  <main class="contact-container">
-    <h1 class="page-title">Contacts</h1>
-
-    <div class="contact-info">
-      <p>Email: <a href="mailto:Federico.martorana@outlook.it">Federico.martorana@outlook.it</a></p>
-      <p>Tel: <a href="tel:+393272024340">+39 327 2024340</a></p>
-    </div>
-
-    <form class="contact-form" action="mailto:Federico.martorana@outlook.it" method="POST" enctype="text/plain">
-      <label for="name">Name</label>
+  <!-- Modulo contatti -->
+  <div class="contact-container">
+    <form id="contact-form">
+      <label for="name">Nome</label>
       <input type="text" id="name" name="name" required>
 
       <label for="email">Email</label>
       <input type="email" id="email" name="email" required>
 
-      <label for="message">Message</label>
+      <label for="message">Messaggio</label>
       <textarea id="message" name="message" rows="6" required></textarea>
 
-      <button type="submit" class="submit-btn">Send</button>
+      <button type="submit">Invia</button>
     </form>
-  </main>
 
+    <div class="info-box">
+      <p><strong>Telefono:</strong> +39 3272024340</p>
+    </div>
+  </div>
+
+  <!-- Fascia in basso -->
+  <div class="bottom-bar">
+    <span id="layout-text"></span>
+    <span class="date-time"></span>
+    <span id="cursor-position"></span>
+  </div>
+
+  <!-- Cursore -->
+  <div id="custom-cursor">+</div>
+
+  <!-- Script EmailJS + personalizzazione -->
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script src="contacts.js"></script>
 </body>
 </html>
