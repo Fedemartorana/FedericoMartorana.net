@@ -5,32 +5,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacts</title>
   <link rel="stylesheet" href="contacts.css">
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script src="contacts.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2/dist/email.min.js"></script>
 </head>
 <body>
-  <h1 class="page-title">contacts</h1>
+  <div class="page-container">
+    <!-- Titolo -->
+    <h1 class="page-title">contacts</h1>
 
-  <div class="form-container">
+    <!-- Form -->
     <form id="contact-form">
       <input type="text" name="from_name" placeholder="Your name" required>
       <input type="email" name="reply_to" placeholder="Your email" required>
       <textarea name="message" placeholder="Your message" required></textarea>
       <button type="submit">Send</button>
     </form>
-    <p id="form-status"></p>
-  </div>
 
-  <div class="info-bar">
-    <span id="reality-number">Reality #0</span>
-    <span id="date-time"></span>
-    <span id="cursor-position">x:0 y:0</span>
-    <a href="index.html" class="back-link">back to home</a>
+    <!-- Fascia info in basso -->
+    <div class="bottom-bar">
+      <span id="reality-number"></span> —
+      <span id="date-time"></span> —
+      <span id="cursor-pos"></span> —
+      <a href="index.html" class="back-link">back to home</a>
+    </div>
   </div>
 
   <!-- Overlay GOTCHA -->
   <div id="gotcha-overlay">
-    <span>GOTCHA</span>
+    <div class="gotcha-text">GOTCHA</div>
   </div>
+
+  <script src="contacts.js"></script>
 </body>
 </html>
