@@ -1,42 +1,73 @@
-/* Contenitore immagini aggiuntive -> griglia responsive */
-.additional-images {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-/* Singola immagine con didascalia */
-.additional-image {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
 /* Cornice quadrata invisibile */
 .additional-image .image-frame {
+  position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* sempre quadrato */
+  aspect-ratio: 1 / 1; 
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent; /* cornice invisibile */
+  background: transparent;
   border-radius: 4px;
   overflow: hidden;
+  cursor: pointer;
 }
 
-/* Immagini adattate dentro al quadrato */
+/* Immagini adattate */
 .additional-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* l’immagine non si deforma */
+  object-fit: contain;
+  display: block;
 }
 
-/* Didascalia */
-.additional-image figcaption {
-  margin-top: 8px;
-  font-family: monospace;
-  font-size: 0.9rem;
+/* Patina hover */
+.additional-image .image-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--reality-color);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.additional-image .image-frame:hover::after {
+  opacity: 0.4; /* livello trasparenza */
+}
+
+/* Modal fullscreen */
+#imageModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2000;
+}
+
+#imageModal.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+#imageModal img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+/* Bottone chiusura */
+#imageModal .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 2rem;
+  font-weight: bold;
   color: var(--reality-color);
+  cursor: pointer;
+  user-select: none;
 }
