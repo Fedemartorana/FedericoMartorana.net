@@ -1,72 +1,37 @@
-// Parametri da URL
-const urlParams = new URLSearchParams(window.location.search);
-const color = urlParams.get('color') || '#000000';
-const layout = urlParams.get('layoutNum') || '–';
-
-// Imposta colore dinamico
-document.documentElement.style.setProperty('--reality-color', color);
-
-// Aggiorna "Reality #"
-const layoutText = document.getElementById("layout-text");
-if (layoutText) layoutText.textContent = `Reality #${layout}`;
-
-// Data e ora
-const dateTimeSpan = document.querySelector('.date-time');
-function updateDateTime() {
-  const now = new Date();
-  const formatted = now.toLocaleDateString('it-IT') + ' ' +
-    now.toLocaleTimeString('it-IT', { hour12: false });
-  if (dateTimeSpan) dateTimeSpan.textContent = formatted;
-}
-updateDateTime();
-setInterval(updateDateTime, 1000);
-
-// Cursore custom
-const cursor = document.getElementById('custom-cursor');
-const cursorPosition = document.getElementById('cursor-position');
-window.addEventListener('mousemove', e => {
-  if (cursor) {
-    cursor.style.left = `${e.clientX}px`;
-    cursor.style.top = `${e.clientY}px`;
-  }
-  if (cursorPosition) {
-    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
-  }
-});
-
-// Colore titolo e link back
-const projectTitle = document.querySelector('.project-title');
-if (projectTitle) projectTitle.style.color = color;
-
-const backLink = document.getElementById('back-link');
-if (backLink) {
-  backLink.style.color = color;
-  backLink.style.cursor = 'none';
-  backLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
-    window.location.href = targetURL;
-  });
-}
-
-/* -------------------
-   EmailJS integrazione
-------------------- */
+// Inizializza EmailJS con la tua Public Key
 (function() {
-  emailjs.init("Hwzu2esk_kltPrwsd"); // sostituisci con la tua Public Key
+  emailjs.init("YOUR_PUBLIC_KEY"); // sostituisci con la tua public key
 })();
 
-const contactForm = document.getElementById("contact-form");
-if (contactForm) {
-  contactForm.addEventListener("submit", function(e) {
-    e.preventDefault();
+// Gestione invio form
+document.getElementById("contact-form").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-    emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
-      .then(() => {
-        alert("Message sent successfully!");
-        contactForm.reset();
-      }, (error) => {
-        alert("Failed to send message: " + JSON.stringify(error));
-      });
-  });
+  emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+    .then(() => {
+      // Mostra overlay GOTCHA
+      document.getElementById("gotcha-overlay").style.display = "flex";
+      this.reset();
+    }, (error) => {
+      document.getElementById("form-status").innerText = "Failed to send message. Try again.";
+      console.error("EmailJS error:", error);
+    });
+});
+
+// Reality number random
+const realityNumber = Math.floor(Math.random() * 240) + 1;
+document.getElementById("reality-number").innerText = `Reality #${realityNumber}`;
+
+// Data e ora live
+function updateDateTime() {
+  const now = new Date();
+  const formatted = now.toLocaleString();
+  document.getElementById("date-time").innerText = formatted;
 }
+setInterval(updateDateTime, 1000);
+updateDateTime();
+
+// Posizione cursore
+document.addEventListener("mousemove", (e) => {
+  document.getElementById("cursor-position").innerText = `x:${e.clientX} y:${e.clientY}`;
+});
