@@ -53,7 +53,7 @@ if (backLink) {
    EmailJS integrazione
 ------------------- */
 (function() {
-  emailjs.init("YOUR_PUBLIC_KEY"); // sostituisci con la tua Public Key
+  emailjs.init("Hwzu2esk_kltPrwsd"); // sostituisci con la tua Public Key
 })();
 
 const contactForm = document.getElementById("contact-form");
@@ -61,7 +61,7 @@ if (contactForm) {
   contactForm.addEventListener("submit", function(e) {
     e.preventDefault();
 
-    emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+    emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
       .then(() => {
         alert("Message sent successfully!");
         contactForm.reset();
