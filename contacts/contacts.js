@@ -1,32 +1,72 @@
-// Inizializza EmailJS
-(function() {
-  emailjs.init("YOUR_PUBLIC_KEY"); // sostituisci con la tua public key
-})();
+// Parametri da URL
+const urlParams = new URLSearchParams(window.location.search);
+const color = urlParams.get('color') || '#000000';
+const layout = urlParams.get('layoutNum') || '–';
 
-// Gestione invio form
-document.getElementById("contact-form").addEventListener("submit", function(event) {
-  event.preventDefault();
+// Imposta colore dinamico
+document.documentElement.style.setProperty('--reality-color', color);
 
-  emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
-    .then(() => {
-      // Mostra overlay GOTCHA
-      document.getElementById("gotcha-overlay").style.display = "flex";
-    }, (error) => {
-      alert("FAILED... " + JSON.stringify(error));
-    });
-});
+// Aggiorna "Reality #"
+const layoutText = document.getElementById("layout-text");
+if (layoutText) layoutText.textContent = `Reality #${layout}`;
 
-// Fascia info
+// Data e ora
+const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
-  document.getElementById("date-time").textContent = now.toLocaleString();
+  const formatted = now.toLocaleDateString('it-IT') + ' ' +
+    now.toLocaleTimeString('it-IT', { hour12: false });
+  if (dateTimeSpan) dateTimeSpan.textContent = formatted;
 }
-setInterval(updateDateTime, 1000);
 updateDateTime();
+setInterval(updateDateTime, 1000);
 
-document.addEventListener("mousemove", (e) => {
-  document.getElementById("cursor-pos").textContent = `x:${e.clientX}, y:${e.clientY}`;
+// Cursore custom
+const cursor = document.getElementById('custom-cursor');
+const cursorPosition = document.getElementById('cursor-position');
+window.addEventListener('mousemove', e => {
+  if (cursor) {
+    cursor.style.left = `${e.clientX}px`;
+    cursor.style.top = `${e.clientY}px`;
+  }
+  if (cursorPosition) {
+    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+  }
 });
 
-// Numero random reality
-document.getElementById("reality-number").textContent = `reality ${Math.floor(Math.random() * 240) + 1}`;
+// Colore titolo e link back
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
+
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.style.cursor = 'none';
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    window.location.href = targetURL;
+  });
+}
+
+/* -------------------
+   EmailJS integrazione
+------------------- */
+(function() {
+  emailjs.init("YOUR_PUBLIC_KEY"); // sostituisci con la tua Public Key
+})();
+
+const contactForm = document.getElementById("contact-form");
+if (contactForm) {
+  contactForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+      .then(() => {
+        alert("Message sent successfully!");
+        contactForm.reset();
+      }, (error) => {
+        alert("Failed to send message: " + JSON.stringify(error));
+      });
+  });
+}
