@@ -1,15 +1,14 @@
+// Imposta colore reality e numero da URL
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
 const layout = urlParams.get('layoutNum') || '–';
 
-// Imposta colore Reality e variabile CSS
 document.documentElement.style.setProperty('--reality-color', color);
 
-// Aggiorna testo Reality
 const layoutText = document.getElementById("layout-text");
 if (layoutText) layoutText.textContent = `Reality #${layout}`;
 
-// Aggiorna data e ora
+// Data e ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
@@ -20,14 +19,9 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Cursore personalizzato e coordinate
+// Cursore
 const cursor = document.getElementById('custom-cursor');
 const cursorPosition = document.getElementById('cursor-position');
-
-if (cursor) cursor.style.color = color;
-if (layoutText) layoutText.style.color = 'white';
-if (dateTimeSpan) dateTimeSpan.style.color = 'white';
-if (cursorPosition) cursorPosition.style.color = 'white';
 
 window.addEventListener('mousemove', e => {
   if (cursor) {
@@ -39,15 +33,18 @@ window.addEventListener('mousemove', e => {
   }
 });
 
-// Back link verso la home works
-const backLink = document.getElementById('back-link');
-if (backLink) {
-  backLink.style.color = color;
-  backLink.style.cursor = 'none';
+// EmailJS inizializzazione (sostituisci con le tue chiavi!)
+emailjs.init("YOUR_PUBLIC_KEY");
 
-  backLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
-    window.location.href = targetURL;
-  });
-}
+const form = document.getElementById("contact-form");
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+    .then(() => {
+      alert("Messaggio inviato con successo!");
+      form.reset();
+    }, (error) => {
+      alert("Errore nell'invio: " + JSON.stringify(error));
+    });
+});
