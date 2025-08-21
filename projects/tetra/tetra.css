@@ -1,178 +1,110 @@
-html, body {
+:root {
+  --reality-color: #000000;
+}
+
+body {
   margin: 0;
-  padding: 0;
-  font-family: Helvetica, sans-serif;
-  background: white;
-  color: var(--reality-color);
-  cursor: none; 
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+  cursor: none; /* mai cursore standard */
 }
 
-.project-container {
-  padding: 3rem 2rem;
-  max-width: 100%;
-  margin: 0 auto;
+/* Fascia top */
+.top-bar {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  justify-content: space-between;
+  padding: 10px;
+  font-size: 14px;
+  background: #000;
 }
 
+/* Titolo */
 .project-title {
-  position: sticky;
-  top: 20px;  
-  font-size: clamp(2rem, 10vw, 8rem);
-  text-transform: uppercase;
-  margin: 0;
-  z-index: 1000;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: titleFade 0.8s ease-out forwards;
-}
-
-@keyframes titleFade {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.project-image {
-  width: 100%;
-  height: auto;
-  object-fit: contain;
-}
-
-.project-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-
-/* Griglia immagini */
-.additional-images {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.additional-image {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
+  margin: 20px 0;
 }
 
-/* Cornice quadrata invisibile */
-.additional-image .image-frame {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: transparent;
-  border-radius: 4px;
-  overflow: hidden;
-  cursor: pointer;
-}
-
-.additional-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+/* Link back */
+#back-link {
   display: block;
+  text-align: center;
+  margin-bottom: 20px;
+  text-decoration: none;
 }
 
-/* Patina hover */
-.additional-image .image-frame::after {
+/* Galleria immagini */
+.gallery {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.image-frame {
+  position: relative;
+  overflow: hidden;
+  max-width: 300px;
+}
+
+.image-frame img {
+  width: 100%;
+  display: block;
+  cursor: none; /* forza cursore custom */
+}
+
+.image-frame::after {
   content: "";
   position: absolute;
   inset: 0;
   background-color: var(--reality-color);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s;
 }
 
-.additional-image .image-frame:hover::after {
-  opacity: 0.4;
+.image-frame:hover::after {
+  opacity: 0.4; /* overlay colorato */
 }
 
-/* Didascalia */
-.additional-image figcaption {
-  margin-top: 8px;
-  font-family: monospace;
-  font-size: 0.9rem;
-  color: var(--reality-color);
-}
-
-/* Modal fullscreen */
+/* Modal */
 #imageModal {
+  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.9);
-  display: flex;
+  background: rgba(0,0,0,0.95);
   justify-content: center;
   align-items: center;
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 2000;
+  z-index: 1000;
 }
 
 #imageModal.active {
-  visibility: visible;
-  opacity: 1;
+  display: flex;
 }
 
 #imageModal img {
   max-width: 90%;
   max-height: 90%;
-  object-fit: contain;
-  border-radius: 8px;
 }
 
-/* Bottone chiusura */
-#imageModal .close-btn {
+.close-btn {
   position: absolute;
   top: 20px;
   right: 30px;
-  font-size: 2rem;
+  font-size: 40px;
   font-weight: bold;
+  cursor: none;
   color: var(--reality-color);
-  cursor: pointer;
-  user-select: none;
+  z-index: 1001;
 }
 
-/* Footer */
-#layout-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background-color: var(--reality-color, #000);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6px 15px;
-  font-family: monospace;
-  font-size: 12px;
-  color: white;
-  z-index: 1000;
-  box-sizing: border-box;
-  user-select: none;
-}
-
-/* Cursore personalizzato */
+/* Cursore custom */
 #custom-cursor {
   position: fixed;
-  left: 0;
   top: 0;
-  width: 20px;
-  height: 20px;
-  font-size: 20px;
-  pointer-events: none;
-  z-index: 9999;
-  user-select: none;
+  left: 0;
   transform: translate(-50%, -50%);
-  transition: color 0.3s;
+  pointer-events: none;
+  font-size: 24px;
+  color: var(--reality-color);
+  z-index: 2000;
 }
