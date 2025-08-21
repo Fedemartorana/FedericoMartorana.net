@@ -1,110 +1,178 @@
-:root {
-  --reality-color: #000000;
-}
-
-body {
+html, body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: white;
-  cursor: none; /* mai cursore standard */
+  padding: 0;
+  font-family: Helvetica, sans-serif;
+  background: white;
+  color: var(--reality-color);
+  cursor: none; 
 }
 
-/* Fascia top */
-.top-bar {
+.project-container {
+  padding: 3rem 2rem;
+  max-width: 100%;
+  margin: 0 auto;
   display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  font-size: 14px;
-  background: #000;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-/* Titolo */
 .project-title {
-  text-align: center;
-  margin: 20px 0;
+  position: sticky;
+  top: 20px;  
+  font-size: clamp(2rem, 10vw, 8rem);
+  text-transform: uppercase;
+  margin: 0;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: titleFade 0.8s ease-out forwards;
 }
 
-/* Link back */
-#back-link {
-  display: block;
-  text-align: center;
-  margin-bottom: 20px;
-  text-decoration: none;
+@keyframes titleFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Galleria immagini */
-.gallery {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.image-frame {
-  position: relative;
-  overflow: hidden;
-  max-width: 300px;
-}
-
-.image-frame img {
+.project-image {
   width: 100%;
-  display: block;
-  cursor: none; /* forza cursore custom */
+  height: auto;
+  object-fit: contain;
 }
 
-.image-frame::after {
+.project-description {
+  font-size: 1rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* Griglia immagini */
+.additional-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.additional-image {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Cornice quadrata invisibile */
+.additional-image .image-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.additional-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Patina hover */
+.additional-image .image-frame::after {
   content: "";
   position: absolute;
   inset: 0;
   background-color: var(--reality-color);
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s ease;
 }
 
-.image-frame:hover::after {
-  opacity: 0.4; /* overlay colorato */
+.additional-image .image-frame:hover::after {
+  opacity: 0.4;
 }
 
-/* Modal */
+/* Didascalia */
+.additional-image figcaption {
+  margin-top: 8px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: var(--reality-color);
+}
+
+/* Modal fullscreen */
 #imageModal {
-  display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.95);
+  background: rgba(0,0,0,0.9);
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 2000;
 }
 
 #imageModal.active {
-  display: flex;
+  visibility: visible;
+  opacity: 1;
 }
 
 #imageModal img {
   max-width: 90%;
   max-height: 90%;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
-.close-btn {
+/* Bottone chiusura */
+#imageModal .close-btn {
   position: absolute;
   top: 20px;
   right: 30px;
-  font-size: 40px;
+  font-size: 2rem;
   font-weight: bold;
-  cursor: none;
   color: var(--reality-color);
-  z-index: 1001;
+  cursor: pointer;
+  user-select: none;
 }
 
-/* Cursore custom */
+/* Footer */
+#layout-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--reality-color, #000);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 15px;
+  font-family: monospace;
+  font-size: 12px;
+  color: white;
+  z-index: 1000;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+/* Cursore personalizzato */
 #custom-cursor {
   position: fixed;
-  top: 0;
   left: 0;
-  transform: translate(-50%, -50%);
+  top: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
   pointer-events: none;
-  font-size: 24px;
-  color: var(--reality-color);
-  z-index: 2000;
+  z-index: 9999;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: color 0.3s;
 }
