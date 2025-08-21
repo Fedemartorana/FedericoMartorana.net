@@ -1,90 +1,111 @@
-body {
+html, body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  font-family: Helvetica, sans-serif;
   background: white;
-  color: black;
+  color: var(--reality-color);
+  cursor: none;
 }
 
-.page-container {
-  padding: 2rem;
-  text-align: center;
+.project-container {
+  padding: 3rem 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
-.page-title {
-  font-size: 3rem;
-  margin-bottom: 2rem;
+.project-title {
+  position: sticky;
+  top: 20px;
+  font-size: clamp(2rem, 10vw, 8rem);
+  text-transform: uppercase;
+  margin: 0;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: titleFade 0.8s ease-out forwards;
 }
 
-form {
+@keyframes titleFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 400px;
-  margin: 0 auto;
 }
 
-input, textarea {
-  padding: 0.8rem;
+.contact-form label {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 10px;
+  border: 2px solid var(--reality-color);
+  border-radius: 4px;
   font-size: 1rem;
-  border: 1px solid #000;
-  border-radius: 8px;
   outline: none;
-  cursor: text; /* cursore normale */
+  background: white;
+  color: var(--reality-color);
 }
 
-button {
-  padding: 0.8rem;
-  background: black;
+.contact-form button {
+  padding: 10px 20px;
+  background: var(--reality-color);
   color: white;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: 4px;
+  cursor: none;
+  font-size: 1rem;
 }
 
-button:hover {
-  background: #444;
+.contact-form button:hover {
+  opacity: 0.8;
 }
 
-/* Fascia info */
-.bottom-bar {
+.contact-info {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Footer */
+#layout-footer {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  background: white;
-  border-top: 1px solid black;
-  padding: 0.5rem;
-  font-size: 0.9rem;
+  background-color: var(--reality-color, #000);
   display: flex;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.back-link {
-  color: black;
-  text-decoration: none;
-}
-
-.back-link:hover {
-  text-decoration: underline;
-}
-
-/* Overlay GOTCHA */
-#gotcha-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: white;
-  display: none; /* nascosto di default */
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  padding: 6px 15px;
+  font-family: monospace;
+  font-size: 12px;
+  color: white;
   z-index: 1000;
+  box-sizing: border-box;
+  user-select: none;
 }
 
-.gotcha-text {
-  font-size: 5rem;
-  font-weight: bold;
-  letter-spacing: 4px;
+/* Cursore personalizzato */
+#custom-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  pointer-events: none;
+  z-index: 9999;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: color 0.3s;
 }
