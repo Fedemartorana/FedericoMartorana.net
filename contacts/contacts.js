@@ -62,13 +62,19 @@ if (contactForm) {
     e.preventDefault();
 
     emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
-      .then(() => {
-        // Mostra overlay GOTCHA
-        const overlay = document.getElementById("gotcha-overlay");
-        overlay.style.display = "flex";
-        contactForm.reset();
-      }, (error) => {
-        alert("Failed to send message: " + JSON.stringify(error));
-      });
-  }); 
+     .then(() => {
+  contactForm.reset();
+  
+  const overlay = document.getElementById("gotcha-overlay");
+  overlay.classList.add("active"); // aggiunge classe con fade-in
+});
 }
+                               
+const gotchaClose = document.getElementById("gotcha-close");
+gotchaClose.addEventListener("click", () => {
+  const overlay = document.getElementById("gotcha-overlay");
+  overlay.classList.remove("active"); // fade-out
+  setTimeout(() => {
+    window.location.href = `../../index.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+  }, 600); // attende la durata del fade
+});
