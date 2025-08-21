@@ -34,13 +34,13 @@ window.addEventListener('mousemove', e => {
 });
 
 // EmailJS inizializzazione (sostituisci con le tue chiavi!)
-emailjs.init("YOUR_PUBLIC_KEY");
+emailjs.init("Hwzu2esk_kltPrwsd");
 
 const form = document.getElementById("contact-form");
 form.addEventListener("submit", function(e) {
   e.preventDefault();
 
-  emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
+  emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
     .then(() => {
       alert("Messaggio inviato con successo!");
       form.reset();
