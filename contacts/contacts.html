@@ -1,47 +1,49 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contacts</title>
-  <link rel="stylesheet" href="contacts.css">
+  <link rel="stylesheet" href="contacts.css" />
 </head>
 <body>
-  <!-- Titolo -->
-  <h1 class="page-title">contacts</h1>
+  <div class="project-container">
+    <h1 class="project-title">CONTACTS</h1>
 
-  <!-- Modulo contatti -->
-  <div class="contact-container">
-    <form id="contact-form">
-      <label for="name">Nome</label>
-      <input type="text" id="name" name="name" required>
+    <!-- Modulo contatti -->
+    <form id="contact-form" class="contact-form">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="from_name" required />
 
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="reply_to" required />
 
-      <label for="message">Messaggio</label>
+      <label for="message">Message</label>
       <textarea id="message" name="message" rows="6" required></textarea>
 
-      <button type="submit">Invia</button>
+      <button type="submit">Send</button>
     </form>
 
-    <div class="info-box">
-      <p><strong>Telefono:</strong> +39 3272024340</p>
+    <!-- Numero di telefono -->
+    <div class="contact-info">
+      <strong>Phone</strong><br>
+      +39 327 202 4340
     </div>
+
+    <a href="#" id="back-link">← Back to works</a>
   </div>
 
-  <!-- Fascia in basso -->
-  <div class="bottom-bar">
-    <span id="layout-text"></span>
+  <!-- Fascia footer -->
+  <div id="layout-footer">
     <span class="date-time"></span>
+    <span id="layout-text">Reality</span>
     <span id="cursor-position"></span>
   </div>
 
-  <!-- Cursore -->
+  <!-- Cursore personalizzato -->
   <div id="custom-cursor">+</div>
 
-  <!-- Script EmailJS + personalizzazione -->
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="contacts.js"></script>
 </body>
 </html>
