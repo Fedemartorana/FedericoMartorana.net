@@ -7,14 +7,15 @@ document.documentElement.style.setProperty('--reality-color', color);
 
 // Aggiorna testo Reality con numero
 const layoutText = document.getElementById("layout-text");
-if(layoutText) layoutText.textContent = `Reality #${layout}`;
+if (layoutText) layoutText.textContent = `Reality #${layout}`;
 
 // Aggiorna data e ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
-  const formatted = now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', { hour12: false });
-  if(dateTimeSpan) dateTimeSpan.textContent = formatted;
+  const formatted = now.toLocaleDateString('it-IT') + ' ' +
+    now.toLocaleTimeString('it-IT', { hour12: false });
+  if (dateTimeSpan) dateTimeSpan.textContent = formatted;
 }
 updateDateTime();
 setInterval(updateDateTime, 1000);
@@ -22,11 +23,6 @@ setInterval(updateDateTime, 1000);
 // Cursore personalizzato e coordinate
 const cursor = document.getElementById('custom-cursor');
 const cursorPosition = document.getElementById('cursor-position');
-
-if(cursor) cursor.style.color = color;
-if(layoutText) layoutText.style.color = 'white';       // testo fascia sempre bianco
-if(dateTimeSpan) dateTimeSpan.style.color = 'white';
-if(cursorPosition) cursorPosition.style.color = 'white';
 
 window.addEventListener('mousemove', e => {
   if(cursor){
@@ -38,18 +34,45 @@ window.addEventListener('mousemove', e => {
   }
 });
 
-// Colore dinamico titolo e link back
+// Colore titolo e link back
 const projectTitle = document.querySelector('.project-title');
 if (projectTitle) projectTitle.style.color = color;
 
 const backLink = document.getElementById('back-link');
 if (backLink) {
   backLink.style.color = color;
-  backLink.style.cursor = 'none'; 
-
+  backLink.style.cursor = 'none';
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
     const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
     window.location.href = targetURL;
   });
 }
+
+/* -------------------
+   Modal immagini
+------------------- */
+const modal = document.getElementById('imageModal');
+const modalImg = modal.querySelector('img');
+const closeBtn = modal.querySelector('.close-btn');
+
+// Click su ogni immagine -> apri modal fullscreen
+document.querySelectorAll('.additional-image .image-frame img').forEach(img => {
+  img.style.cursor = 'none'; // mantiene cursore personalizzato
+  img.addEventListener('click', () => {
+    modalImg.src = img.src;
+    modal.classList.add('active');
+  });
+});
+
+// Chiudi modal con X
+closeBtn.addEventListener('click', () => {
+  modal.classList.remove('active');
+});
+
+// Chiudi modal cliccando sullo sfondo
+modal.addEventListener('click', e => {
+  if (e.target === modal) {
+    modal.classList.remove('active');
+  }
+});
