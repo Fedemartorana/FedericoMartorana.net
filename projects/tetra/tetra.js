@@ -24,22 +24,17 @@ setInterval(updateDateTime, 1000);
 const cursor = document.getElementById('custom-cursor');
 const cursorPosition = document.getElementById('cursor-position');
 
-if (cursor) cursor.style.color = color;
-if (layoutText) layoutText.style.color = 'white';       // testo fascia sempre bianco
-if (dateTimeSpan) dateTimeSpan.style.color = 'white';
-if (cursorPosition) cursorPosition.style.color = 'white';
-
 window.addEventListener('mousemove', e => {
-  if (cursor) {
+  if(cursor){
     cursor.style.left = `${e.clientX}px`;
     cursor.style.top = `${e.clientY}px`;
   }
-  if (cursorPosition) {
+  if(cursorPosition){
     cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
   }
 });
 
-// Colore dinamico titolo e link back
+// Colore titolo e link back
 const projectTitle = document.querySelector('.project-title');
 if (projectTitle) projectTitle.style.color = color;
 
@@ -47,7 +42,6 @@ const backLink = document.getElementById('back-link');
 if (backLink) {
   backLink.style.color = color;
   backLink.style.cursor = 'none';
-
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
     const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
@@ -62,8 +56,9 @@ const modal = document.getElementById('imageModal');
 const modalImg = modal.querySelector('img');
 const closeBtn = modal.querySelector('.close-btn');
 
-// Click su ogni immagine -> apri modal
+// Click su ogni immagine -> apri modal fullscreen
 document.querySelectorAll('.additional-image .image-frame img').forEach(img => {
+  img.style.cursor = 'none'; // mantiene cursore personalizzato
   img.addEventListener('click', () => {
     modalImg.src = img.src;
     modal.classList.add('active');
