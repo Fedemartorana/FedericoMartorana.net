@@ -1,10 +1,12 @@
-// Imposta colore reality e numero da URL
+// Parametri da URL
 const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
 const layout = urlParams.get('layoutNum') || '–';
 
+// Imposta colore dinamico
 document.documentElement.style.setProperty('--reality-color', color);
 
+// Aggiorna "Reality #"
 const layoutText = document.getElementById("layout-text");
 if (layoutText) layoutText.textContent = `Reality #${layout}`;
 
@@ -19,10 +21,9 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Cursore
+// Cursore custom
 const cursor = document.getElementById('custom-cursor');
 const cursorPosition = document.getElementById('cursor-position');
-
 window.addEventListener('mousemove', e => {
   if (cursor) {
     cursor.style.left = `${e.clientX}px`;
@@ -33,18 +34,39 @@ window.addEventListener('mousemove', e => {
   }
 });
 
-// EmailJS inizializzazione (sostituisci con le tue chiavi!)
-emailjs.init("Hwzu2esk_kltPrwsd");
+// Colore titolo e link back
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
 
-const form = document.getElementById("contact-form");
-form.addEventListener("submit", function(e) {
-  e.preventDefault();
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.style.cursor = 'none';
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    window.location.href = targetURL;
+  });
+}
 
-  emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
-    .then(() => {
-      alert("Messaggio inviato con successo!");
-      form.reset();
-    }, (error) => {
-      alert("Errore nell'invio: " + JSON.stringify(error));
-    });
-});
+/* -------------------
+   EmailJS integrazione
+------------------- */
+(function() {
+  emailjs.init("Hwzu2esk_kltPrwsd"); // sostituisci con la tua Public Key
+})();
+
+const contactForm = document.getElementById("contact-form");
+if (contactForm) {
+  contactForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
+      .then(() => {
+        alert("Message sent successfully!");
+        contactForm.reset();
+      }, (error) => {
+        alert("Failed to send message: " + JSON.stringify(error));
+      });
+  });
+}
