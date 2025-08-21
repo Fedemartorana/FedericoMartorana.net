@@ -62,7 +62,7 @@ html, body {
   background: var(--reality-color);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 0px;
   cursor: none;
   font-size: 1rem;
 }
