@@ -68,5 +68,5 @@ if (contactForm) {
       }, (error) => {
         alert("Failed to send message: " + JSON.stringify(error));
       });
-  });
+  }); 
 }
