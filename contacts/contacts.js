@@ -63,7 +63,9 @@ if (contactForm) {
 
     emailjs.sendForm("service_sgw22gh", "template_oirjqf4", this)
       .then(() => {
-        alert("Message sent successfully!");
+        // Mostra overlay GOTCHA
+        const overlay = document.getElementById("gotcha-overlay");
+        overlay.style.display = "flex";
         contactForm.reset();
       }, (error) => {
         alert("Failed to send message: " + JSON.stringify(error));
