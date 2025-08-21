@@ -109,3 +109,32 @@ html, body {
   transform: translate(-50%, -50%);
   transition: color 0.3s;
 }
+
+/* Overlay GOTCHA */
+#gotcha-overlay {
+  position: fixed;
+  inset: 0;
+  background: white;
+  display: none; /* nascosto di default */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+.gotcha-text {
+  font-size: 8vw;
+  font-weight: bold;
+  color: var(--reality-color);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.gotcha-close {
+  margin-top: 4rem;
+  font-size: 3rem;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+}
