@@ -53,3 +53,21 @@ if (backLink) {
     window.location.href = targetURL;
   });
 }
+const modal = document.getElementById('imageModal');
+const modalImg = modal.querySelector('img');
+const closeBtn = modal.querySelector('.close-btn');
+
+// Aggiunge click su immagini
+document.querySelectorAll('.additional-image img').forEach(img => {
+  img.addEventListener('click', () => {
+    if (window.innerWidth > 1024) { // solo desktop
+      modalImg.src = img.src;
+      modal.classList.add('active');
+    }
+  });
+});
+
+// Chiudi modal
+closeBtn.addEventListener('click', () => {
+  modal.classList.remove('active');
+});
