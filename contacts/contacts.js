@@ -1,37 +1,32 @@
-// Inizializza EmailJS con la tua Public Key
+// Inizializza EmailJS
 (function() {
   emailjs.init("YOUR_PUBLIC_KEY"); // sostituisci con la tua public key
 })();
 
 // Gestione invio form
-document.getElementById("contact-form").addEventListener("submit", function(e) {
-  e.preventDefault();
+document.getElementById("contact-form").addEventListener("submit", function(event) {
+  event.preventDefault();
 
   emailjs.sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", this)
     .then(() => {
       // Mostra overlay GOTCHA
       document.getElementById("gotcha-overlay").style.display = "flex";
-      this.reset();
     }, (error) => {
-      document.getElementById("form-status").innerText = "Failed to send message. Try again.";
-      console.error("EmailJS error:", error);
+      alert("FAILED... " + JSON.stringify(error));
     });
 });
 
-// Reality number random
-const realityNumber = Math.floor(Math.random() * 240) + 1;
-document.getElementById("reality-number").innerText = `Reality #${realityNumber}`;
-
-// Data e ora live
+// Fascia info
 function updateDateTime() {
   const now = new Date();
-  const formatted = now.toLocaleString();
-  document.getElementById("date-time").innerText = formatted;
+  document.getElementById("date-time").textContent = now.toLocaleString();
 }
 setInterval(updateDateTime, 1000);
 updateDateTime();
 
-// Posizione cursore
 document.addEventListener("mousemove", (e) => {
-  document.getElementById("cursor-position").innerText = `x:${e.clientX} y:${e.clientY}`;
+  document.getElementById("cursor-pos").textContent = `x:${e.clientX}, y:${e.clientY}`;
 });
+
+// Numero random reality
+document.getElementById("reality-number").textContent = `reality ${Math.floor(Math.random() * 240) + 1}`;
