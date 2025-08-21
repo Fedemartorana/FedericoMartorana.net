@@ -73,14 +73,15 @@ html, body {
   background: transparent;
   border-radius: 4px;
   overflow: hidden;
-  cursor: pointer;
 }
 
+/* Immagini adattate */
 .additional-image img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
+  cursor: none; /* forza cursore custom */
 }
 
 /* Patina hover */
@@ -91,6 +92,7 @@ html, body {
   background-color: var(--reality-color);
   opacity: 0;
   transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
 .additional-image .image-frame:hover::after {
@@ -139,7 +141,7 @@ html, body {
   font-size: 2rem;
   font-weight: bold;
   color: var(--reality-color);
-  cursor: pointer;
+  cursor: none; /* mantiene cursore custom */
   user-select: none;
 }
 
