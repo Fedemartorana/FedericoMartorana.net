@@ -1,36 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Info</title>
-  <link rel="stylesheet" href="info.css">
+  <link rel="stylesheet" href="info.css" />
 </head>
 <body>
-  <div class="page-title">INFO</div>
+  <div class="project-container">
+    <h1 class="project-title">INFO</h1>
+    
+    <!-- Foto profilo -->
+    <img src="/img/profile.jpg" alt="profile photo" class="project-image" />
+    
+    <!-- Testo biografico -->
+    <p class="project-description">
+      <strong>who</strong>
+      Federico Martorana
 
-  <div class="info-container">
-    <div class="photo-space">
-      <!-- Qui puoi mettere la tua foto -->
-      <img src="images/profile.jpg" alt="My photo">
-    </div>
-    <div class="bio">
-      <p>
-        Ciao, sono Federico Martorana, studente di Architettura.  
-        In questo sito raccolgo i miei lavori, i miei scritti e i miei progetti universitari.  
-        Credo nell’architettura come esperienza sensibile e come strumento critico capace di rinnovare il modo in cui percepiamo lo spazio.  
-      </p>
-      <a href="cv.pdf" target="_blank" class="cv-button">Open CV</a>
-    </div>
+      <strong>about</strong>
+      Studente di Architettura, appassionato di spazi e narrazioni.  
+      In questo sito raccolgo progetti, scritti ed esercizi di ricerca.  
+      Credo nell’architettura come esperienza sensibile e come strumento critico capace di rinnovare il modo in cui percepiamo lo spazio.
+    </p>
+
+    <!-- Bottone CV -->
+    <a href="cv.pdf" target="_blank" class="cv-button">Open CV</a>
+
+    <a href="#" id="back-link">← Back to home</a>
   </div>
 
-  <!-- Fascia in basso -->
-  <div id="info-bar">
-    <span id="reality-number"></span> | 
-    <span id="date-time"></span> | 
+  <!-- Fascia footer -->
+  <div id="layout-footer">
+    <span class="date-time"></span>
+    <span id="layout-text">Reality</span>
     <span id="cursor-position"></span>
-    <span class="back-link"><a href="index.html">back to home</a></span>
   </div>
+
+  <!-- Cursore personalizzato -->
+  <div id="custom-cursor">+</div>
 
   <script src="info.js"></script>
 </body>
