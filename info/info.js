@@ -1,23 +1,49 @@
-// Numero reality casuale
-const realityNumber = document.getElementById("realityNumber");
-realityNumber.textContent = "reality " + Math.floor(Math.random() * 240 + 1);
+const urlParams = new URLSearchParams(window.location.search);
+const color = urlParams.get('color') || '#000000';
+const layout = urlParams.get('layoutNum') || '–';
+
+// Imposta colore dinamico
+document.documentElement.style.setProperty('--reality-color', color);
+
+// Aggiorna Reality #
+const layoutText = document.getElementById("layout-text");
+if (layoutText) layoutText.textContent = `Reality #${layout}`;
 
 // Data e ora
-const dateTime = document.getElementById("dateTime");
+const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
-  dateTime.textContent = now.toLocaleString();
+  const formatted = now.toLocaleDateString('it-IT') + ' ' +
+    now.toLocaleTimeString('it-IT', { hour12: false });
+  if (dateTimeSpan) dateTimeSpan.textContent = formatted;
 }
-setInterval(updateDateTime, 1000);
 updateDateTime();
+setInterval(updateDateTime, 1000);
 
-// Posizione cursore
-const cursorPosition = document.getElementById("cursorPosition");
-document.addEventListener("mousemove", (e) => {
-  cursorPosition.textContent = `x:${e.clientX}, y:${e.clientY}`;
+// Cursore personalizzato
+const cursor = document.getElementById('custom-cursor');
+const cursorPosition = document.getElementById('cursor-position');
+window.addEventListener('mousemove', e => {
+  if (cursor) {
+    cursor.style.left = `${e.clientX}px`;
+    cursor.style.top = `${e.clientY}px`;
+  }
+  if (cursorPosition) {
+    cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
+  }
 });
 
-// Imposta colore reality
-const colors = ["#000000", "#FF0000", "#00FF00", "#0000FF", "#FF00FF", "#00FFFF", "#FFA500", "#800080", "#808080", "#008080"];
-const chosenColor = colors[Math.floor(Math.random() * colors.length)];
-document.documentElement.style.setProperty("--reality-color", chosenColor);
+// Colore titolo e link back
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
+
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.style.cursor = 'none';
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetURL = `../../index.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    window.location.href = targetURL;
+  });
+}
