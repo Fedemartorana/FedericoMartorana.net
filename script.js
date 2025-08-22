@@ -11,7 +11,7 @@ const colors = [
 ];
 
 // Etichette
-const labels = ["works", "extras", "info", "contacts"];
+const labels = ["works", "extras", "who", "contacts"];
 
 // Tutte le permutazioni
 function getAllPermutations(arr) {
