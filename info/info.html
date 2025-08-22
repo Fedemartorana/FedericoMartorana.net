@@ -7,27 +7,29 @@
   <link rel="stylesheet" href="info.css">
 </head>
 <body>
-  <h1 class="page-title">INFO</h1>
+  <div class="page-title">INFO</div>
 
   <div class="info-container">
-    <div class="photo">
-      <img src="your-photo.jpg" alt="My Photo">
+    <div class="photo-space">
+      <!-- Qui puoi mettere la tua foto -->
+      <img src="images/profile.jpg" alt="My photo">
     </div>
     <div class="bio">
       <p>
-        Ciao, sono Federico Martorana. Studio architettura e mi occupo di progetti che
-        spaziano dalla critica all’elaborazione progettuale, con particolare attenzione
-        all’esperienza dello spazio e al rapporto tra osservatore e opera.
+        Ciao, sono Federico Martorana, studente di Architettura.  
+        In questo sito raccolgo i miei lavori, i miei scritti e i miei progetti universitari.  
+        Credo nell’architettura come esperienza sensibile e come strumento critico capace di rinnovare il modo in cui percepiamo lo spazio.  
       </p>
-      <a href="cv.pdf" download class="cv-button">Download CV</a>
+      <a href="cv.pdf" target="_blank" class="cv-button">Open CV</a>
     </div>
   </div>
 
-  <div class="bottom-bar">
-    <span id="realityNumber"></span>
-    <span id="dateTime"></span>
-    <span id="cursorPosition"></span>
-    <a href="index.html" class="back-link">back to home</a>
+  <!-- Fascia in basso -->
+  <div id="info-bar">
+    <span id="reality-number"></span> | 
+    <span id="date-time"></span> | 
+    <span id="cursor-position"></span>
+    <span class="back-link"><a href="index.html">back to home</a></span>
   </div>
 
   <script src="info.js"></script>
