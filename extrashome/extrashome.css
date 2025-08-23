@@ -1,0 +1,107 @@
+/* Nasconde il cursore di sistema ovunque */
+html, body, * {
+    cursor: none !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Container rettangoli */
+.works-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 50vh; /* Ogni rettangolo occupa metà altezza della viewport */
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Singolo rettangolo */
+.project-square {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;           
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Immagine del progetto */
+.project-square img {
+    width: 50%;
+    height: auto;
+    display: block;
+}
+
+/* Overlay */
+.project-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Helvetica, sans-serif;
+    text-transform: uppercase;
+    font-size: 2.5rem;
+    transition: background 0.3s, color 0.3s;
+    color: transparent;
+    pointer-events: none; /* DISABILITA eventi mouse sul container */
+}
+
+/* Rendi il link dentro overlay cliccabile */
+.project-overlay a {
+    pointer-events: auto; /* ABILITA eventi mouse sul link */
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Fascia colorata in basso */
+#layout-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25px;
+  background-color: var(--reality-color, #000); /* variabile CSS impostata via JS */
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: monospace;
+  font-size: 10px;
+  color: white; /* testo bianco */
+  padding: 0 10px;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Cursore custom */
+#custom-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    pointer-events: none;
+    z-index: 9999;
+    user-select: none;
+    transform: translate(-50%, -50%);
+    transition: color 0.3s;
+}
+
+/* Responsive per tablet e mobile */
+@media (max-width: 768px) {
+    .works-container {
+        grid-template-columns: 1fr;
+        grid-auto-rows: 50vh;
+        height: auto;
+    }
+}
