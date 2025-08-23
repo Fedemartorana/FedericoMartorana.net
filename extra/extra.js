@@ -52,7 +52,7 @@ projects.forEach(project => {
     if (realityNum) {
         params.set('layoutNum', realityNum);
     }
-    titleLink.href = `/projects/${projectFolder}/${projectFolder}.html?${params.toString()}`;
+    titleLink.href = `/extras/${projectFolder}/${projectFolder}.html?${params.toString()}`;
 
     titleLink.style.color = 'transparent';
     titleLink.style.textDecoration = 'none';
