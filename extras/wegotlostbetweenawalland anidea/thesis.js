@@ -44,7 +44,7 @@ if (backLink) {
   backLink.style.cursor = 'none';
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
-    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    const targetURL = `../../extra/extra.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
     window.location.href = targetURL;
   });
 }
