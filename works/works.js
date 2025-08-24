@@ -92,7 +92,7 @@ if (backLink) {
   backLink.style.cursor = 'none';
   backLink.addEventListener('click', (e) => {
     e.preventDefault();
-    const targetURL = `../../index.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    const targetURL = `../../index.html`;
     window.location.href = targetURL;
   });
 }
