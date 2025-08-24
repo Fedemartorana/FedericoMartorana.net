@@ -79,21 +79,6 @@ projects.forEach(project => {
     worksContainer.appendChild(square);
 });
 
-// Colore titolo e link back
-const projectTitle = document.querySelector('.project-title');
-if (projectTitle) projectTitle.style.color = color;
-
-const backLink = document.getElementById('back-link');
-if (backLink) {
-  backLink.style.color = color;
-  backLink.style.cursor = 'none';
-  backLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetURL = `../../index.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
-    window.location.href = targetURL;
-  });
-}
-
 // Imposta numero layout nel footer
 layoutText.textContent = `Reality #${realityNum}`;
 
@@ -119,3 +104,18 @@ setInterval(updateDateTime, 1000);
 dateTimeSpan.style.color = '#ffffff';
 layoutText.style.color = '#ffffff';
 cursorPosition.style.color = '#ffffff';
+
+// Colore titolo e link back
+const projectTitle = document.querySelector('.project-title');
+if (projectTitle) projectTitle.style.color = color;
+
+const backLink = document.getElementById('back-link');
+if (backLink) {
+  backLink.style.color = color;
+  backLink.style.cursor = 'none';
+  backLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    const targetURL = `../../index.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
+    window.location.href = targetURL;
+  });
+}
