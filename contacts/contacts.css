@@ -139,3 +139,14 @@ html, body {
   cursor: none;
   color: var(--reality-color);
 }
+#back-link {
+  position: fixed;
+  bottom: 40px;
+  left: 5%;
+  transform: translateX(-50%);
+  font-family: monospace;
+  font-size: 14px;
+  text-decoration: none;
+  color: black;
+  z-index: 900
+}
