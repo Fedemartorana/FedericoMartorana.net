@@ -80,5 +80,26 @@ The formal and technological sincerity of the residential body (the base) is in 
   </div>
 
   <script src="houseatelier.js"></script>
+  <script>
+// Disabilita tasto destro
+document.addEventListener("contextmenu", (e) => e.preventDefault());
+
+// Disabilita alcune scorciatoie da tastiera
+document.addEventListener("keydown", (e) => {
+  // F12
+  if (e.key === "F12") {
+    e.preventDefault();
+  }
+  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
+  if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) {
+    e.preventDefault();
+  }
+  // Ctrl+U (visualizza sorgente)
+  if (e.ctrlKey && e.key.toUpperCase() === "U") {
+    e.preventDefault();
+  }
+});
+</script>
+
 </body>
 </html>
