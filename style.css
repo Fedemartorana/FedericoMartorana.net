@@ -1,59 +1,51 @@
+:root {
+  --reality-color: #000000; /* aggiornato via JS */
+}
+
+/* Nasconde cursore di sistema ovunque */
+html, body, * {
+  cursor: none !important;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #ffffff;
+  font-family: Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+/* Contenitore centrale */
 .center-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 90px;
-    flex-direction: row;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 90px;
+  flex-direction: row;
 }
 
-/* Scritta grande */
+/* Parole */
 .word {
-    font-size: 6vw;
-    font-weight: bold;
-    text-transform: uppercase;
-    white-space: nowrap;
+  font-size: clamp(32px, 6vw, 90px); /* min 32px, scala con viewport, max 90px */
+  text-transform: uppercase;
+  transition: color 0.3s;
+  white-space: nowrap;
 }
 
-/* Adattamento progressivo */
-@media (max-width: 1200px) {
-  .center-container {
-    gap: 60px;
-  }
-  .word {
-    font-size: 5vw;
-  }
-}
-
-@media (max-width: 992px) {
-  .center-container {
-    gap: 40px;
-  }
-  .word {
-    font-size: 4vw;
-  }
-}
-
-/* Sotto i 768px va in verticale */
+/* Responsive */
 @media (max-width: 768px) {
   .center-container {
     flex-direction: column;
-    gap: 30px;
+    gap: 20px;
   }
   .word {
-    font-size: 8vw;
+    font-size: clamp(28px, 8vw, 70px);
   }
-}
-
-        gap: 20px;
-    }
-
-    .word {
-        font-size: 5vw;
-    }
 }
 
 /* Fascia colorata in basso */
@@ -78,17 +70,17 @@
 
 /* Cursore custom */
 #custom-cursor {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 20px;
-    height: 20px;
-    font-size: 20px;
-    pointer-events: none;
-    z-index: 9999;
-    user-select: none;
-    transform: translate(-50%, -50%);
-    transition: color 0.3s;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+  pointer-events: none;
+  z-index: 9999;
+  user-select: none;
+  transform: translate(-50%, -50%);
+  transition: color 0.3s;
 }
 
 /* Colore fisso bianco per il testo del footer */
