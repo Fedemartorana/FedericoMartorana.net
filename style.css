@@ -31,7 +31,7 @@ body {
 
 /* Parole */
 .word {
-  font-size: clamp(32px, 6vw, 90px); /* min 32px, scala con viewport, max 90px */
+  font-size: clamp(32px, 6vw, 80px); /* min 32px, scala con viewport, max 90px */
   text-transform: uppercase;
   transition: color 0.3s;
   white-space: nowrap;
