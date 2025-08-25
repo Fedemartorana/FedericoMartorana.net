@@ -13,7 +13,7 @@ const customCursor = document.getElementById('custom-cursor');
 
 // Lista dei progetti
 const projects = [
-    { title: "We got lost\n between a wall and an idea", image: "/img/thesis/thesis.jpg" },
+    { title: "Thesis", image: "/img/thesis/thesis.jpg" },
     { title: "Dal Co & Chipperfield", image: "/img/dalco&chipperfield/dalco&chipperfield.jpg" },
 ];
 
