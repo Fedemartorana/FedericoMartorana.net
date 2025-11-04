@@ -8,26 +8,26 @@
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
+  <!-- INTRO -->
   <section id="intro" class="screen">
     <div class="intro-box">
       <h1>Louvre Memory</h1>
       <p class="subtitle">Partecipa alla costruzione della memoria del Louvre.</p>
 
       <form id="memoryForm">
-        <label for="themeSelect">Scegli un tema:</label>
-        <select id="themeSelect" required>
-          <option value="" disabled selected>— Seleziona un tema —</option>
-          <option value="tema1">Tema 1</option>
-          <option value="tema2">Tema 2</option>
-          <option value="tema3">Tema 3</option>
-          <option value="tema4">Tema 4</option>
-          <option value="tema5">Tema 5</option>
-          <option value="tema6">Tema 6</option>
-          <option value="tema7">Tema 7</option>
-          <option value="tema8">Tema 8</option>
-          <option value="tema9">Tema 9</option>
-          <option value="tema10">Tema 10</option>
-        </select>
+        <label>Scegli un tema:</label>
+        <div id="themeGrid" class="theme-grid">
+          <div class="theme-option" data-value="tema1">Tema 1</div>
+          <div class="theme-option" data-value="tema2">Tema 2</div>
+          <div class="theme-option" data-value="tema3">Tema 3</div>
+          <div class="theme-option" data-value="tema4">Tema 4</div>
+          <div class="theme-option" data-value="tema5">Tema 5</div>
+          <div class="theme-option" data-value="tema6">Tema 6</div>
+          <div class="theme-option" data-value="tema7">Tema 7</div>
+          <div class="theme-option" data-value="tema8">Tema 8</div>
+          <div class="theme-option" data-value="tema9">Tema 9</div>
+          <div class="theme-option" data-value="tema10">Tema 10</div>
+        </div>
 
         <label for="visitorName">Il tuo nome:</label>
         <input type="text" id="visitorName" maxlength="40" placeholder="Inserisci il tuo nome" required>
@@ -40,6 +40,7 @@
     </div>
   </section>
 
+  <!-- RISULTATO -->
   <section id="overlay" class="screen hidden">
     <div class="overlay-box">
       <p id="resultText"></p>
@@ -47,6 +48,7 @@
     </div>
   </section>
 
+  <!-- ARCHIVIO -->
   <section id="desktop" class="hidden">
     <div id="topbar">Archivio della memoria collettiva</div>
     <div id="iconGrid"></div>
@@ -68,7 +70,7 @@
     ]
   }));
 
-  // --- ELEMENTS ---
+  // --- ELEMENTI BASE ---
   const form = document.getElementById('memoryForm');
   const desktop = document.getElementById('desktop');
   const grid = document.getElementById('iconGrid');
@@ -78,14 +80,28 @@
   const intro = document.getElementById('intro');
 
   let userData = {};
+  let selectedTheme = null;
+
+  // --- SELEZIONE TEMA CON TICK ---
+  const themeGrid = document.getElementById('themeGrid');
+  themeGrid.querySelectorAll('.theme-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      themeGrid.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selectedTheme = opt.dataset.value;
+    });
+  });
 
   // --- SUBMIT ---
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    const tema = document.getElementById('themeSelect').value;
+    const tema = selectedTheme;
     const nome = document.getElementById('visitorName').value.trim();
     const testo = document.getElementById('visitorText').value.trim();
-    if (!tema || !nome || !testo) return;
+    if (!tema || !nome || !testo) {
+      alert("Seleziona un tema, inserisci il nome e un ricordo.");
+      return;
+    }
 
     userData = { tema, nome, testo };
     const perc = calculateMemoryPercentage(testo);
@@ -118,12 +134,12 @@
     else console.log('Ricordo salvato su Supabase');
   }
 
-  // --- MOSTRARE DESKTOP + RICORDI COLLETTIVI ---
+  // --- MOSTRA ARCHIVIO ---
   async function showDesktop() {
     desktop.classList.remove('hidden');
     grid.innerHTML = '';
 
-    // mostra le 10 cartelle
+    // cartelle tema
     EPOCHS.forEach(ep => {
       const el = document.createElement('div');
       el.className = 'icon';
@@ -133,7 +149,7 @@
       grid.appendChild(el);
     });
 
-    // carica tutti i ricordi da Supabase
+    // ricordi collettivi
     await loadAllMemories();
   }
 
@@ -159,7 +175,7 @@
     });
   }
 
-  // --- VISUALIZZA IL TESTO DI UN RICORDO ---
+  // --- VISUALIZZA RICORDO ---
   function openUserMemory(data) {
     const win = document.createElement('div');
     win.className = 'window';
