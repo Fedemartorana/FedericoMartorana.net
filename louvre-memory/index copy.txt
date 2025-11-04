@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Louvre Memory — Memoria Collettiva</title>
+  <link rel="stylesheet" href="style/main.css">
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <section id="intro" class="screen">
+    <div class="intro-box">
+      <h1>Louvre Memory</h1>
+      <p class="subtitle">Partecipa alla costruzione della memoria del Louvre.</p>
+
+      <form id="memoryForm">
+        <label for="themeSelect">Scegli un tema:</label>
+        <select id="themeSelect" required>
+          <option value="" disabled selected>— Seleziona un tema —</option>
+          <option value="tema1">Tema 1</option>
+          <option value="tema2">Tema 2</option>
+          <option value="tema3">Tema 3</option>
+          <option value="tema4">Tema 4</option>
+          <option value="tema5">Tema 5</option>
+          <option value="tema6">Tema 6</option>
+          <option value="tema7">Tema 7</option>
+          <option value="tema8">Tema 8</option>
+          <option value="tema9">Tema 9</option>
+          <option value="tema10">Tema 10</option>
+        </select>
+
+        <label for="visitorName">Il tuo nome:</label>
+        <input type="text" id="visitorName" maxlength="40" placeholder="Inserisci il tuo nome" required>
+
+        <label for="visitorText">Scrivi il tuo ricordo:</label>
+        <textarea id="visitorText" rows="6" maxlength="1000" placeholder="Scrivi ciò che il Louvre rappresenta per te..." required></textarea>
+
+        <button type="submit">Invia</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="overlay" class="screen hidden">
+    <div class="overlay-box">
+      <p id="resultText"></p>
+      <button id="continueBtn">Continua</button>
+    </div>
+  </section>
+
+  <section id="desktop" class="hidden">
+    <div id="topbar">Archivio della memoria collettiva</div>
+    <div id="iconGrid"></div>
+  </section>
+
+  <script>
+  // --- SUPABASE INIT ---
+  const SUPABASE_URL = "https://fxthdtvorfzgrbywyrjn.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4dGhkdHZvcmZ6Z3JieXd5cmpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNjM4MjgsImV4cCI6MjA3NzgzOTgyOH0.Tk9HK_CadJ1p8YIJN5RRGforhVsuMxfpEptbhD4bBmM";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // --- DATASET TEMI ---
+  const EPOCHS = Array.from({length: 10}, (_, i) => ({
+    id: `tema${i+1}`,
+    name: `Tema ${i+1}`,
+    files: [
+      {type:'video', name:'video.mp4', src:`media/epoca${i+1}/video.mp4`},
+      {type:'text', name:'testo.txt', text:`Contenuto introduttivo del tema ${i+1}.`}
+    ]
+  }));
+
+  // --- ELEMENTS ---
+  const form = document.getElementById('memoryForm');
+  const desktop = document.getElementById('desktop');
+  const grid = document.getElementById('iconGrid');
+  const overlay = document.getElementById('overlay');
+  const resultText = document.getElementById('resultText');
+  const continueBtn = document.getElementById('continueBtn');
+  const intro = document.getElementById('intro');
+
+  let userData = {};
+
+  // --- SUBMIT ---
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const tema = document.getElementById('themeSelect').value;
+    const nome = document.getElementById('visitorName').value.trim();
+    const testo = document.getElementById('visitorText').value.trim();
+    if (!tema || !nome || !testo) return;
+
+    userData = { tema, nome, testo };
+    const perc = calculateMemoryPercentage(testo);
+
+    await saveMemory(userData);
+    showResult(tema, nome, perc);
+  });
+
+  function calculateMemoryPercentage(text) {
+    const base = 10; // 1 tema = 10%
+    const extra = Math.min(10, Math.round(text.length / 20));
+    return base + extra;
+  }
+
+  function showResult(tema, nome, perc) {
+    intro.classList.add('hidden');
+    overlay.classList.remove('hidden');
+    resultText.innerHTML = `Ti ricordi il Louvre per il <b>${perc}%</b> della sua memoria.`;
+  }
+
+  continueBtn.addEventListener('click', () => {
+    overlay.classList.add('hidden');
+    showDesktop();
+  });
+
+  // --- SALVATAGGIO SU SUPABASE ---
+  async function saveMemory(data) {
+    const { error } = await supabase.from('memories').insert([data]);
+    if (error) console.error('Errore nel salvataggio:', error);
+    else console.log('Ricordo salvato su Supabase');
+  }
+
+  // --- MOSTRARE DESKTOP + RICORDI COLLETTIVI ---
+  async function showDesktop() {
+    desktop.classList.remove('hidden');
+    grid.innerHTML = '';
+
+    // mostra le 10 cartelle
+    EPOCHS.forEach(ep => {
+      const el = document.createElement('div');
+      el.className = 'icon';
+      el.innerHTML = `
+        <div class="glyph"><svg width="24" height="24" viewBox="0 0 24 24" stroke="#ccc"><path d="M3 6h6l2 2h10v10H3Z"/></svg></div>
+        <div class="name">${ep.name}</div>`;
+      grid.appendChild(el);
+    });
+
+    // carica tutti i ricordi da Supabase
+    await loadAllMemories();
+  }
+
+  async function loadAllMemories() {
+    const { data, error } = await supabase
+      .from('memories')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Errore nel caricamento memorie:', error);
+      return;
+    }
+
+    data.forEach(mem => {
+      const icon = document.createElement('div');
+      icon.className = 'icon';
+      icon.innerHTML = `
+        <div class="glyph"><svg width="24" height="24" viewBox="0 0 24 24" stroke="#ccc"><path d="M4 4h16v16H4Z"/></svg></div>
+        <div class="name">ricordo di ${mem.nome}.txt</div>`;
+      icon.onclick = () => openUserMemory(mem);
+      grid.appendChild(icon);
+    });
+  }
+
+  // --- VISUALIZZA IL TESTO DI UN RICORDO ---
+  function openUserMemory(data) {
+    const win = document.createElement('div');
+    win.className = 'window';
+    win.innerHTML = `
+      <div class="titlebar">
+        <div class="title">ricordo di ${data.nome}.txt</div>
+        <div class="buttons"><div class="btn" data-close>X</div></div>
+      </div>
+      <div style="padding:10px;white-space:pre-wrap;font-size:13px;color:var(--fg);flex:1;overflow:auto;">
+        ${data.testo}
+      </div>`;
+    document.body.appendChild(win);
+    win.querySelector('[data-close]').onclick = () => win.remove();
+  }
+  </script>
+</body>
+</html>
