@@ -25,6 +25,83 @@ body, input, textarea, button, pre {
 }
 .theme-option.selected::after { color: var(--fg) !important; }
 
+/* Restore core layout styles */
+#desktop {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+}
+#desktop:not(.hidden) {
+  display: flex;
+}
+#topbar {
+  padding: 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: center;
+  color: var(--fg);
+}
+#iconGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  padding: 18px;
+}
+.icon {
+  border: 1px solid var(--line);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  cursor: pointer;
+  padding: 10px;
+  text-align: center;
+}
+.icon:hover {
+  border-color: var(--fg);
+}
+.window {
+  position: fixed;
+  top: 10vh;
+  left: 10vw;
+  width: min(800px, 80vw);
+  height: min(550px, 70vh);
+  border: 1px solid var(--line);
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+}
+.titlebar {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--line);
+}
+.btn {
+  cursor: pointer;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+}
+.content {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+}
+.sidebar {
+  border-right: 1px solid var(--line);
+  overflow-y: auto;
+}
+.file {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+.file:hover {
+  background: #111;
+}
+.viewer {
+  padding: 14px;
+  overflow-y: auto;
+}
+
 /* Scanlines CRT effect */
 body::after {
   content: "";
