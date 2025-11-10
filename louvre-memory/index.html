@@ -40,6 +40,11 @@ body::after {
   opacity: 0.18;
   mix-blend-mode: screen;
 }
+
+/* Fosforo persistente */
+body, input, textarea, button, pre, .theme-option, .icon, .titlebar, .file, .viewer {
+  text-shadow: 0 0 3px rgba(108,255,111,0.4), 0 0 6px rgba(108,255,111,0.25);
+}
 </style>
 </head>
 <body>
@@ -99,8 +104,8 @@ const EPOCHS = Array.from({length: 10}, (_, i) => ({
   id: `tema${i+1}`,
   name: `Tema ${i+1}`,
   files: [
-    {type:'text', name:`tema${i+1}.txt`, src:`media/tema${i+1}/tema${i+1}.txt`},
-    {type:'video', name:'video.mp4', src:`tema/epoca${i+1}/video.mp4`}
+    {type:'text', name:`tema${i+1}.txt`, src:`media/epoca${i+1}/tema${i+1}.txt`},
+    {type:'video', name:'video.mp4', src:`media/epoca${i+1}/video.mp4`}
   ]
 }));
 
