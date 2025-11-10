@@ -1,195 +1,210 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Louvre Memory — Memoria Collettiva</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Louvre Memory — Archivio Collettivo</title>
   <link rel="stylesheet" href="style/main.css">
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <!-- INTRO -->
-  <section id="intro" class="screen">
-    <div class="intro-box">
-      <h1>Louvre Memory</h1>
-      <p class="subtitle">Partecipa alla costruzione della memoria del Louvre.</p>
 
-      <form id="memoryForm">
-        <label>Scegli un tema:</label>
-        <div id="themeGrid" class="theme-grid">
-          <div class="theme-option" data-value="tema1">Tema 1</div>
-          <div class="theme-option" data-value="tema2">Tema 2</div>
-          <div class="theme-option" data-value="tema3">Tema 3</div>
-          <div class="theme-option" data-value="tema4">Tema 4</div>
-          <div class="theme-option" data-value="tema5">Tema 5</div>
-          <div class="theme-option" data-value="tema6">Tema 6</div>
-          <div class="theme-option" data-value="tema7">Tema 7</div>
-          <div class="theme-option" data-value="tema8">Tema 8</div>
-          <div class="theme-option" data-value="tema9">Tema 9</div>
-          <div class="theme-option" data-value="tema10">Tema 10</div>
-        </div>
+<!-- INTRO -->
+<section id="intro" class="screen">
+  <div class="intro-box">
+    <h1>Louvre Memory</h1>
+    <p class="subtitle">Partecipa alla costruzione della memoria del Louvre.</p>
 
-        <label for="visitorName">Il tuo nome:</label>
-        <input type="text" id="visitorName" maxlength="40" placeholder="Inserisci il tuo nome" required>
+    <form id="memoryForm">
 
-        <label for="visitorText">Scrivi il tuo ricordo:</label>
-        <textarea id="visitorText" rows="6" maxlength="1000" placeholder="Scrivi ciò che il Louvre rappresenta per te..." required></textarea>
-
-        <button type="submit">Invia</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- RISULTATO -->
-  <section id="overlay" class="screen hidden">
-    <div class="overlay-box">
-      <p id="resultText"></p>
-      <button id="continueBtn">Continua</button>
-    </div>
-  </section>
-
-  <!-- ARCHIVIO -->
-  <section id="desktop" class="hidden">
-    <div id="topbar">Archivio della memoria collettiva</div>
-    <div id="iconGrid"></div>
-  </section>
-
-  <script>
-  // --- SUPABASE INIT ---
-  const SUPABASE_URL = "https://fxthdtvorfzgrbywyrjn.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4dGhkdHZvcmZ6Z3JieXd5cmpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNjM4MjgsImV4cCI6MjA3NzgzOTgyOH0.Tk9HK_CadJ1p8YIJN5RRGforhVsuMxfpEptbhD4bBmM";
-  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  // --- DATASET TEMI ---
-  const EPOCHS = Array.from({length: 10}, (_, i) => ({
-    id: `tema${i+1}`,
-    name: `Tema ${i+1}`,
-    files: [
-      {type:'video', name:'video.mp4', src:`media/epoca${i+1}/video.mp4`},
-      {type:'text', name:'testo.txt', text:`Contenuto introduttivo del tema ${i+1}.`}
-    ]
-  }));
-
-  // --- ELEMENTI BASE ---
-  const form = document.getElementById('memoryForm');
-  const desktop = document.getElementById('desktop');
-  const grid = document.getElementById('iconGrid');
-  const overlay = document.getElementById('overlay');
-  const resultText = document.getElementById('resultText');
-  const continueBtn = document.getElementById('continueBtn');
-  const intro = document.getElementById('intro');
-
-  let userData = {};
-  let selectedTheme = null;
-
-  // --- SELEZIONE TEMA CON TICK ---
-  const themeGrid = document.getElementById('themeGrid');
-  themeGrid.querySelectorAll('.theme-option').forEach(opt => {
-    opt.addEventListener('click', () => {
-      themeGrid.querySelectorAll('.theme-option').forEach(o => o.classList.remove('selected'));
-      opt.classList.add('selected');
-      selectedTheme = opt.dataset.value;
-    });
-  });
-
-  // --- SUBMIT ---
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const tema = selectedTheme;
-    const nome = document.getElementById('visitorName').value.trim();
-    const testo = document.getElementById('visitorText').value.trim();
-    if (!tema || !nome || !testo) {
-      alert("Seleziona un tema, inserisci il nome e un ricordo.");
-      return;
-    }
-
-    userData = { tema, nome, testo };
-    const perc = calculateMemoryPercentage(testo);
-
-    await saveMemory(userData);
-    showResult(tema, nome, perc);
-  });
-
-  function calculateMemoryPercentage(text) {
-    const base = 10; // 1 tema = 10%
-    const extra = Math.min(10, Math.round(text.length / 20));
-    return base + extra;
-  }
-
-  function showResult(tema, nome, perc) {
-    intro.classList.add('hidden');
-    overlay.classList.remove('hidden');
-    resultText.innerHTML = `Ti ricordi il Louvre per il <b>${perc}%</b> della sua memoria.`;
-  }
-
-  continueBtn.addEventListener('click', () => {
-    overlay.classList.add('hidden');
-    showDesktop();
-  });
-
-  // --- SALVATAGGIO SU SUPABASE ---
-  async function saveMemory(data) {
-    const { error } = await supabase.from('memories').insert([data]);
-    if (error) console.error('Errore nel salvataggio:', error);
-    else console.log('Ricordo salvato su Supabase');
-  }
-
-  // --- MOSTRA ARCHIVIO ---
-  async function showDesktop() {
-    desktop.classList.remove('hidden');
-    grid.innerHTML = '';
-
-    // cartelle tema
-    EPOCHS.forEach(ep => {
-      const el = document.createElement('div');
-      el.className = 'icon';
-      el.innerHTML = `
-        <div class="glyph"><svg width="24" height="24" viewBox="0 0 24 24" stroke="#ccc"><path d="M3 6h6l2 2h10v10H3Z"/></svg></div>
-        <div class="name">${ep.name}</div>`;
-      grid.appendChild(el);
-    });
-
-    // ricordi collettivi
-    await loadAllMemories();
-  }
-
-  async function loadAllMemories() {
-    const { data, error } = await supabase
-      .from('memories')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Errore nel caricamento memorie:', error);
-      return;
-    }
-
-    data.forEach(mem => {
-      const icon = document.createElement('div');
-      icon.className = 'icon';
-      icon.innerHTML = `
-        <div class="glyph"><svg width="24" height="24" viewBox="0 0 24 24" stroke="#ccc"><path d="M4 4h16v16H4Z"/></svg></div>
-        <div class="name">ricordo di ${mem.nome}.txt</div>`;
-      icon.onclick = () => openUserMemory(mem);
-      grid.appendChild(icon);
-    });
-  }
-
-  // --- VISUALIZZA RICORDO ---
-  function openUserMemory(data) {
-    const win = document.createElement('div');
-    win.className = 'window';
-    win.innerHTML = `
-      <div class="titlebar">
-        <div class="title">ricordo di ${data.nome}.txt</div>
-        <div class="buttons"><div class="btn" data-close>X</div></div>
+      <label>Scegli un tema:</label>
+      <div id="themeGrid" class="theme-grid">
+        <div class="theme-option" data-value="tema1">Tema 1</div>
+        <div class="theme-option" data-value="tema2">Tema 2</div>
+        <div class="theme-option" data-value="tema3">Tema 3</div>
+        <div class="theme-option" data-value="tema4">Tema 4</div>
+        <div class="theme-option" data-value="tema5">Tema 5</div>
+        <div class="theme-option" data-value="tema6">Tema 6</div>
+        <div class="theme-option" data-value="tema7">Tema 7</div>
+        <div class="theme-option" data-value="tema8">Tema 8</div>
+        <div class="theme-option" data-value="tema9">Tema 9</div>
+        <div class="theme-option" data-value="tema10">Tema 10</div>
       </div>
-      <div style="padding:10px;white-space:pre-wrap;font-size:13px;color:var(--fg);flex:1;overflow:auto;">
-        ${data.testo}
-      </div>`;
-    document.body.appendChild(win);
-    win.querySelector('[data-close]').onclick = () => win.remove();
+
+      <label>Il tuo nome:</label>
+      <input id="visitorName" type="text" maxlength="40" required>
+
+      <label>Scrivi il tuo ricordo:</label>
+      <textarea id="visitorText" rows="6" maxlength="1000" required></textarea>
+
+      <button type="submit">Invia</button>
+    </form>
+  </div>
+</section>
+
+<!-- RISULTATO -->
+<section id="overlay" class="screen hidden">
+  <div class="overlay-box">
+    <p id="resultText"></p>
+    <button id="continueBtn">Continua</button>
+  </div>
+</section>
+
+<!-- DESKTOP -->
+<section id="desktop" class="hidden">
+  <div id="topbar">Archivio della memoria collettiva</div>
+  <div id="iconGrid"></div>
+</section>
+
+<script>
+// --- SUPABASE INIT ---
+const SUPABASE_URL = "https://fxthdtvorfzgrbywyrjn.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4dGhkdHZvcmZ6Z3JieXd5cmpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNjM4MjgsImV4cCI6MjA3NzgzOTgyOH0.Tk9HK_CadJ1p8YIJN5RRGforhVsuMxfpEptbhD4bBmM";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// --- TEMI / FILE ASSOCIATI ---
+const EPOCHS = Array.from({length: 10}, (_, i) => ({
+  id: `tema${i+1}`,
+  name: `Tema ${i+1}`,
+  files: [
+    {type:'text', name:`tema${i+1}.txt`, src:`media/epoca${i+1}/tema${i+1}.txt`},
+    {type:'video', name:'video.mp4', src:`media/epoca${i+1}/video.mp4`}
+  ]
+}));
+
+// ELEMENTI UI
+const form = document.getElementById("memoryForm");
+const intro = document.getElementById("intro");
+const overlay = document.getElementById("overlay");
+const desktop = document.getElementById("desktop");
+const resultText = document.getElementById("resultText");
+const continueBtn = document.getElementById("continueBtn");
+const grid = document.getElementById("iconGrid");
+
+let selectedTheme = null;
+let userData = {};
+
+// SELEZIONE TEMA CON TICK
+document.querySelectorAll(".theme-option").forEach(opt => {
+  opt.onclick = () => {
+    document.querySelectorAll(".theme-option").forEach(o => o.classList.remove("selected"));
+    opt.classList.add("selected");
+    selectedTheme = opt.dataset.value;
+  };
+});
+
+// SUBMIT
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const tema = selectedTheme;
+  const nome = document.getElementById("visitorName").value.trim();
+  const testo = document.getElementById("visitorText").value.trim();
+
+  if (!tema || !nome || !testo) return;
+
+  userData = { tema, nome, testo };
+  await supabase.from("memories").insert([userData]);
+
+  const perc = 10 + Math.min(10, Math.round(testo.length / 20));
+  intro.classList.add("hidden");
+  overlay.classList.remove("hidden");
+  resultText.innerHTML = `Ti ricordi il Louvre per il <b>${perc}%</b> della sua memoria.`;
+});
+
+// CONTINUA → DESKTOP
+continueBtn.onclick = () => {
+  overlay.classList.add("hidden");
+  showDesktop();
+};
+
+// DESKTOP
+async function showDesktop() {
+  desktop.classList.remove("hidden");
+  grid.innerHTML = "";
+
+  // Aggiungi cartelle dei temi
+  EPOCHS.forEach(ep => {
+    const icon = document.createElement("div");
+    icon.className = "icon";
+    icon.innerHTML = `<div class="glyph">📁</div><div class="name">${ep.name}</div>`;
+    icon.onclick = () => openFolder(ep);
+    grid.appendChild(icon);
+  });
+
+  // Aggiungi ricordi da Supabase
+  const { data } = await supabase.from("memories").select("*").order("created_at", {ascending:false});
+  data.forEach(mem => {
+    const icon = document.createElement("div");
+    icon.className = "icon";
+    icon.innerHTML = `<div class="glyph">📄</div><div class="name">ricordo di ${mem.nome}.txt</div>`;
+    icon.onclick = () => openUserMemory(mem);
+    grid.appendChild(icon);
+  });
+}
+
+// FINESTRA TEMA
+function openFolder(ep) {
+  const win = document.createElement("div");
+  win.className = "window";
+  win.innerHTML = `
+    <div class="titlebar">
+      <div class="title">${ep.name}</div>
+      <div class="buttons"><div class="btn" data-close>X</div></div>
+    </div>
+    <div class="content">
+      <div class="sidebar" data-files></div>
+      <div class="viewer" data-viewer><div style="color:#555">Seleziona un file</div></div>
+    </div>`;
+  document.body.appendChild(win);
+
+  const files = win.querySelector("[data-files]");
+  const viewer = win.querySelector("[data-viewer]");
+
+  ep.files.forEach(f => {
+    const fe = document.createElement("div");
+    fe.className = "file";
+    fe.textContent = f.name;
+    fe.onclick = () => openFile(f, viewer);
+    files.appendChild(fe);
+  });
+
+  win.querySelector("[data-close]").onclick = () => win.remove();
+}
+
+// APRI FILE
+async function openFile(f, viewer) {
+  viewer.innerHTML = "";
+
+  if (f.type === "text") {
+    const txt = await (await fetch(f.src)).text();
+    const pre = document.createElement("pre");
+    pre.textContent = txt;
+    viewer.appendChild(pre);
   }
-  </script>
+
+  if (f.type === "video") {
+    const v = document.createElement("video");
+    v.src = f.src;
+    v.controls = true;
+    v.autoplay = true;
+    viewer.appendChild(v);
+  }
+}
+
+// APRI RICORDO COLLETTIVO
+function openUserMemory(data) {
+  const win = document.createElement("div");
+  win.className = "window";
+  win.innerHTML = `
+    <div class="titlebar">
+      <div class="title">ricordo di ${data.nome}.txt</div>
+      <div class="buttons"><div class="btn" data-close>X</div></div>
+    </div>
+    <div style="padding:10px;white-space:pre-wrap;">${data.testo}</div>`;
+  document.body.appendChild(win);
+  win.querySelector("[data-close]").onclick = () => win.remove();
+}
+
+</script>
 </body>
 </html>
