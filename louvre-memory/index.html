@@ -1,29 +1,222 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Louvre Memory — Terminale</title>
+  <link rel="stylesheet" href="style/main.css">
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #000000;
+  --fg: #6cff6f;
+  --muted: #3ea43f;
+  --line: #1d1d1d;
+}
+body, input, textarea, button, pre {
+  font-family: monospace;
+  color: var(--fg) !important;
+  background: var(--bg) !important;
+}
+.terminal, .terminal-box, .terminal-input, .terminal-btn, .theme-option, #topbar, .window, .file, .viewer {
+  background: var(--bg) !important;
+  color: var(--fg) !important;
+  border-color: var(--line) !important;
+}
+.theme-option.selected::after { color: var(--fg) !important; }
+
+/* Scanlines CRT effect */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,255,0,0.05) 3px
+  );
+  opacity: 0.18;
+  mix-blend-mode: screen;
+}
+
+/* Fosforo persistente */
+body, input, textarea, button, pre, .theme-option, .icon, .titlebar, .file, .viewer {
+  text-shadow: 0 0 3px rgba(108,255,111,0.4), 0 0 6px rgba(108,255,111,0.25);
+}
+</style>
+</head>
+<body>
+
+<!-- SCHERMATA TERMINALE INIZIALE -->
 <section id="intro" class="screen terminal">
   <div class="terminal-box">
-
     <div class="line">> Benvenuto nella memoria profonda del Louvre.</div>
     <div class="line">> Seleziona l'epoca che riconosci come tua.</div>
+    <div class="line">&nbsp;</div>
 
-    <div id="themeGrid" class="theme-grid">
-      <div class="theme-option" data-value="tema1">Il Louvre Fortezza</div>
-      <div class="theme-option" data-value="tema2">Il Louvre Rinascimentale</div>
-      <div class="theme-option" data-value="tema3">Il Louvre dello Stato Assoluto</div>
-      <div class="theme-option" data-value="tema4">Il Louvre Rivoluzionario</div>
-      <div class="theme-option" data-value="tema5">Il Louvre Napoleonico</div>
-      <div class="theme-option" data-value="tema6">Il Louvre Ottocento–Novecento</div>
-      <div class="theme-option" data-value="tema7">Il Grand Louvre</div>
-      <div class="theme-option" data-value="tema8">Il Louvre della Gioconda</div>
-      <div class="theme-option" data-value="tema9">Il Louvre di Parigi</div>
-      <div class="theme-option" data-value="tema10">Il Louvre dei Furti</div>
-      <div class="theme-option" data-value="tema11">Il Louvre della Piramide</div>
+    <div id="themeGrid" class="theme-grid-terminal">
+      <div class="theme-option" data-value="tema1">[ ] Il Louvre Fortezza</div>
+      <div class="theme-option" data-value="tema2">[ ] Il Louvre Rinascimentale</div>
+      <div class="theme-option" data-value="tema3">[ ] Il Louvre dello Stato Assoluto</div>
+      <div class="theme-option" data-value="tema4">[ ] Il Louvre Rivoluzionario</div>
+      <div class="theme-option" data-value="tema5">[ ] Il Louvre Napoleonico</div>
+      <div class="theme-option" data-value="tema6">[ ] Il Louvre Ottocento–Novecento</div>
+      <div class="theme-option" data-value="tema7">[ ] Il Grand Louvre</div>
+      <div class="theme-option" data-value="tema8">[ ] Il Louvre della Gioconda</div>
+      <div class="theme-option" data-value="tema9">[ ] Il Louvre di Parigi</div>
+      <div class="theme-option" data-value="tema10">[ ] Il Louvre dei Furti</div>
+      <div class="theme-option" data-value="tema11">[ ] Il Louvre della Piramide</div>
     </div>
 
-    <div class="line">> Firma:</div>
-    <input id="visitorName" class="terminal-input">
+    <div class="line">> Inserisci la tua firma:</div>
+    <input id="visitorName" class="terminal-input" maxlength="40" autocomplete="off">
 
-    <div class="line">> Trascrivi ciò che rimane:</div>
-    <textarea id="visitorText" class="terminal-input area" rows="6"></textarea>
+    <div class="line">> Scrivi la parte di memoria che riconosci:</div>
+    <textarea id="visitorText" class="terminal-input area" rows="5" maxlength="1000"></textarea>
 
     <button id="submitBtn" class="terminal-btn">CONFERMA</button>
   </div>
 </section>
+
+<!-- OVERLAY PERCENTUALE -->
+<section id="overlay" class="screen hidden terminal">
+  <div class="terminal-box center-box">
+    <div id="resultText" class="line"></div>
+    <button id="continueBtn" class="terminal-btn">CONTINUA</button>
+  </div>
+</section>
+
+<!-- DESKTOP -->
+<section id="desktop" class="hidden desktop">
+  <div id="topbar">ARCHIVIO COMPLETO DELLA MEMORIA</div>
+  <div id="iconGrid"></div>
+</section>
+
+<script>
+// --- SUPABASE INIT ---
+const SUPABASE_URL = "https://fxthdtvorfzgrbywyrjn.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ4dGhkdHZvcmZ6Z3JieXd5cmpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjIyNjM4MjgsImV4cCI6MjA3NzgzOTgyOH0.Tk9HK_CadJ1p8YIJN5RRGforhVsuMxfpEptbhD4bBmM";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// TEMI
+const EPOCHS = [
+  { id: 'tema1',  name: 'Il Louvre Fortezza', files: [ { type:'text', name:'Doc1.txt', src:'media/tema1/tema1.txt' } ] },
+  { id: 'tema2',  name: 'Il Louvre Rinascimentale', files: [ { type:'text', name:'Doc2.txt', src:'media/tema2/tema2.txt' } ] },
+  { id: 'tema3',  name: 'Il Louvre dello Stato Assoluto', files: [ { type:'text', name:'Doc3.txt', src:'media/tema3/tema3.txt' } ] },
+  { id: 'tema4',  name: 'Il Louvre Rivoluzionario', files: [ { type:'text', name:'Doc4.txt', src:'media/tema4/tema4.txt' } ] },
+  { id: 'tema5',  name: 'Il Louvre Napoleonico', files: [ { type:'text', name:'Doc5.txt', src:'media/tema5/tema5.txt' } ] },
+  { id: 'tema6',  name: 'Il Louvre Ottocento–Novecento', files: [ { type:'text', name:'Doc6.txt', src:'media/tema6/tema6.txt' } ] },
+  { id: 'tema7',  name: 'Il Grand Louvre', files: [ { type:'text', name:'Doc7.txt', src:'media/tema7/tema7.txt' } ] },
+  { id: 'tema8',  name: 'Il Louvre della Gioconda', files: [ { type:'text', name:'Doc8.txt', src:'media/tema8/tema8.txt' } ] },
+  { id: 'tema9',  name: 'Il Louvre di Parigi', files: [ { type:'text', name:'Doc9.txt', src:'media/tema9/tema9.txt' } ] },
+  { id: 'tema10', name: 'Il Louvre dei Furti', files: [ { type:'text', name:'Doc10.txt', src:'media/tema10/tema10.txt' } ] },
+  { id: 'tema11', name: 'Il Louvre della Piramide', files: [ { type:'text', name:'Doc11.txt', src:'media/tema11/tema11.txt' } ] }
+];
+
+let selectedTheme = null;
+let userData = {};
+
+// Selezione tema
+document.querySelectorAll('.theme-option').forEach(opt => {
+  opt.onclick = () => {
+    document.querySelectorAll('.theme-option').forEach(o => o.textContent = o.textContent.replace('✓',' ').replace('[x]','[ ]'));
+    opt.textContent = '[x] ' + opt.textContent.replace('[ ] ','').replace('[x] ','');
+    selectedTheme = opt.dataset.value;
+  };
+});
+
+// Submit
+submitBtn.onclick = async () => {
+  const nome = visitorName.value.trim();
+  const testo = visitorText.value.trim();
+  if(!selectedTheme || !nome || !testo) return;
+
+  userData = { tema: selectedTheme, nome, testo };
+  await supabase.from('memories').insert([userData]);
+
+  const perc = 10 + Math.min(10, Math.round(testo.length / 20));
+
+  intro.classList.add('hidden');
+  overlay.classList.remove('hidden');
+  resultText.innerHTML = `> Conosci il Louvre al <b>${perc}%</b>.`;
+
+  openFolder(EPOCHS.find(e => e.id === selectedTheme));
+};
+
+continueBtn.onclick = () => {
+  overlay.classList.add('hidden');
+  showDesktop();
+};
+
+function showDesktop(){
+  desktop.classList.remove('hidden');
+  iconGrid.innerHTML = '';
+
+  EPOCHS.forEach(ep => {
+    const icon = document.createElement('div');
+    icon.className = 'icon';
+    icon.innerHTML = `<div class="glyph">📁</div><div class="name">${ep.name}</div>`;
+    icon.onclick = () => openFolder(ep);
+    iconGrid.appendChild(icon);
+  });
+
+  loadAllMemories();
+}
+
+async function loadAllMemories(){
+  const { data } = await supabase.from('memories').select('*').order('created_at',{ascending:false});
+  data.forEach(mem => {
+    const icon = document.createElement('div');
+    icon.className = 'icon';
+    icon.innerHTML = `<div class="glyph">📄</div><div class="name">ricordo di ${mem.nome}</div>`;
+    icon.onclick = () => openUserMemory(mem);
+    iconGrid.appendChild(icon);
+  });
+}
+
+function openFolder(ep){
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.innerHTML = `
+    <div class="titlebar">${ep.name}<div class="btn" data-close>X</div></div>
+    <div class="content">
+      <div class="sidebar" data-files></div>
+      <div class="viewer" data-viewer><div style="opacity:.5;">Attendi...</div></div>
+    </div>`;
+  document.body.appendChild(win);
+
+  const files = win.querySelector('[data-files]');
+  const viewer = win.querySelector('[data-viewer]');
+
+  ep.files.forEach(f => {
+    const fe = document.createElement('div'); fe.className = 'file'; fe.textContent = f.name;
+    fe.onclick = () => openFile(f,viewer);
+    files.appendChild(fe);
+  });
+
+  win.querySelector('[data-close]').onclick = () => win.remove();
+}
+
+async function openFile(f,viewer){
+  viewer.innerHTML = '';
+  if(f.type==='text'){
+    const txt = await (await fetch(f.src)).text();
+    const pre = document.createElement('pre'); pre.textContent = txt;
+    viewer.appendChild(pre);
+  } else {
+    const v = document.createElement('video'); v.src=f.src; v.controls=true; v.autoplay=true; viewer.appendChild(v);
+  }
+}
+
+function openUserMemory(data){
+  const win = document.createElement('div'); win.className='window';
+  win.innerHTML = `<div class="titlebar">ricordo di ${data.nome}<div class="btn" data-close>X</div></div><div class="viewer-text">${data.testo}</div>`;
+  document.body.appendChild(win);
+  win.querySelector('[data-close]').onclick = () => win.remove();
+}
+</script>
+
+</body>
+</html>
