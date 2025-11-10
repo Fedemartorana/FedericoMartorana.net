@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Louvre Memory — Terminale</title>
+  <title>Memoria del Louvre</title>
   <link rel="stylesheet" href="style/main.css">
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --bg: #000000;
-  --fg: #6cff6f;
+  --fg: #ffffff;
   --muted: #3ea43f;
   --line: #1d1d1d;
 }
@@ -52,8 +52,10 @@ body, input, textarea, button, pre, .theme-option, .icon, .titlebar, .file, .vie
 <!-- SCHERMATA TERMINALE INIZIALE -->
 <section id="intro" class="screen terminal">
   <div class="terminal-box">
-    <div class="line">> Benvenuto nella memoria profonda del Louvre.</div>
-    <div class="line">> Seleziona l'epoca che riconosci come tua.</div>
+    
+    <div class="line">> Ingresso nel sistema di memoria del louvre</div>
+    
+    <div class="line">>Cosa resta del Louvre in te.</div>
     <div class="line">&nbsp;</div>
 
     <div id="themeGrid" class="theme-grid-terminal">
@@ -70,13 +72,13 @@ body, input, textarea, button, pre, .theme-option, .icon, .titlebar, .file, .vie
       <div class="theme-option" data-value="tema11">[ ] Il Louvre della Piramide</div>
     </div>
 
-    <div class="line">> Inserisci la tua firma:</div>
+    <div class="line">> Firma:</div>
     <input id="visitorName" class="terminal-input" maxlength="40" autocomplete="off">
 
-    <div class="line">> Scrivi la parte di memoria che riconosci:</div>
+    <div class="line">> Annota la tua traccia</div>
     <textarea id="visitorText" class="terminal-input area" rows="5" maxlength="1000"></textarea>
 
-    <button id="submitBtn" class="terminal-btn">CONFERMA</button>
+    <button id="submitBtn" class="terminal-btn">Inserisci</button>
   </div>
 </section>
 
@@ -90,7 +92,7 @@ body, input, textarea, button, pre, .theme-option, .icon, .titlebar, .file, .vie
 
 <!-- DESKTOP -->
 <section id="desktop" class="hidden desktop">
-  <div id="topbar">ARCHIVIO COMPLETO DELLA MEMORIA</div>
+  <div id="topbar">Memoria del Louvre - sistema centrale</div>
   <div id="iconGrid"></div>
 </section>
 
