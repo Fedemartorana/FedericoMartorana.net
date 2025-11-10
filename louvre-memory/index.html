@@ -6,6 +6,41 @@
   <title>Louvre Memory — Terminale</title>
   <link rel="stylesheet" href="style/main.css">
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #000000;
+  --fg: #6cff6f;
+  --muted: #3ea43f;
+  --line: #1d1d1d;
+}
+body, input, textarea, button, pre {
+  font-family: monospace;
+  color: var(--fg) !important;
+  background: var(--bg) !important;
+}
+.terminal, .terminal-box, .terminal-input, .terminal-btn, .theme-option, #topbar, .window, .file, .viewer {
+  background: var(--bg) !important;
+  color: var(--fg) !important;
+  border-color: var(--line) !important;
+}
+.theme-option.selected::after { color: var(--fg) !important; }
+
+/* Scanlines CRT effect */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,255,0,0.05) 3px
+  );
+  opacity: 0.18;
+  mix-blend-mode: screen;
+}
+</style>
 </head>
 <body>
 
@@ -65,7 +100,7 @@ const EPOCHS = Array.from({length: 10}, (_, i) => ({
   name: `Tema ${i+1}`,
   files: [
     {type:'text', name:`tema${i+1}.txt`, src:`media/tema${i+1}/tema${i+1}.txt`},
-    {type:'video', name:'video.mp4', src:`media/tema${i+1}/video.mp4`}
+    {type:'video', name:'video.mp4', src:`tema/epoca${i+1}/video.mp4`}
   ]
 }));
 
