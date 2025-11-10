@@ -41,10 +41,6 @@ body::after {
   mix-blend-mode: screen;
 }
 
-/* Fosforo persistente */
-body, input, textarea, button, pre, .theme-option, .icon, .titlebar, .file, .viewer {
-  text-shadow: 0 0 3px rgba(108,255,111,0.4), 0 0 6px rgba(108,255,111,0.25);
-}
 </style>
 </head>
 <body>
@@ -159,7 +155,7 @@ function showDesktop(){
   EPOCHS.forEach(ep => {
     const icon = document.createElement('div');
     icon.className = 'icon';
-    icon.innerHTML = `<div class="glyph">📁</div><div class="name">${ep.name}</div>`;
+    icon.innerHTML = `<div class="glyph"> </div><div class="name">${ep.name}</div>`;
     icon.onclick = () => openFolder(ep);
     iconGrid.appendChild(icon);
   });
@@ -172,7 +168,7 @@ async function loadAllMemories(){
   data.forEach(mem => {
     const icon = document.createElement('div');
     icon.className = 'icon';
-    icon.innerHTML = `<div class="glyph">📄</div><div class="name">ricordo di ${mem.nome}</div>`;
+    icon.innerHTML = `<div class="glyph"> </div><div class="name">ricordo di ${mem.nome}</div>`;
     icon.onclick = () => openUserMemory(mem);
     iconGrid.appendChild(icon);
   });
