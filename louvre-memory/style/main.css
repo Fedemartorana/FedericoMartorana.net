@@ -1,404 +1,247 @@
 /* =========================================================
-   RESET & THEME (bianco/nero, minimale, centrato)
+   RESET DI BASE
    ========================================================= */
 *,
 *::before,
-*::after { box-sizing: border-box; }
+*::after {
+  box-sizing: border-box;
+}
 
 html, body {
+  margin: 0;
+  padding: 0;
   height: 100%;
+  -webkit-font-smoothing: antialiased;
 }
 
 :root {
   --bg: #ffffff;
   --fg: #000000;
-  --line: #e5e5e5;
-  --line-strong: #cfcfcf;
-  --muted: #666666;
-  --accent: #000000;
+  --line: #d9d9d9;
+  --line-strong: #bcbcbc;
   --radius: 10px;
-  --shadow: 0 2px 12px rgba(0,0,0,0.06);
   --maxw: 860px;
-  --pad: 20px;
-  --pad-lg: 28px;
-  --pad-sm: 12px;
+  --pad: 24px;
+  --shadow: 0 4px 20px rgba(0,0,0,0.06);
 }
-
-/* Forza bianco/nero, ignorando il vecchio tema */
-body, input, textarea, button, pre,
-.terminal, .terminal-box, .terminal-input, .terminal-btn,
-.theme-option, #topbar, .window, .file, .viewer {
-  background: var(--bg) !important;
-  color: var(--fg) !important;
-  border-color: var(--line) !important;
-  text-shadow: none !important;
-}
-
-/* Disattiva le scanlines del vecchio tema */
-body::after { display: none !important; }
-
-/* Tipografia minimale */
-body {
-  margin: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-               Roboto, "Helvetica Neue", Arial, "Noto Sans",
-               "Apple Color Emoji", "Segoe UI Emoji";
-  color: var(--fg);
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-p, .line, pre { line-height: 1.6; font-size: 16px; }
-pre { white-space: pre-wrap; }
-
-/* Utility visibilità */
-.hidden { display: none !important; }
-
-/* Link neutri */
-a { color: var(--fg); text-decoration: underline; }
-a:hover { opacity: .7; }
 
 /* =========================================================
-   LAYOUT SEZIONI (intro / overlay / desktop)
+   TIPO E COLORI GLOBALI
    ========================================================= */
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+  line-height: 1.5;
+}
 
-/* Ogni “schermata” è centrata con sola necessità di scroll verticale */
+/* Rimuove vecchio tema CRT */
+body::after { display: none !important; }
+
+/* Link */
+a {
+  color: var(--fg);
+  text-decoration: underline;
+}
+a:hover { opacity: .7; }
+
+/* Nascondi elementi dinamici */
+.hidden { display: none !important; }
+
+/* =========================================================
+   SEZIONE INTRO (form iniziale)
+   ========================================================= */
 .screen {
-  display: block;
   width: 100%;
   min-height: 100dvh;
-  padding: clamp(16px, 3vw, 32px);
+  padding: var(--pad);
+  display: block;
 }
 
-/* Contenitore centrale max-width */
-.terminal-box,
-.center-box,
-#iconGrid {
+.terminal-box {
   max-width: var(--maxw);
   margin: 0 auto;
+  display: grid;
+  gap: 20px;
 }
 
-/* Titoli e righe tipo terminale ma leggibili */
 .line {
-  padding: 6px 0;
   border-bottom: 1px solid var(--line);
+  padding: 6px 0;
+  font-size: 16px;
 }
 
-/* Form base */
-.terminal-input,
-textarea,
-input {
+/* Input */
+input, textarea {
   width: 100%;
   border: 1px solid var(--line-strong);
-  padding: 12px 14px;
   border-radius: var(--radius);
+  padding: 12px 14px;
+  background: #ffffff;
+  color: #000;
   font-size: 16px;
-  background: #fff !important;
-  color: #000 !important;
-  outline: none;
-}
-.terminal-input.area,
-textarea {
-  min-height: 160px;
   resize: vertical;
 }
 
-.terminal-btn,
-button {
-  display: inline-block;
-  padding: 12px 16px;
+/* Button */
+button, .terminal-btn {
   border: 1px solid #000;
-  border-radius: var(--radius);
   background: #000;
   color: #fff;
-  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: var(--radius);
   cursor: pointer;
-  box-shadow: var(--shadow);
+  font-weight: 600;
 }
-.terminal-btn:hover { opacity: .9; }
+button:hover { opacity: .9; }
 
-/* Griglia temi → diventa un elenco elegante e leggibile */
+/* Grid selezione tema */
 .theme-grid-terminal {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px 16px;
-  margin: 10px 0 16px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 14px;
 }
 .theme-option {
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
   padding: 10px 12px;
+  border-radius: var(--radius);
   cursor: pointer;
-  transition: background .15s ease, border-color .15s ease;
 }
-.theme-option:hover {
-  background: #f8f8f8;
-  border-color: #000;
-}
+.theme-option:hover { border-color: #000; background: #f6f6f6; }
 
 /* =========================================================
-   OVERLAY (percentuale) centrato
+   OVERLAY PERCENTUALE
    ========================================================= */
 .center-box {
-  display: grid;
-  gap: 14px;
-  padding-top: 20vh;
+  max-width: var(--maxw);
+  margin: 0 auto;
   text-align: center;
+  padding-top: 18vh;
+  display: grid;
+  gap: 16px;
 }
 
 /* =========================================================
-   DESKTOP → trasformato in MENÙ A DISCESA (semplice da mobile)
+   DESKTOP (Archivio delle memorie)
    ========================================================= */
 #topbar {
-  position: sticky;
-  top: 0;
-  padding: 10px 0;
-  background: #fff;
-  border-bottom: 1px solid var(--line);
-  z-index: 5;
   text-align: center;
   font-weight: 600;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 #iconGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  max-width: var(--maxw);
+  margin: 0 auto;
   padding: var(--pad) 0;
+  display: grid;
+  gap: 10px;
 }
 
-/* Ogni “icona/cartella” diventa una voce di menu */
+/* Cartelle */
 .icon {
   display: flex;
   align-items: center;
   gap: 10px;
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
   padding: 12px 14px;
+  border-radius: var(--radius);
   cursor: pointer;
-  background: #fff;
-  box-shadow: var(--shadow);
+  background: transparent;
 }
-.icon:hover { border-color: #000; }
-.icon .glyph { font-size: 18px; }
-.icon .name  { font-size: 16px; font-weight: 600; }
+.icon:hover { border-color: #000; background: #f4f4f4; }
 
 /* =========================================================
-   “WINDOW” (apertura cartella) → pannello centrato
+   FINESTRA CONTENUTI (Cartella)
    ========================================================= */
 .window {
   position: fixed;
   inset: 0;
-  padding: clamp(10px, 2vw, 24px);
-  background: rgba(255,255,255,0.86);
-  backdrop-filter: blur(2px);
-  z-index: 30;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(3px);
+  padding: var(--pad);
   overflow: auto;
+  z-index: 30;
 }
 
 .titlebar {
   max-width: var(--maxw);
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  background: transparent;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  padding: 12px 14px;
-  background: #fff;
-  box-shadow: var(--shadow);
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
   position: sticky;
-  top: clamp(6px, 1.2vw, 12px);
-  z-index: 2;
-  font-weight: 700;
-}
-.titlebar .btn {
-  border: 1px solid var(--line-strong);
-  border-radius: 8px;
-  padding: 4px 10px;
-  cursor: pointer;
+  top: 10px;
   background: #fff;
 }
-.titlebar .btn:hover { background: #f5f5f5; }
 
-/* Contenuto finestra in layout verticale (dropdown-friendly) */
+.titlebar .btn {
+  cursor: pointer;
+  padding: 6px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+}
+.titlebar .btn:hover { background: #f2f2f2; }
+
+/* Layout interno finestra */
 .content {
   max-width: var(--maxw);
-  margin: 12px auto 0;
+  margin: 18px auto 0;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
+  gap: 16px;
 }
 
-/* Sidebar file come menu a discesa */
+/* Lista file */
 .sidebar {
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  background: #fff;
-  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  background: transparent;
+  border: none;
 }
 .file {
   padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  border: 1px solid var(--line-strong);
+  background: transparent;
   cursor: pointer;
-  background: #fff;
 }
-.file:hover {
-  border-color: #000;
-  background: #fafafa;
-}
+.file:hover { border-color: #000; background: #f6f6f6; }
 
-/* Viewer contenuti sempre centrato e leggibile */
+/* Viewer */
 .viewer {
+  padding: var(--pad);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: #fff;
-  padding: var(--pad);
+  background: transparent;
   min-height: 40vh;
-  box-shadow: var(--shadow);
 }
 .viewer pre,
-.viewer-text {
-  font-size: 16px;
-  line-height: 1.7;
-}
+.viewer-text { font-size: 16px; line-height: 1.7; }
 
-/* Immagini nel viewer adattate */
+/* Immagini */
 .viewer img {
   display: block;
   max-width: 100%;
   height: auto;
   margin: 12px auto;
-  cursor: zoom-in; /* il JS potrà aprire la lightbox */
+  cursor: zoom-in;
 }
 
 /* =========================================================
-   LIGHTBOX (full-screen image) — pronto per il tuo JS
-   Aggiungi/togli .lightbox-open al <body> e usa .lightbox
+   MOBILE
    ========================================================= */
-.lightbox-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.85);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-}
-body.lightbox-open .lightbox-backdrop { display: flex; }
-
-.lightbox-image {
-  max-width: 92vw;
-  max-height: 92vh;
-  object-fit: contain;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-}
-
-.lightbox-close {
-  position: fixed;
-  top: 14px;
-  right: 14px;
-  background: #fff;
-  color: #000;
-  border: 1px solid #000;
-  border-radius: 999px;
-  width: 40px;
-  height: 40px;
-  font-weight: 800;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-}
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-@media (max-width: 920px) {
-  :root { --maxw: 720px; }
-}
-
 @media (max-width: 600px) {
   :root { --maxw: 100%; --pad: 16px; }
-
-  /* Intro */
-  .theme-grid-terminal {
-    grid-template-columns: 1fr;
-  }
-
-  .terminal-btn { width: 100%; }
-
-  /* Desktop lista */
-  #iconGrid { gap: 10px; }
-
-  .icon { padding: 12px; }
-
-  /* Window */
-  .titlebar {
-    border-radius: 12px;
-    padding: 12px;
-    top: 8px;
-  }
-
-  .content {
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .sidebar { padding: 6px; }
-  .file    { padding: 10px; }
-
-  .viewer  { padding: 14px; }
-
-  .viewer pre,
-  .viewer-text { font-size: 15px; line-height: 1.6; }
-}
-
-/* Piccole rifiniture focus */
-input:focus, textarea:focus, button:focus, .file:focus, .theme-option:focus {
-  outline: 2px solid #000;
-  outline-offset: 2px;
-}
-
-/* ---- FIX CONTRASTO CARTELLE & FILE ---- */
-
-/* Tutto quello che sta in desktop / menu deve avere testo nero */
-/* Testo nero ovunque, ma sfondi trasparenti */
-#iconGrid,
-.icon,
-.icon .name,
-.file,
-.viewer,
-.viewer-text,
-.titlebar,
-.titlebar .btn {
-  color: #000 !important;
-  background: transparent !important;
-}
-
-/* Sidebar = trasparente, senza blocco bianco */
-.sidebar {
-  color: #000 !important;
-  background: transparent !important;
-}
-
-/* Bordo leggero e uniforme */
-.icon,
-.file,
-.titlebar,
-.sidebar,
-.viewer {
-  border: 1px solid #ccc;
-}
-
-/* Hover */
-.file:hover,
-.icon:hover {
-  background: #f2f2f2 !important;
-  border-color: #000 !important;
+  .theme-grid-terminal { grid-template-columns: 1fr; }
+  .titlebar { top: 8px; }
 }
