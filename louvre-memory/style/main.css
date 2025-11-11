@@ -368,32 +368,37 @@ input:focus, textarea:focus, button:focus, .file:focus, .theme-option:focus {
 /* ---- FIX CONTRASTO CARTELLE & FILE ---- */
 
 /* Tutto quello che sta in desktop / menu deve avere testo nero */
+/* Testo nero ovunque, ma sfondi trasparenti */
 #iconGrid,
 .icon,
 .icon .name,
-.sidebar,
 .file,
 .viewer,
 .viewer-text,
 .titlebar,
 .titlebar .btn {
   color: #000 !important;
-  background: #000 !important;
+  background: transparent !important;
 }
 
-/* Bordo leggermente più visibile */
+/* Sidebar = trasparente, senza blocco bianco */
+.sidebar {
+  color: #000 !important;
+  background: transparent !important;
+}
+
+/* Bordo leggero e uniforme */
 .icon,
-.sidebar,
 .file,
-.viewer,
-.titlebar {
-  border: 1px solid #ccc !important;
+.titlebar,
+.sidebar,
+.viewer {
+  border: 1px solid #ccc;
 }
 
-/* Quando si passa sopra */
+/* Hover */
 .file:hover,
 .icon:hover {
   background: #f2f2f2 !important;
   border-color: #000 !important;
 }
-
