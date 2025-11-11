@@ -256,3 +256,17 @@ button:hover { opacity: .9; }
   color: #000 !important;
 }
 
+
+/* Assicura che il testo rimanga dentro lo schermo */
+.viewer pre,
+.viewer-text {
+  white-space: pre-wrap !important;   /* manda a capo automaticamente */
+  word-wrap: break-word !important;   /* spezza parole troppo lunghe */
+  overflow-wrap: break-word !important;
+  max-width: 100% !important;
+}
+.viewer {
+  overflow-x: hidden !important;  /* niente scroll orizzontale */
+  overflow-y: auto !important;    /* solo scroll verticale */
+}
+
