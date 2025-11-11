@@ -364,3 +364,36 @@ input:focus, textarea:focus, button:focus, .file:focus, .theme-option:focus {
   outline: 2px solid #000;
   outline-offset: 2px;
 }
+
+/* ---- FIX CONTRASTO CARTELLE & FILE ---- */
+
+/* Tutto quello che sta in desktop / menu deve avere testo nero */
+#iconGrid,
+.icon,
+.icon .name,
+.sidebar,
+.file,
+.viewer,
+.viewer-text,
+.titlebar,
+.titlebar .btn {
+  color: #000 !important;
+  background: #fff !important;
+}
+
+/* Bordo leggermente più visibile */
+.icon,
+.sidebar,
+.file,
+.viewer,
+.titlebar {
+  border: 1px solid #ccc !important;
+}
+
+/* Quando si passa sopra */
+.file:hover,
+.icon:hover {
+  background: #f2f2f2 !important;
+  border-color: #000 !important;
+}
+
