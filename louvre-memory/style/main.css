@@ -245,3 +245,14 @@ button:hover { opacity: .9; }
   .theme-grid-terminal { grid-template-columns: 1fr; }
   .titlebar { top: 8px; }
 }
+/* FIX: titlebar non deve avere sfondo pieno */
+.titlebar {
+  background: rgba(255,255,255,0.4) !important; /* leggero, non copre */
+  backdrop-filter: blur(4px);                   /* mantiene eleganza */
+  color: #000 !important;                       /* testo sempre leggibile */
+}
+.titlebar .btn {
+  background: rgba(255,255,255,0.6) !important;
+  color: #000 !important;
+}
+
