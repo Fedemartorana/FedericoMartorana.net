@@ -378,7 +378,7 @@ input:focus, textarea:focus, button:focus, .file:focus, .theme-option:focus {
 .titlebar,
 .titlebar .btn {
   color: #000 !important;
-  background: #fff !important;
+  background: #000 !important;
 }
 
 /* Bordo leggermente più visibile */
