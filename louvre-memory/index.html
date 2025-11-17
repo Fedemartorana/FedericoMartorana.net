@@ -58,8 +58,8 @@ body::after {
 <section id="intro" class="screen terminal">
   <div class="terminal-box">
 
-    <div class="line">> Ingresso nel sistema di memoria del louvre</div>
-    <div class="line">> Cosa resta del Louvre in te.</div>
+    <div class="line">> Memoria collettiva del louvre</div>
+    <div class="line">> Per quale tema ricordi maggiormente il Louvre.</div>
     <div class="line">&nbsp;</div>
 
     <div id="themeGrid" class="theme-grid-terminal">
@@ -79,10 +79,10 @@ body::after {
     <div class="line">> Firma:</div>
     <input id="visitorName" class="terminal-input" maxlength="40" autocomplete="off">
 
-    <div class="line">> Annota la tua traccia</div>
+    <div class="line">> Contribuisci a costituire la memoria collettiva del Louvre</div>
     <textarea id="visitorText" class="terminal-input area" rows="5" maxlength="1000"></textarea>
 
-    <button id="submitBtn" class="terminal-btn">Inserisci</button>
+    <button id="submitBtn" class="terminal-btn">INSERISCI</button>
 
   </div>
 </section>
@@ -366,7 +366,7 @@ submitBtn.onclick = async () => {
 
   intro.classList.add('hidden');
   overlay.classList.remove('hidden');
-  resultText.innerHTML = `> Conosci il Louvre al <b>${perc}%</b>.`;
+  resultText.innerHTML = `> Ricordi il Louvre per il <b>${perc}%</b>.`;
 
   openFolder(EPOCHS.find(e => e.id === selectedTheme));
 };
