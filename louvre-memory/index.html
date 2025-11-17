@@ -83,6 +83,8 @@ body::after {
     <textarea id="visitorText" class="terminal-input area" rows="5" maxlength="1000"></textarea>
 
     <button id="submitBtn" class="terminal-btn">INSERISCI</button>
+    <button id="skipBtn" class="terminal-btn" style="margin-top:15px;">SKIP</button>
+
 
   </div>
 </section>
@@ -375,6 +377,19 @@ continueBtn.onclick = () => {
   overlay.classList.add('hidden');
   showDesktop();
 };
+  
+  // Bottone SKIP → salta il questionario e apre direttamente il desktop
+document.addEventListener("DOMContentLoaded", () => {
+  const skipBtn = document.getElementById("skipBtn");
+  if (skipBtn) {
+    skipBtn.onclick = () => {
+      intro.classList.add("hidden");
+      overlay.classList.add("hidden");
+      showDesktop();
+    };
+  }
+});
+
 
 function showDesktop(){
   desktop.classList.remove('hidden');
