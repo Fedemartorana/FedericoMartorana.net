@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Quadra Translator — Italiano ⇄ Quadra</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --fg:#000000;
+      --muted:#6b6b6b;
+      --line:2.25px;
+      --cell:64px;
+      --gap:10px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
+    header{
+      position:sticky; top:0; background:var(--bg);
+      border-bottom:1px solid #e9e9e9;
+      padding:16px 18px;
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+    }
+    header h1{ margin:0; font-size:16px; letter-spacing:0.08em; text-transform:uppercase; }
+    header .sub{ font-family:var(--mono); font-size:12px; color:var(--muted); }
+    main{ padding:18px; display:grid; grid-template-columns: 1.3fr 1fr; gap:18px; }
+    @media (max-width: 980px){ main{ grid-template-columns: 1fr; } }
+    .card{ border:1px solid #e9e9e9; border-radius:10px; padding:14px; }
+    .card h2{
+      margin:0 0 10px 0; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-family:var(--mono);
+    }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .row > *{ flex:1; min-width: 180px; }
+    textarea, input, select{
+      width:100%; border:1px solid #dcdcdc; border-radius:10px; padding:10px 12px;
+      font-family:var(--mono); font-size:13px; outline:none; background:#fff;
+    }
+    textarea{ min-height:140px; resize:vertical; }
+    button{
+      border:1px solid #dcdcdc; background:#fff; padding:10px 12px; border-radius:10px;
+      font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+      cursor:pointer; transition: transform .04s ease;
+    }
+    button:active{ transform: translateY(1px); }
+    .btn-primary{ border-color:#000; }
+    .btn-danger{ border-color:#000; background:#000; color:#fff; }
+    .muted{ color:var(--muted); font-size:12px; font-family:var(--mono); }
+    .tiny{ font-size:11px; font-family:var(--mono); color:var(--muted); line-height:1.4; }
+    .hr{ height:1px; background:#e9e9e9; margin:14px 0; }
+    .quadra-line{
+      display:flex; flex-wrap:wrap; gap: var(--gap); align-items:center;
+      padding:10px; border:1px dashed #e1e1e1; border-radius:10px;
+      min-height: calc(var(--cell) + 24px);
+    }
+    .word{ display:flex; gap: var(--gap); align-items:center; padding:8px; border:1px solid #efefef; border-radius:10px; }
+    .label{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:6px; word-break:break-word; }
+    .pill{
+      display:inline-block; font-family:var(--mono); font-size:11px;
+      border:1px solid #e9e9e9; border-radius:999px; padding:4px 8px; color:#000; background:#fff;
+    }
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width: 980px){ .grid2{ grid-template-columns:1fr; } }
+    .kbd{
+      font-family:var(--mono); border:1px solid #e9e9e9; border-radius:6px;
+      padding:2px 6px; font-size:11px; background:#fafafa;
+    }
+    .suggest{
+      border:1px solid #efefef; border-radius:10px; padding:10px; background:#fff;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .suggest .head{ display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .suggest .title{ font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; }
+    .suggest .why{ font-family:var(--mono); font-size:11px; color:var(--muted); }
+    .suggest .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    .table-like{ border:1px solid #efefef; border-radius:10px; overflow:hidden; }
+    .table-like .r{ display:grid; grid-template-columns: 1fr 1.4fr; gap:10px; padding:10px; border-bottom:1px solid #f0f0f0; }
+    .table-like .r:last-child{ border-bottom:none; }
+    .table-like .k{ font-family:var(--mono); font-size:12px; }
+    .table-like .v{ font-family:var(--mono); font-size:11px; color:var(--muted); word-break:break-word; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div>
+    <h1>Quadra Translator</h1>
+    <div class="sub">Italiano ⇄ Quadra • sintassi: ENTITÀ → AGENZIA → STATO → TEMPO • negazione: assenza interna</div>
+  </div>
+  <div class="sub">“Learning” locale: ON</div>
+</header>
+
+<main>
+  <!-- LEFT -->
+  <section class="card">
+    <h2>Traduzione & Builder</h2>
+
+    <div class="grid2">
+      <div>
+        <div class="muted">Italiano (parole / frasi)</div>
+        <textarea id="itInput" placeholder="Esempi: ciao&#10;bottiglia&#10;luogo abbandonato&#10;persona attiva presente&#10;non presente (usa negazione)"></textarea>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn-primary" id="btnItToQuadra">Italiano → Quadra</button>
+          <button id="btnClear">Pulisci</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Proposte automatiche (se parola non trovata)</h2>
+        <div class="tiny">
+          Se una parola non esiste nel dizionario, il sistema genera <b>3 ipotesi</b> usando regole euristiche (pattern linguistici, categorie e fallback).
+          Puoi accettare una proposta e salvarla: il dizionario “impara” (in <span class="kbd">localStorage</span> sul tuo browser).
+        </div>
+        <div id="suggestions"></div>
+      </div>
+
+      <div>
+        <div class="muted">Quadra (glifi + gloss)</div>
+        <div class="quadra-line" id="quadraOutput"></div>
+        <div class="label" id="glossOutput"></div>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn-primary" id="btnQuadraToGloss">Quadra → Gloss</button>
+          <button id="btnCopyGloss">Copia gloss</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Builder frase (composizione manuale)</h2>
+        <div class="tiny">
+          Costruisci parole Quadra e concatenale in una frase. Ogni parola è una sequenza di glifi (<span class="kbd">+</span>). Le parole sono separate da <span class="kbd">/</span>.
+          Negazione: anteponi <span class="kbd">!</span> al token da negare (<span class="kbd">!PRESENTE</span>) → inserisce “assenza” dentro quel glifo.
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <select id="slot1"></select>
+          <select id="slot2"></select>
+          <select id="slot3"></select>
+          <select id="slot4"></select>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <select id="slot5"></select>
+          <select id="slot6"></select>
+          <button class="btn-primary" id="btnAddWord">Aggiungi parola alla frase</button>
+        </div>
+
+        <div class="quadra-line" id="phrasePreview" style="margin-top:10px;"></div>
+        <div class="label" id="phraseGloss"></div>
+
+        <div class="row" style="margin-top:10px;">
+          <button id="btnClearPhrase">Pulisci frase</button>
+          <button class="btn-primary" id="btnCopyPhraseGloss">Copia frase (gloss)</button>
+          <button class="btn-primary" id="btnUsePhraseAsOutput">Usa frase come output</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Dizionario (Italiano → Quadra) • persistente</h2>
+    <div class="tiny">
+      Ogni voce associa una parola italiana a una sequenza Quadra.
+      Formato: <span class="kbd">TOKEN+TOKEN+TOKEN+TOKEN</span> e più parole con <span class="kbd">/</span>. Negazione con <span class="kbd">!TOKEN</span>.
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <input id="dictKey" placeholder="parola italiana (es. bottiglia)" />
+      <input id="dictVal" placeholder="sequenza (es. OGGETTO+PASSIVO+FERMO+PRESENTE)" />
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn-primary" id="btnSaveEntry">Salva voce</button>
+      <button id="btnDeleteEntry">Elimina voce</button>
+      <button id="btnExportDict">Export JSON</button>
+      <button id="btnImportDict">Import JSON</button>
+      <button id="btnResetDict" class="btn-danger">Reset dizionario</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Voci salvate</h2>
+    <div id="dictList" class="table-like"></div>
+  </section>
+
+  <!-- RIGHT -->
+  <section class="card">
+    <h2>Legenda glifi</h2>
+    <div class="tiny">
+      Set minimo implementato: entità, agenzia, stato, tempo + relazione/inizio/fine. La lingua cresce aggiungendo <b>voci</b> al dizionario, non nuovi segni.
+    </div>
+    <div class="hr"></div>
+    <div id="legend" class="quadra-line"></div>
+    <div class="label" id="legendLabels"></div>
+
+    <div class="hr"></div>
+
+    <h2>Come “impara”</h2>
+    <div class="tiny">
+      Questo strumento salva tutto in <span class="kbd">localStorage</span> del browser:
+      <ul>
+        <li>Quando accetti una proposta, crea una voce nel dizionario.</li>
+        <li>Quando modifichi una voce, viene persistita.</li>
+        <li>Puoi esportare/importare JSON per condividere la lingua.</li>
+      </ul>
+      Nota: non c’è AI online in questa pagina. Le “ipotesi” sono euristiche controllabili (e quindi coerenti).
+    </div>
+  </section>
+</main>
+
+<script>
+/* =========================
+   QUADRA — GLYPH DEFINITIONS
+   ========================= */
+
+const GLYPH_DEFS = {
+  OGGETTO:   { frame: "closed", fill: "empty" },
+  PERSONA:   { frame: "closed", fill: "solid" },
+  LUOGO:     { frame: "open-bottom", fill: "empty" },
+
+  ATTIVO:    { frame: "closed", fill: "empty", dot: "top" },
+  PASSIVO:   { frame: "closed", fill: "empty", dot: "bottom" },
+
+  FERMO:     { frame: "closed", fill: "empty", nucleus: true },
+  MOVIMENTO: { frame: "closed", fill: "empty", band: true },
+
+  PRESENTE:  { frame: "broken-corners", fill: "empty" },
+  ASSENTE:   { frame: "none", absence: true },
+
+  RELAZIONE: { frame: "open-top-bottom", fill: "empty" },
+  INIZIO:    { frame: "open-top", fill: "empty" },
+  FINE:      { frame: "open-bottom-wide", fill: "empty" }
+};
+
+const ALL_TOKENS = Object.keys(GLYPH_DEFS);
+
+/* =========================
+   DICTIONARY (persistent)
+   ========================= */
+
+const DEFAULT_DICT = {
+  "ciao": "PERSONA+ATTIVO+RELAZIONE+INIZIO / PERSONA+ATTIVO+PRESENTE",
+  "saluto": "PERSONA+ATTIVO+RELAZIONE+INIZIO",
+  "bottiglia": "OGGETTO+PASSIVO+FERMO+PRESENTE / OGGETTO+PASSIVO+MOVIMENTO+PRESENTE",
+  "luogo": "LUOGO+PASSIVO+FERMO+PRESENTE",
+  "abbandonato": "LUOGO+PASSIVO+FERMO+ASSENTE",
+  "porta": "OGGETTO+PASSIVO+FERMO+PRESENTE",
+  "entrare": "PERSONA+ATTIVO+MOVIMENTO+PRESENTE / LUOGO+PASSIVO+FERMO+PRESENTE",
+  "uscire": "PERSONA+ATTIVO+MOVIMENTO+PRESENTE / LUOGO+PASSIVO+FERMO+ASSENTE"
+};
+
+const STORAGE_KEY = "quadra_dict_v2";
+
+function loadDict(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return structuredClone(DEFAULT_DICT);
+    const parsed = JSON.parse(raw);
+    return { ...structuredClone(DEFAULT_DICT), ...parsed };
+  } catch(e){
+    return structuredClone(DEFAULT_DICT);
+  }
+}
+function saveDict(dict){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(dict));
+}
+
+let DICT = loadDict();
+
+/* =========================
+   SVG RENDERER
+   ========================= */
+
+function svgGlyph(token, options = {}){
+  const def = GLYPH_DEFS[token];
+  if(!def) return "";
+
+  const size = 64;
+  const pad = 7;
+  const x0 = pad, y0 = pad, w = size - 2*pad, h = size - 2*pad;
+  const line = 2.5;
+  const gap = 12;
+  const stroke = "#000";
+  const fillSolid = "#000";
+  const fillEmpty = "none";
+
+  function framePaths(type){
+    const x1 = x0, y1 = y0, x2 = x0+w, y2 = y0+h;
+    const segs = [];
+    const top =    { x1:x1, y1:y1, x2:x2, y2:y1 };
+    const right =  { x1:x2, y1:y1, x2:x2, y2:y2 };
+    const bottom = { x1:x2, y1:y2, x2:x1, y2:y2 };
+    const left =   { x1:x1, y1:y2, x2:x1, y2:y1 };
+
+    const midTopL = { x1:x1, y1:y1, x2:x1 + (w-gap)/2, y2:y1 };
+    const midTopR = { x1:x1 + (w+gap)/2, y1:y1, x2:x2, y2:y1 };
+
+    const midBotL = { x1:x1, y1:y2, x2:x1 + (w-gap)/2, y2:y2 };
+    const midBotR = { x1:x1 + (w+gap)/2, y1:y2, x2:x2, y2:y2 };
+
+    if(type === "none") return segs;
+    if(type === "closed"){ segs.push(top,right,bottom,left); return segs; }
+    if(type === "open-top"){ segs.push(midTopL, midTopR, right, bottom, left); return segs; }
+    if(type === "open-bottom"){ segs.push(top, right, midBotL, midBotR, left); return segs; }
+    if(type === "open-bottom-wide"){
+      const stub = 10;
+      segs.push(top, right, {x1:x2, y1:y2, x2:x2-stub, y2:y2}, {x1:x1, y1:y2, x2:x1+stub, y2:y2}, left);
+      return segs;
+    }
+    if(type === "open-top-bottom"){ segs.push(midTopL, midTopR, right, midBotL, midBotR, left); return segs; }
+    if(type === "broken-corners"){
+      const c = 10;
+      segs.push(
+        {x1:x1+c, y1:y1, x2:x2-c, y2:y1},
+        {x1:x2, y1:y1+c, x2:x2, y2:y2-c},
+        {x1:x2-c, y1:y2, x2:x1+c, y2:y2},
+        {x1:x1, y1:y2-c, x2:x1, y2:y1+c}
+      );
+      return segs;
+    }
+    segs.push(top,right,bottom,left); return segs;
+  }
+
+  const baseFill = (def.fill === "solid") ? fillSolid : fillEmpty;
+
+  const nucleus = def.nucleus ? `<rect x="${x0 + w*0.38}" y="${y0 + h*0.38}" width="${w*0.24}" height="${h*0.24}" fill="${fillSolid}" />` : "";
+  const band = def.band ? `<rect x="${x0 + w*0.18}" y="${y0 + h*0.44}" width="${w*0.64}" height="${h*0.12}" fill="${fillSolid}" />` : "";
+
+  let dot = "";
+  if(def.dot){
+    const cx = x0 + w/2;
+    const cy = def.dot === "top" ? (y0 + h*0.22) : (y0 + h*0.78);
+    dot = `<circle cx="${cx}" cy="${cy}" r="3.2" fill="${fillSolid}" />`;
+  }
+
+  let absence = "";
+  if(def.absence){
+    const pts = [
+      [x0+w*0.30, y0+h*0.30],
+      [x0+w*0.70, y0+h*0.30],
+      [x0+w*0.30, y0+h*0.70],
+      [x0+w*0.70, y0+h*0.70],
+      [x0+w*0.50, y0+h*0.50]
+    ];
+    absence = pts.map(([cx,cy]) => `<rect x="${cx-2.6}" y="${cy-2.6}" width="5.2" height="5.2" fill="${fillSolid}" />`).join("");
+  }
+
+  let negOverlay = "";
+  if(options.negate === true){
+    const pts = [
+      [x0+w*0.38, y0+h*0.38],
+      [x0+w*0.62, y0+h*0.38],
+      [x0+w*0.38, y0+h*0.62],
+      [x0+w*0.62, y0+h*0.62]
+    ];
+    negOverlay = pts.map(([cx,cy]) => `<rect x="${cx-2.2}" y="${cy-2.2}" width="4.4" height="4.4" fill="${fillSolid}" />`).join("");
+  }
+
+  const frameType = def.frame || "closed";
+  const segs = framePaths(frameType);
+  const lines = segs.map(s => `<line x1="${s.x1}" y1="${s.y1}" x2="${s.x2}" y2="${s.y2}" stroke="${stroke}" stroke-width="${line}" stroke-linecap="square"/>`).join("");
+  const baseRect = (frameType === "none") ? "" : `<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="${baseFill}" />`;
+
+  return `
+    <svg width="${64}" height="${64}" viewBox="0 0 64 64" role="img" aria-label="${token}">
+      ${baseRect}
+      ${lines}
+      ${nucleus}
+      ${band}
+      ${dot}
+      ${absence}
+      ${negOverlay}
+    </svg>
+  `;
+}
+
+function renderWords(wordsParsed, targetEl){
+  targetEl.innerHTML = "";
+  wordsParsed.forEach((w, idx) => {
+    const wordWrap = document.createElement("div");
+    wordWrap.className = "word";
+    w.tokens.forEach((t, i) => {
+      const cell = document.createElement("div");
+      cell.innerHTML = svgGlyph(t, { negate: w.opts[i]?.negate === true });
+      wordWrap.appendChild(cell);
+    });
+    targetEl.appendChild(wordWrap);
+    if(idx !== wordsParsed.length - 1){
+      const pill = document.createElement("span");
+      pill.className = "pill";
+      pill.textContent = "⟂";
+      targetEl.appendChild(pill);
+    }
+  });
+}
+
+function safeToken(t){
+  return ALL_TOKENS.includes(t);
+}
+
+/* =========================
+   PARSING
+   ========================= */
+
+function parseQuadraString(s){
+  const words = s.split("/").map(w => w.trim()).filter(Boolean);
+  return words.map(word => {
+    const rawTokens = word.split("+").map(t => t.trim()).filter(Boolean);
+    const tokens = [];
+    const opts = [];
+    rawTokens.forEach(rt => {
+      let negate = false;
+      let t = rt.toUpperCase();
+      if(t.startsWith("!")){
+        negate = true;
+        t = t.slice(1);
+      }
+      tokens.push(t);
+      opts.push({ negate });
+    });
+    return { tokens, opts };
+  });
+}
+
+function quadraToGloss(text){
+  const s = (text || "").trim();
+  if(!s) return "";
+  const words = parseQuadraString(s);
+  const outWords = words.map(w => {
+    const parts = w.tokens.map((t, i) => {
+      const ok = safeToken(t);
+      const neg = w.opts[i]?.negate ? "!" : "";
+      return (ok ? (neg + t) : (neg + "<?>"));
+    });
+    return parts.join("+");
+  });
+  return outWords.join(" / ");
+}
+
+/* =========================
+   ITALIANO → QUADRA (learning + suggestions)
+   ========================= */
+
+/**
+ * Strategy:
+ * 1) Exact dict match
+ * 2) Phrase-level: tokenize and translate each token; if missing, propose suggestions per token.
+ * 3) Heuristics for missing token:
+ *    - morphological cues (verbi -are/-ere/-ire; -zione/-mento; -ità; plural; negation "non")
+ *    - semantic buckets (very small starter set)
+ *    - fallback: OGGETTO+PASSIVO+FERMO+PRESENTE
+ *
+ * IMPORTANT: no online AI. Deterministic, controllable, consistent.
+ */
+
+// minimal semantic buckets (expand as you go)
+const BUCKETS = [
+  { name:"Persone/ruoli", words: ["persona","uomo","donna","bambino","utente","cliente","amico","nemico","lui","lei","io","tu","noi","voi","loro"], quadra:"PERSONA+ATTIVO+PRESENTE" },
+  { name:"Luoghi", words: ["casa","stanza","città","piazza","strada","scuola","ufficio","studio","museo","teatro","bar","locale","porto","stazione"], quadra:"LUOGO+PASSIVO+FERMO+PRESENTE" },
+  { name:"Oggetti", words: ["cosa","oggetto","strumento","sedia","tavolo","banco","telefono","computer","chiave","bottiglia","libro"], quadra:"OGGETTO+PASSIVO+FERMO+PRESENTE" },
+  { name:"Azioni (appross.)", words: ["andare","venire","fare","dire","vedere","entrare","uscire","prendere","dare","bere","mangiare"], quadra:"PERSONA+ATTIVO+MOVIMENTO+PRESENTE" }
+];
+
+function normalizeIt(s){
+  return (s||"")
+    .toLowerCase()
+    .trim()
+    .replace(/[’']/g,"'")
+    .replace(/[.,;:!?()\[\]"]/g," ");
+}
+
+function tokenizeIt(s){
+  const cleaned = normalizeIt(s);
+  return cleaned.split(/\s+/).filter(Boolean);
+}
+
+function heuristicForToken(tok){
+  // negation word itself: "non"
+  if(tok === "non") return { quadra: "!PRESENTE", why: "negazione: 'non' applica assenza interna (usa !TOKEN nel builder)" };
+
+  // simple morphological cues
+  if(tok.endsWith("are") || tok.endsWith("ere") || tok.endsWith("ire")){
+    return { quadra: "PERSONA+ATTIVO+MOVIMENTO+PRESENTE", why: "sembra un verbo all'infinito → azione/movimento" };
+  }
+  if(tok.endsWith("zione") || tok.endsWith("mento") || tok.endsWith("ità")){
+    return { quadra: "OGGETTO+PASSIVO+FERMO+PRESENTE", why: "sembra un astratto (nome) → cosa/stabile (fallback controllato)" };
+  }
+  if(tok.endsWith("ato") || tok.endsWith("uta") || tok.endsWith("uto") || tok.endsWith("ente")){
+    // participio/aggettivo: spesso stato
+    return { quadra: "OGGETTO+PASSIVO+FERMO+PRESENTE", why: "sembra stato/aggettivo → trattato come descrittore (fallback)" };
+  }
+
+  // buckets
+  for(const b of BUCKETS){
+    if(b.words.includes(tok)){
+      return { quadra: b.quadra, why: `bucket: ${b.name}` };
+    }
+  }
+
+  // fallback
+  return { quadra: "OGGETTO+PASSIVO+FERMO+PRESENTE", why: "fallback neutro (oggetto passivo fermo presente)" };
+}
+
+function proposeCandidates(tok){
+  // 3 candidates: bucket/morph/fallback variants
+  const cands = [];
+  const base = heuristicForToken(tok);
+
+  // candidate 1: best heuristic
+  cands.push({ quadra: base.quadra, why: base.why });
+
+  // candidate 2: alternative depending on detected type
+  if(tok.endsWith("are") || tok.endsWith("ere") || tok.endsWith("ire")){
+    cands.push({ quadra: "PERSONA+ATTIVO+MOVIMENTO+PRESENTE / RELAZIONE+PASSIVO+FERMO+PRESENTE", why: "azione + relazione (split in 2 parole)" });
+    cands.push({ quadra: "PERSONA+ATTIVO+MOVIMENTO+PRESENTE / FINE+PASSIVO+FERMO+PRESENTE", why: "azione + chiusura (se indica terminare/uscire)" });
+  } else {
+    cands.push({ quadra: "OGGETTO+PASSIVO+FERMO+PRESENTE", why: "oggetto neutro" });
+    cands.push({ quadra: "OGGETTO+PASSIVO+MOVIMENTO+PRESENTE", why: "oggetto con stato dinamico (contenuto/fluido/processo)" });
+  }
+
+  // dedupe by quadra string
+  const seen = new Set();
+  return cands.filter(c => {
+    if(seen.has(c.quadra)) return false;
+    seen.add(c.quadra);
+    return true;
+  }).slice(0,3);
+}
+
+function itToQuadraWithLearning(it){
+  const tokens = tokenizeIt(it);
+  if(tokens.length === 0) return { quadra:"", wordsParsed:[], gloss:"", missing:[] };
+
+  const missing = [];
+  const translated = [];
+
+  for(let i=0; i<tokens.length; i++){
+    const tok = tokens[i];
+
+    // phrase-level negation: "non X" => negate next token's TIME by default if unknown
+    if(tok === "non"){
+      // handle in post: mark that next token should be negated (simple approach)
+      translated.push({ raw:"non", quadra:"", meta:{negateNext:true} });
+      continue;
+    }
+
+    const direct = DICT[tok];
+    if(direct){
+      translated.push({ raw:tok, quadra:direct });
+    }else{
+      // missing token -> produce a suggestion but do not auto-save
+      const candidates = proposeCandidates(tok);
+      translated.push({ raw:tok, quadra:candidates[0].quadra, meta:{auto:true, candidates} });
+      missing.push({ tok, candidates });
+    }
+  }
+
+  // apply "non" to next token (negate PRESENTE by default on first word of that token)
+  // (controlled heuristic: negates the TIME slot of the first quadra-word)
+  const applied = [];
+  for(let i=0;i<translated.length;i++){
+    const cur = translated[i];
+    if(cur.meta?.negateNext){
+      // skip
+      continue;
+    }
+    const prev = translated[i-1];
+    if(prev?.meta?.negateNext){
+      // negate PRESENTE in the first word if present, else negate last token
+      const q = cur.quadra || "";
+      const words = parseQuadraString(q);
+      if(words.length>0){
+        // look for PRESENTE token
+        let done = false;
+        for(let w=0; w<words.length && !done; w++){
+          const idxP = words[w].tokens.findIndex(t => t==="PRESENTE");
+          if(idxP !== -1){
+            words[w].opts[idxP].negate = true;
+            done = true;
+          }
+        }
+        if(!done){
+          // negate last token of first word
+          const w0 = words[0];
+          if(w0.tokens.length>0){
+            w0.opts[w0.tokens.length-1].negate = true;
+          }
+        }
+        // rebuild gloss
+        const rebuilt = words.map(w => w.tokens.map((t,idx)=> (w.opts[idx].negate ? "!" : "") + t).join("+")).join(" / ");
+        applied.push({ ...cur, quadra: rebuilt, meta: { ...(cur.meta||{}), negatedByNon:true } });
+      }else{
+        applied.push(cur);
+      }
+    }else{
+      applied.push(cur);
+    }
+  }
+
+  // Build final as phrase: join each original token translation as separate "word" with '/'
+  // If a translation already contains '/', keep it (multi-word concept)
+  const quadra = applied
+    .filter(x => x.quadra && x.quadra.trim().length>0)
+    .map(x => x.quadra.trim())
+    .join(" / ");
+
+  const wordsParsed = parseQuadraString(quadra);
+  const gloss = quadraToGloss(quadra);
+
+  return { quadra, wordsParsed, gloss, missing };
+}
+
+/* =========================
+   UI
+   ========================= */
+
+const itInput = document.getElementById("itInput");
+const quadraOutput = document.getElementById("quadraOutput");
+const glossOutput = document.getElementById("glossOutput");
+
+const btnItToQuadra = document.getElementById("btnItToQuadra");
+const btnQuadraToGloss = document.getElementById("btnQuadraToGloss");
+const btnClear = document.getElementById("btnClear");
+const btnCopyGloss = document.getElementById("btnCopyGloss");
+
+const suggestionsEl = document.getElementById("suggestions");
+
+const dictKey = document.getElementById("dictKey");
+const dictVal = document.getElementById("dictVal");
+const btnSaveEntry = document.getElementById("btnSaveEntry");
+const btnDeleteEntry = document.getElementById("btnDeleteEntry");
+const btnResetDict = document.getElementById("btnResetDict");
+const btnExportDict = document.getElementById("btnExportDict");
+const btnImportDict = document.getElementById("btnImportDict");
+const dictList = document.getElementById("dictList");
+
+const slotEls = ["slot1","slot2","slot3","slot4","slot5","slot6"].map(id => document.getElementById(id));
+const btnAddWord = document.getElementById("btnAddWord");
+const phrasePreview = document.getElementById("phrasePreview");
+const phraseGloss = document.getElementById("phraseGloss");
+const btnClearPhrase = document.getElementById("btnClearPhrase");
+const btnCopyPhraseGloss = document.getElementById("btnCopyPhraseGloss");
+const btnUsePhraseAsOutput = document.getElementById("btnUsePhraseAsOutput");
+
+function escapeHtml(s){
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+function refreshDictList(){
+  const keys = Object.keys(DICT).sort((a,b)=>a.localeCompare(b));
+  if(keys.length === 0){
+    dictList.innerHTML = `<div class="r"><div class="k">(nessuna voce)</div><div class="v"></div></div>`;
+    return;
+  }
+  dictList.innerHTML = keys.map(k => {
+    const v = DICT[k];
+    return `<div class="r">
+      <div class="k">${escapeHtml(k)}</div>
+      <div class="v">${escapeHtml(v)}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderLegend(){
+  const legend = document.getElementById("legend");
+  const legendLabels = document.getElementById("legendLabels");
+  const tokens = ["OGGETTO","PERSONA","LUOGO","ATTIVO","PASSIVO","FERMO","MOVIMENTO","PRESENTE","ASSENTE","RELAZIONE","INIZIO","FINE"];
+  legend.innerHTML = "";
+  tokens.forEach(t => {
+    const w = document.createElement("div");
+    w.className = "word";
+    w.innerHTML = svgGlyph(t);
+    legend.appendChild(w);
+  });
+  legendLabels.textContent = tokens.join(" • ");
+}
+
+function populateSlots(){
+  const options = [
+    "",
+    "OGGETTO","PERSONA","LUOGO",
+    "ATTIVO","PASSIVO",
+    "FERMO","MOVIMENTO",
+    "PRESENTE","ASSENTE",
+    "RELAZIONE","INIZIO","FINE",
+    "!OGGETTO","!PERSONA","!LUOGO",
+    "!ATTIVO","!PASSIVO",
+    "!FERMO","!MOVIMENTO",
+    "!PRESENTE","!ASSENTE",
+    "!RELAZIONE","!INIZIO","!FINE"
+  ];
+  slotEls.forEach(sel => {
+    sel.innerHTML = options.map(o => `<option value="${o}">${o || "(vuoto)"}</option>`).join("");
+  });
+
+  // defaults: ENTITÀ → AGENZIA → STATO → TEMPO
+  slotEls[0].value = "OGGETTO";
+  slotEls[1].value = "PASSIVO";
+  slotEls[2].value = "FERMO";
+  slotEls[3].value = "PRESENTE";
+  slotEls[4].value = "";
+  slotEls[5].value = "";
+}
+
+let phraseWords = []; // array of quadra strings (each may contain +)
+function renderPhrase(){
+  const phrase = phraseWords.join(" / ");
+  const parsed = parseQuadraString(phrase);
+  renderWords(parsed, phrasePreview);
+  phraseGloss.textContent = phrase ? quadraToGloss(phrase) : "";
+}
+
+function buildWordFromSlots(){
+  const values = slotEls.map(s => s.value).filter(v => v && v.trim().length>0);
+  if(values.length === 0) return "";
+  return values.join("+");
+}
+
+function renderSuggestions(missing){
+  suggestionsEl.innerHTML = "";
+  if(!missing || missing.length === 0){
+    suggestionsEl.innerHTML = `<div class="tiny">(nessuna parola mancante: tutto trovato nel dizionario)</div>`;
+    return;
+  }
+
+  missing.forEach(item => {
+    const wrap = document.createElement("div");
+    wrap.className = "suggest";
+
+    const head = document.createElement("div");
+    head.className = "head";
+    head.innerHTML = `<div class="title">${escapeHtml(item.tok)}</div><div class="pill">non in dizionario</div>`;
+    wrap.appendChild(head);
+
+    item.candidates.forEach((c, idx) => {
+      const cand = document.createElement("div");
+      cand.style.border = "1px solid #f0f0f0";
+      cand.style.borderRadius = "10px";
+      cand.style.padding = "10px";
+      cand.style.display = "flex";
+      cand.style.flexDirection = "column";
+      cand.style.gap = "8px";
+
+      const parsed = parseQuadraString(c.quadra);
+      const line = document.createElement("div");
+      line.className = "quadra-line";
+      renderWords(parsed, line);
+
+      const why = document.createElement("div");
+      why.className = "why";
+      why.textContent = `ipotesi ${idx+1}: ${c.why} • gloss: ${quadraToGloss(c.quadra)}`;
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+      const btnAccept = document.createElement("button");
+      btnAccept.className = "btn-primary";
+      btnAccept.textContent = "Accetta & salva";
+      btnAccept.addEventListener("click", () => {
+        DICT[item.tok] = c.quadra.toUpperCase();
+        saveDict(DICT);
+        refreshDictList();
+
+        // Pre-fill edit fields
+        dictKey.value = item.tok;
+        dictVal.value = c.quadra.toUpperCase();
+
+        // Re-run translation for immediate feedback
+        btnItToQuadra.click();
+      });
+
+      const btnEdit = document.createElement("button");
+      btnEdit.textContent = "Modifica";
+      btnEdit.addEventListener("click", () => {
+        dictKey.value = item.tok;
+        dictVal.value = c.quadra.toUpperCase();
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      });
+
+      actions.appendChild(btnAccept);
+      actions.appendChild(btnEdit);
+
+      cand.appendChild(line);
+      cand.appendChild(why);
+      cand.appendChild(actions);
+
+      wrap.appendChild(cand);
+    });
+
+    suggestionsEl.appendChild(wrap);
+  });
+}
+
+btnItToQuadra.addEventListener("click", () => {
+  const res = itToQuadraWithLearning(itInput.value);
+  renderWords(res.wordsParsed, quadraOutput);
+  glossOutput.textContent = res.gloss;
+  renderSuggestions(res.missing);
+});
+
+btnQuadraToGloss.addEventListener("click", () => {
+  const gloss = quadraToGloss(glossOutput.textContent);
+  itInput.value = gloss ? `[gloss] ${gloss}` : itInput.value;
+});
+
+btnClear.addEventListener("click", () => {
+  itInput.value = "";
+  quadraOutput.innerHTML = "";
+  glossOutput.textContent = "";
+  suggestionsEl.innerHTML = "";
+});
+
+btnCopyGloss.addEventListener("click", async () => {
+  const t = glossOutput.textContent || "";
+  if(!t) return;
+  try{ await navigator.clipboard.writeText(t); }catch(e){}
+});
+
+btnSaveEntry.addEventListener("click", () => {
+  const k = (dictKey.value || "").trim().toLowerCase();
+  const v = (dictVal.value || "").trim().toUpperCase();
+  if(!k || !v) return;
+
+  // validate tokens
+  const words = parseQuadraString(v);
+  for(const w of words){
+    for(const t of w.tokens){
+      if(!safeToken(t)) return;
+    }
+  }
+
+  DICT[k] = v;
+  saveDict(DICT);
+  refreshDictList();
+});
+
+btnDeleteEntry.addEventListener("click", () => {
+  const k = (dictKey.value || "").trim().toLowerCase();
+  if(!k) return;
+  delete DICT[k];
+  saveDict(DICT);
+  refreshDictList();
+});
+
+btnResetDict.addEventListener("click", () => {
+  DICT = structuredClone(DEFAULT_DICT);
+  saveDict(DICT);
+  refreshDictList();
+});
+
+btnExportDict.addEventListener("click", async () => {
+  const data = JSON.stringify(DICT, null, 2);
+  try{
+    await navigator.clipboard.writeText(data);
+  }catch(e){}
+  alert("Export copiato negli appunti (JSON).");
+});
+
+btnImportDict.addEventListener("click", () => {
+  const raw = prompt("Incolla JSON del dizionario da importare (sovrascrive/merge):");
+  if(!raw) return;
+  try{
+    const parsed = JSON.parse(raw);
+    if(typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("JSON non valido");
+    DICT = { ...DICT, ...parsed };
+    saveDict(DICT);
+    refreshDictList();
+    alert("Import completato (merge).");
+  }catch(e){
+    alert("Import fallito: JSON non valido.");
+  }
+});
+
+/* Phrase builder */
+btnAddWord.addEventListener("click", () => {
+  const w = buildWordFromSlots();
+  if(!w) return;
+  phraseWords.push(w);
+  renderPhrase();
+});
+
+btnClearPhrase.addEventListener("click", () => {
+  phraseWords = [];
+  renderPhrase();
+});
+
+btnCopyPhraseGloss.addEventListener("click", async () => {
+  const t = phraseGloss.textContent || "";
+  if(!t) return;
+  try{ await navigator.clipboard.writeText(t); }catch(e){}
+});
+
+btnUsePhraseAsOutput.addEventListener("click", () => {
+  glossOutput.textContent = phraseGloss.textContent || "";
+  const parsed = parseQuadraString(glossOutput.textContent);
+  renderWords(parsed, quadraOutput);
+});
+
+/* init */
+renderLegend();
+populateSlots();
+refreshDictList();
+renderPhrase();
+
+// preload demo
+itInput.value = "ciao bottiglia luogo abbandonato non presente";
+btnItToQuadra.click();
+</script>
+</body>
+</html>
