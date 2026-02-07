@@ -6,63 +6,129 @@
   <title>Quadra Translator</title>
   <style>
     :root{
-      --bg:#ffffff; --fg:#000000; --muted:#6b6b6b;
+      --bg:#ffffff;
+      --fg:#000000;
+      --muted:#6b6b6b;
       --line:1.5px;
+      --cell:64px;
+      --gap:10px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      --cell:64px; --gap:10px;
     }
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
-    body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); overflow-x:hidden; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family:var(--sans);
+      overflow-x:hidden;
+    }
 
-    /* Header */
+    /* ====== Always-on dotfield ====== */
+    .dotfield{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+      background:var(--bg);
+    }
+    .dotfield canvas{ width:100%; height:100%; display:block; }
+
+    /* ====== Header ====== */
     header{
       position:sticky; top:0; z-index:20;
       background:rgba(255,255,255,.92);
       backdrop-filter: blur(8px);
       border-bottom:1px solid #e9e9e9;
       padding:14px 16px;
-      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
     }
-    h1{ margin:0; font-size:12px; letter-spacing:.22em; text-transform:uppercase; }
-    .sub{ font-family:var(--mono); font-size:12px; color:var(--muted); }
-    .top-actions{ display:flex; gap:10px; align-items:center; }
+    h1{
+      margin:0;
+      font-size:12px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+    }
+    .sub{
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+    }
+    .top-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
     .btn{
-      border:1px solid #dcdcdc; background:#fff;
-      padding:9px 10px; border-radius:999px;
-      font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+      border:1px solid #dcdcdc;
+      background:#fff;
+      padding:9px 10px;
+      border-radius:999px;
+      font-family:var(--mono);
+      font-size:11px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
       cursor:pointer;
     }
+    .btn:disabled{ opacity:.45; cursor:not-allowed; }
     .btn-primary{ border-color:#000; }
-    .statusbar{ display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;
-      font-family:var(--mono); font-size:12px; color:var(--muted); }
-    .dot{ width:8px; height:8px; border-radius:999px; background:#bbb; display:inline-block; border:1px solid #e9e9e9;}
-    .dot.ok{ background:#000; } .dot.bad{ background:#fff; border-color:#000; }
 
-    /* Modes */
+    .statusbar{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+    }
+    .dot{
+      width:8px; height:8px;
+      border-radius:999px;
+      background:#bbb;
+      display:inline-block;
+      border:1px solid #e9e9e9;
+    }
+    .dot.ok{ background:#000; }
+    .dot.bad{ background:#fff; border-color:#000; }
+
+    /* ====== Modes ====== */
     .mode{ display:none; }
     .mode.active{ display:block; }
 
-    /* Alien Swiss translator mode */
+    /* ====== Alien Translator Mode ====== */
     .stage{
       position:relative;
+      z-index:5;
       min-height: calc(100vh - 62px);
       display:grid;
       place-items:center;
       padding:24px 16px;
     }
     .core{
-      width:min(960px, 100%);
+      width:min(980px, 100%);
       border:1px solid #e9e9e9;
       border-radius:16px;
       padding:18px;
       display:grid;
       gap:14px;
       position:relative;
+      background:rgba(255,255,255,.68);
+      backdrop-filter: blur(10px);
     }
+
+    /* subtle swiss grid */
     .gridline{
-      position:absolute; inset:0; pointer-events:none; opacity:.55;
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.40;
       background:
         linear-gradient(#0000 63px, #00000010 64px),
         linear-gradient(90deg, #0000 63px, #00000010 64px);
@@ -70,77 +136,213 @@
       border-radius:16px;
       mix-blend-mode:multiply;
     }
+
     .core-head{
-      display:flex; justify-content:space-between; align-items:baseline; gap:12px;
-      padding-bottom:8px; border-bottom:1px solid #efefef;
+      display:flex;
+      justify-content:space-between;
+      align-items:baseline;
+      gap:12px;
+      padding-bottom:8px;
+      border-bottom:1px solid #efefef;
+      position:relative;
+      z-index:2;
     }
-    .core-head .label{ font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; }
-    .core-head .hint{ font-family:var(--mono); font-size:11px; color:var(--muted); }
+    .core-head .label{
+      font-family:var(--mono);
+      font-size:11px;
+      color:var(--muted);
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+    .core-head .hint{
+      font-family:var(--mono);
+      font-size:11px;
+      color:var(--muted);
+    }
 
     .io{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:14px;
+      position:relative;
+      z-index:2;
     }
-    @media (max-width: 980px){ .io{ grid-template-columns:1fr; } }
+    @media (max-width: 980px){
+      .io{ grid-template-columns:1fr; }
+    }
 
     textarea{
       width:100%;
-      border:1px solid #dcdcdc; border-radius:14px;
+      border:1px solid #dcdcdc;
+      border-radius:14px;
       padding:12px 12px;
-      font-family:var(--mono); font-size:13px; outline:none; background:#fff;
-      min-height:140px; resize:vertical;
+      font-family:var(--mono);
+      font-size:13px;
+      outline:none;
+      background:#fff;
+      min-height:140px;
+      resize:vertical;
     }
+
+    .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .row > *{ flex:1; min-width:180px; }
+
     .out{
-      border:1px dashed #e1e1e1; border-radius:14px;
-      padding:12px; min-height:164px;
-      display:flex; flex-wrap:wrap; gap: var(--gap); align-items:center;
+      border:1px dashed #e1e1e1;
+      border-radius:14px;
+      padding:12px;
+      min-height:164px;
+      display:flex;
+      flex-wrap:wrap;
+      gap: var(--gap);
+      align-items:center;
       position:relative;
       overflow:hidden;
+      background:rgba(255,255,255,.85);
     }
-    .word{ display:flex; gap: var(--gap); align-items:center; padding:8px; border:1px solid #efefef; border-radius:12px; background:#fff; }
-    .pill{ display:inline-block; font-family:var(--mono); font-size:11px; border:1px solid #e9e9e9; border-radius:999px; padding:4px 8px; color:#000; background:#fff;}
-    .gloss{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:6px; word-break:break-word; }
 
-    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
-    .row > *{ flex:1; min-width: 180px; }
+    .word{
+      display:flex;
+      gap: var(--gap);
+      align-items:center;
+      padding:8px;
+      border:1px solid #efefef;
+      border-radius:12px;
+      background:#fff;
+    }
 
-    /* Particles overlay */
+    .pill{
+      display:inline-block;
+      font-family:var(--mono);
+      font-size:11px;
+      border:1px solid #e9e9e9;
+      border-radius:999px;
+      padding:4px 8px;
+      color:#000;
+      background:#fff;
+    }
+
+    .gloss{
+      font-family:var(--mono);
+      font-size:12px;
+      color:var(--muted);
+      margin-top:6px;
+      word-break:break-word;
+    }
+
+    /* overlay particles inside output */
     .particles{
-      position:absolute; inset:0; pointer-events:none;
-      opacity:0; transition: opacity .18s ease;
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:0;
+      transition: opacity 600ms ease;
     }
     .particles.on{ opacity:1; }
     .p{
       position:absolute;
-      width:3px; height:3px;
-      background:#000; border-radius:2px;
-      opacity:.9;
+      width:3px;
+      height:3px;
+      background:#000;
+      border-radius:2px;
+      opacity:.22;
+      will-change: transform, opacity;
     }
 
-    /* Technical mode layout (your current UI style) */
+    /* ====== Technical Mode ====== */
     main.tech{
+      position:relative;
+      z-index:5;
       padding:18px;
       display:grid;
       grid-template-columns: 1.3fr 1fr;
       gap:18px;
     }
-    @media (max-width: 980px){ main.tech{ grid-template-columns:1fr; } }
-    .card{ border:1px solid #e9e9e9; border-radius:10px; padding:14px; }
-    .card h2{ margin:0 0 10px 0; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-family:var(--mono); }
-    input, select{
-      width:100%; border:1px solid #dcdcdc; border-radius:10px;
-      padding:10px 12px; font-family:var(--mono); font-size:13px; outline:none; background:#fff;
+    @media (max-width: 980px){
+      main.tech{ grid-template-columns:1fr; }
     }
-    .tiny{ font-size:11px; font-family:var(--mono); color:var(--muted); line-height:1.4; }
+
+    .card{
+      border:1px solid #e9e9e9;
+      border-radius:10px;
+      padding:14px;
+      background:rgba(255,255,255,.78);
+      backdrop-filter: blur(10px);
+    }
+    .card h2{
+      margin:0 0 10px 0;
+      font-size:12px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      font-family:var(--mono);
+    }
+    input, select{
+      width:100%;
+      border:1px solid #dcdcdc;
+      border-radius:10px;
+      padding:10px 12px;
+      font-family:var(--mono);
+      font-size:13px;
+      outline:none;
+      background:#fff;
+    }
+    .tiny{
+      font-size:11px;
+      font-family:var(--mono);
+      color:var(--muted);
+      line-height:1.4;
+    }
     .hr{ height:1px; background:#e9e9e9; margin:14px 0; }
-    .suggest{ border:1px solid #efefef; border-radius:10px; padding:10px; background:#fff; display:flex; flex-direction:column; gap:8px; }
-    .suggest .head{ display:flex; justify-content:space-between; gap:8px; align-items:center; }
-    .suggest .title{ font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; }
-    .suggest .why{ font-family:var(--mono); font-size:11px; color:var(--muted); }
-    .suggest .actions{ display:flex; gap:10px; flex-wrap:wrap; }
-    .table-like{ border:1px solid #efefef; border-radius:10px; overflow:hidden; }
-    .table-like .r{ display:grid; grid-template-columns: 1fr 1.4fr; gap:10px; padding:10px; border-bottom:1px solid #f0f0f0; }
+
+    .suggest{
+      border:1px solid #efefef;
+      border-radius:10px;
+      padding:10px;
+      background:#fff;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .suggest .head{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+    }
+    .suggest .title{
+      font-family:var(--mono);
+      font-size:12px;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
+    .suggest .why{
+      font-family:var(--mono);
+      font-size:11px;
+      color:var(--muted);
+    }
+    .suggest .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .table-like{
+      border:1px solid #efefef;
+      border-radius:10px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .table-like .r{
+      display:grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap:10px;
+      padding:10px;
+      border-bottom:1px solid #f0f0f0;
+    }
     .table-like .r:last-child{ border-bottom:none; }
     .table-like .k{ font-family:var(--mono); font-size:12px; }
     .table-like .v{ font-family:var(--mono); font-size:11px; color:var(--muted); word-break:break-word; }
@@ -148,129 +350,211 @@
 </head>
 
 <body>
-<header>
-  <div>
-    <h1>Quadra Translator</h1>
-    <div class="sub">ENTITÀ → AGENZIA → STATO → TEMPO • negazione: assenza interna</div>
+  <div class="dotfield" aria-hidden="true">
+    <canvas id="dotfield"></canvas>
   </div>
-  <div class="top-actions">
-    <div class="statusbar">
-      <span class="dot" id="apiDot"></span>
-      <span id="apiLabel">API: check…</span>
+
+  <header>
+    <div>
+      <h1>Quadra Translator</h1>
+      <div class="sub">ENTITÀ → AGENZIA → STATO → TEMPO • negazione: assenza interna</div>
     </div>
-    <button class="btn btn-primary" id="btnToggleTech">AREA TECNICA</button>
-  </div>
-</header>
-
-<!-- MODE 1: Alien Translator -->
-<section class="mode active" id="modeTranslator">
-  <div class="stage">
-    <div class="core">
-      <div class="gridline"></div>
-      <div class="core-head">
-        <div class="label">Translator</div>
-        <div class="hint">scrivi concetti / parole • invio = traduci</div>
+    <div class="top-actions">
+      <div class="statusbar">
+        <span class="dot" id="apiDot"></span>
+        <span id="apiLabel">API: check…</span>
       </div>
+      <button class="btn btn-primary" id="btnToggleTech">AREA TECNICA</button>
+    </div>
+  </header>
 
-      <div class="io">
-        <div>
-          <textarea id="itInputAlien" placeholder="Esempi:&#10;luogo assente&#10;persona attiva presente&#10;inizio relazione&#10;non presente"></textarea>
-          <div class="row" style="margin-top:10px;">
-            <button class="btn btn-primary" id="btnTranslateAlien">TRADUCI</button>
-            <button class="btn" id="btnClearAlien">PULISCI</button>
+  <!-- MODE 1: Alien Translator -->
+  <section class="mode active" id="modeTranslator">
+    <div class="stage">
+      <div class="core">
+        <div class="gridline"></div>
+
+        <div class="core-head">
+          <div class="label">Translator</div>
+          <div class="hint">invio = traduci • shift+invio = a capo</div>
+        </div>
+
+        <div class="io">
+          <div>
+            <textarea id="itInputAlien" placeholder="Esempi:
+luogo assente
+persona attiva presente
+inizio relazione
+non presente"></textarea>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn btn-primary" id="btnTranslateAlien">TRADUCI</button>
+              <button class="btn" id="btnClearAlien">PULISCI</button>
+            </div>
+            <div class="gloss" id="glossAlien"></div>
           </div>
-          <div class="gloss" id="glossAlien"></div>
+
+          <div class="out" id="quadraAlien">
+            <div class="particles" id="particles"></div>
+          </div>
         </div>
 
-        <div class="out" id="quadraAlien">
-          <div class="particles" id="particles"></div>
-          <!-- glyphs render here -->
-        </div>
+        <div class="sub">Per accettare/salvare proposte AI → Area Tecnica.</div>
       </div>
-
-      <div class="sub">Suggerimento: se una parola non esiste, l’AI propone; accetta/salva dall’Area Tecnica.</div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- MODE 2: Technical Area (your current tools) -->
-<section class="mode" id="modeTech">
-  <main class="tech">
-    <section class="card">
-      <h2>Traduzione & Builder</h2>
+  <!-- MODE 2: Technical Area -->
+  <section class="mode" id="modeTech">
+    <main class="tech">
+      <section class="card">
+        <h2>Traduzione & Vocabolario</h2>
 
-      <div class="row">
-        <div style="flex:2">
-          <div class="tiny">Italiano</div>
-          <textarea id="itInput" placeholder="Esempi: ciao&#10;bottiglia&#10;luogo abbandonato&#10;non presente"></textarea>
+        <div class="row">
+          <div style="flex:2">
+            <div class="tiny">Italiano</div>
+            <textarea id="itInput" placeholder="Esempi: ciao
+bottiglia
+luogo abbandonato
+non presente"></textarea>
+          </div>
+          <div style="flex:1">
+            <div class="tiny">Quadra (output)</div>
+            <div class="out" id="quadraOutput" style="min-height:140px;"></div>
+            <div class="gloss" id="glossOutput"></div>
+          </div>
         </div>
-        <div style="flex:1">
-          <div class="tiny">Quadra (output)</div>
-          <div class="out" id="quadraOutput" style="min-height:140px;"></div>
-          <div class="gloss" id="glossOutput"></div>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn btn-primary" id="btnItToQuadra">Italiano → Quadra (AI)</button>
+          <button class="btn" id="btnClear">Pulisci</button>
+          <button class="btn" id="btnCopyGloss">Copia gloss</button>
         </div>
-      </div>
 
-      <div class="row" style="margin-top:10px;">
-        <button class="btn btn-primary" id="btnItToQuadra">Italiano → Quadra (AI)</button>
-        <button class="btn" id="btnClear">Pulisci</button>
-        <button class="btn" id="btnCopyGloss">Copia gloss</button>
-      </div>
+        <div class="hr"></div>
 
-      <div class="hr"></div>
+        <h2>Proposte AI</h2>
+        <div class="tiny">Accetta & salva → Cloudflare D1.</div>
+        <div id="suggestions"></div>
 
-      <h2>Proposte AI</h2>
-      <div class="tiny">Accetta & salva → Cloudflare D1.</div>
-      <div id="suggestions"></div>
+        <div class="hr"></div>
 
-      <div class="hr"></div>
+        <h2>Vocabolario (cloud)</h2>
+        <div class="row">
+          <input id="dictKey" placeholder="parola italiana (es. bottiglia)" />
+          <input id="dictVal" placeholder="sequenza (es. OGGETTO+PASSIVO+FERMO+PRESENTE)" />
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn btn-primary" id="btnSaveEntry">Salva voce (cloud)</button>
+          <button class="btn" id="btnFetchEntry">Cerca voce (cloud)</button>
+          <button class="btn" id="btnResetLocalCache">Reset cache locale</button>
+        </div>
 
-      <h2>Vocabolario (cloud)</h2>
-      <div class="row">
-        <input id="dictKey" placeholder="parola italiana (es. bottiglia)" />
-        <input id="dictVal" placeholder="sequenza (es. OGGETTO+PASSIVO+FERMO+PRESENTE)" />
-      </div>
-      <div class="row" style="margin-top:10px;">
-        <button class="btn btn-primary" id="btnSaveEntry">Salva voce (cloud)</button>
-        <button class="btn" id="btnFetchEntry">Cerca voce (cloud)</button>
-        <button class="btn" id="btnResetLocalCache">Reset cache locale</button>
-      </div>
+        <div class="hr"></div>
+        <h2>Cache locale</h2>
+        <div id="dictList" class="table-like"></div>
+      </section>
 
-      <div class="hr"></div>
-      <h2>Cache locale</h2>
-      <div id="dictList" class="table-like"></div>
-    </section>
+      <section class="card">
+        <h2>Legenda glifi</h2>
+        <div id="legend" class="out" style="min-height:140px;"></div>
+        <div class="gloss" id="legendLabels"></div>
 
-    <section class="card">
-      <h2>Legenda glifi</h2>
-      <div id="legend" class="out" style="min-height:140px;"></div>
-      <div class="gloss" id="legendLabels"></div>
-
-      <div class="hr"></div>
-      <h2>Builder frase</h2>
-      <div class="row">
-        <select id="slot1"></select><select id="slot2"></select><select id="slot3"></select><select id="slot4"></select>
-      </div>
-      <div class="row" style="margin-top:10px;">
-        <select id="slot5"></select><select id="slot6"></select>
-        <button class="btn btn-primary" id="btnAddWord">Aggiungi parola</button>
-      </div>
-      <div class="out" id="phrasePreview" style="min-height:120px; margin-top:10px;"></div>
-      <div class="gloss" id="phraseGloss"></div>
-      <div class="row" style="margin-top:10px;">
-        <button class="btn" id="btnClearPhrase">Pulisci frase</button>
-        <button class="btn" id="btnCopyPhraseGloss">Copia frase (gloss)</button>
-        <button class="btn btn-primary" id="btnUsePhraseAsOutput">Usa frase come output</button>
-      </div>
-    </section>
-  </main>
-</section>
+        <div class="hr"></div>
+        <h2>Builder frase</h2>
+        <div class="row">
+          <select id="slot1"></select><select id="slot2"></select><select id="slot3"></select><select id="slot4"></select>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <select id="slot5"></select><select id="slot6"></select>
+          <button class="btn btn-primary" id="btnAddWord">Aggiungi parola</button>
+        </div>
+        <div class="out" id="phrasePreview" style="min-height:120px; margin-top:10px;"></div>
+        <div class="gloss" id="phraseGloss"></div>
+        <div class="row" style="margin-top:10px;">
+          <button class="btn" id="btnClearPhrase">Pulisci frase</button>
+          <button class="btn" id="btnCopyPhraseGloss">Copia frase (gloss)</button>
+          <button class="btn btn-primary" id="btnUsePhraseAsOutput">Usa frase come output</button>
+        </div>
+      </section>
+    </main>
+  </section>
 
 <script>
 /* =========================
    CONFIG
    ========================= */
 const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
+
+/* =========================
+   ALWAYS-ON DOTFIELD (dense + slow drift)
+   ========================= */
+(function initDotField(){
+  const canvas = document.getElementById("dotfield");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d", { alpha:true });
+
+  let W=0, H=0, DPR=1;
+  let dots = [];
+
+  // tuning: più alto = più fitto
+  const density = 0.00022;   // dots per px^2
+  const baseSpeed = 0.085;   // drift speed
+  const jitter = 0.010;      // micro noise
+  const minR = 1.0, maxR = 2.1;
+
+  function resize(){
+    DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    W = Math.floor(window.innerWidth);
+    H = Math.floor(window.innerHeight);
+    canvas.width = Math.floor(W*DPR);
+    canvas.height = Math.floor(H*DPR);
+    canvas.style.width = W+"px";
+    canvas.style.height = H+"px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+
+    const N = Math.floor(W*H*density);
+    dots = [];
+    for(let i=0;i<N;i++){
+      dots.push({
+        x: Math.random()*W,
+        y: Math.random()*H,
+        vx: (Math.random()*2-1)*baseSpeed,
+        vy: (Math.random()*2-1)*baseSpeed,
+        r: minR + Math.random()*(maxR-minR),
+        a: 0.08 + Math.random()*0.18
+      });
+    }
+  }
+
+  function tick(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#000";
+    for(const d of dots){
+      d.vx += (Math.random()*2-1)*jitter*0.02;
+      d.vy += (Math.random()*2-1)*jitter*0.02;
+
+      d.x += d.vx;
+      d.y += d.vy;
+
+      // wrap
+      if(d.x < -10) d.x = W+10;
+      if(d.x > W+10) d.x = -10;
+      if(d.y < -10) d.y = H+10;
+      if(d.y > H+10) d.y = -10;
+
+      ctx.globalAlpha = d.a;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener("resize", resize, {passive:true});
+  resize();
+  tick();
+})();
 
 /* =========================
    GLYPHS
@@ -334,16 +618,19 @@ function svgGlyph(token, options = {}){
   const baseFill = (def.fill==="solid") ? fillSolid : fillEmpty;
   const nucleus = def.nucleus ? `<rect x="${x0+w*0.38}" y="${y0+h*0.38}" width="${w*0.24}" height="${h*0.24}" fill="${fillSolid}" />` : "";
   const band = def.band ? `<rect x="${x0+w*0.18}" y="${y0+h*0.44}" width="${w*0.64}" height="${h*0.12}" fill="${fillSolid}" />` : "";
+
   let dot="";
   if(def.dot){
     const cx=x0+w/2, cy=(def.dot==="top")?(y0+h*0.22):(y0+h*0.78);
     dot=`<circle cx="${cx}" cy="${cy}" r="3.2" fill="${fillSolid}" />`;
   }
+
   let absence="";
   if(def.absence){
     const pts=[[x0+w*0.30,y0+h*0.30],[x0+w*0.70,y0+h*0.30],[x0+w*0.30,y0+h*0.70],[x0+w*0.70,y0+h*0.70],[x0+w*0.50,y0+h*0.50]];
     absence=pts.map(([cx,cy])=>`<rect x="${cx-2.6}" y="${cy-2.6}" width="5.2" height="5.2" fill="${fillSolid}" />`).join("");
   }
+
   let negOverlay="";
   if(options.negate===true){
     const pts=[[x0+w*0.38,y0+h*0.38],[x0+w*0.62,y0+h*0.38],[x0+w*0.38,y0+h*0.62],[x0+w*0.62,y0+h*0.62]];
@@ -379,19 +666,20 @@ function quadraToGloss(text){
   return words.map(w=>w.tokens.map((t,i)=>((w.opts[i]?.negate?"!":"") + (safeToken(t)?t:"<?>"))).join("+")).join(" / ");
 }
 function renderWords(wordsParsed, targetEl){
-  targetEl.innerHTML="";
+  targetEl.innerHTML = "";
   wordsParsed.forEach((w, idx)=>{
     const wordWrap=document.createElement("div");
     wordWrap.className="word";
     w.tokens.forEach((t,i)=>{
       const cell=document.createElement("div");
-      cell.innerHTML=svgGlyph(t,{negate:w.opts[i]?.negate===true});
+      cell.innerHTML = svgGlyph(t,{negate:w.opts[i]?.negate===true});
       wordWrap.appendChild(cell);
     });
     targetEl.appendChild(wordWrap);
-    if(idx!==wordsParsed.length-1){
+    if(idx !== wordsParsed.length-1){
       const pill=document.createElement("span");
-      pill.className="pill"; pill.textContent="⟂";
+      pill.className="pill";
+      pill.textContent="⟂";
       targetEl.appendChild(pill);
     }
   });
@@ -442,61 +730,98 @@ async function apiGetVocab(it){
 }
 
 /* =========================
-   Alien particles animation
+   Particles: wander dense -> assemble slow -> dissolve
    ========================= */
-function particlesScatterAndAssemble(container, targetsCount=40){
+function particlesVagueThenAssemble(container, opts = {}){
   const layer = document.getElementById("particles");
+  if(!layer) return { stop:()=>Promise.resolve() };
+
+  const rect = container.getBoundingClientRect();
+  const W = rect.width, H = rect.height;
+  const cx = W/2, cy = H/2;
+
+  const N = opts.count ?? 280;
+  const wanderMs = opts.wanderMs ?? 1200;
+  const assembleMs = opts.assembleMs ?? 2000;
+  const fadeOutMs = opts.fadeOutMs ?? 850;
+
   layer.innerHTML = "";
   layer.classList.add("on");
 
-  const rect = container.getBoundingClientRect();
-  const cx = rect.width/2, cy = rect.height/2;
-
   const dots = [];
-  const n = Math.min(140, Math.max(60, targetsCount*6));
-
-  for(let i=0;i<n;i++){
-    const d=document.createElement("div");
-    d.className="p";
-    const x = Math.random()*rect.width;
-    const y = Math.random()*rect.height;
+  for(let i=0;i<N;i++){
+    const d = document.createElement("div");
+    d.className = "p";
+    const x = Math.random()*W;
+    const y = Math.random()*H;
     d.style.left = `${x}px`;
     d.style.top  = `${y}px`;
+    d.style.opacity = String(0.14 + Math.random()*0.20);
     layer.appendChild(d);
-    dots.push({el:d, x, y});
+    dots.push({ el:d, x, y });
   }
 
-  // explode: move outward randomly
-  const t1 = dots.map(({el,x,y})=>{
-    const ex = x + (Math.random()*2-1)*rect.width*0.35;
-    const ey = y + (Math.random()*2-1)*rect.height*0.35;
+  let stopped = false;
+  const wanderAnims = dots.map(({el}, idx)=>{
+    const dx = (Math.random()*2-1) * W*0.18;
+    const dy = (Math.random()*2-1) * H*0.18;
+    const dx2 = (Math.random()*2-1) * W*0.10;
+    const dy2 = (Math.random()*2-1) * H*0.10;
+    const dur = wanderMs + Math.floor(Math.random()*500);
     return el.animate(
-      [{transform:"translate(0,0)", opacity:.9},{transform:`translate(${ex-x}px,${ey-y}px)`, opacity:.65}],
-      {duration:220, easing:"cubic-bezier(.2,.8,.2,1)", fill:"forwards"}
+      [
+        { transform:`translate(0,0)` },
+        { transform:`translate(${dx}px,${dy}px)` },
+        { transform:`translate(${dx2}px,${dy2}px)` },
+        { transform:`translate(${-dx*0.6}px,${-dy*0.6}px)` }
+      ],
+      { duration: dur, iterations: Infinity, direction:"alternate", easing:"ease-in-out" }
     );
   });
 
-  return Promise.all(t1.map(a=>a.finished)).then(()=>{
-    // assemble to center cluster
-    const t2 = dots.map(({el,x,y},i)=>{
-      const ring = (i%8);
-      const ang = (i/ n) * Math.PI*2;
+  async function stop(){
+    if(stopped) return;
+    stopped = true;
+
+    // freeze transforms
+    const frozen = dots.map(({el,x,y})=>{
+      const t = getComputedStyle(el).transform;
+      return { el, x, y, t };
+    });
+    wanderAnims.forEach(a=>a.cancel());
+
+    // assemble slowly into ordered cluster
+    const assemble = frozen.map(({el,x,y,t}, i)=>{
+      const ring = (i % 14);
+      const ang = (i / frozen.length) * Math.PI*2;
       const rx = (ring*6) * Math.cos(ang);
       const ry = (ring*6) * Math.sin(ang);
+      const tx = (cx - x) + rx;
+      const ty = (cy - y) + ry;
+
       return el.animate(
-        [{transform:getComputedStyle(el).transform, opacity:.65},{transform:`translate(${(cx-x)+rx}px,${(cy-y)+ry}px)`, opacity:.95}],
-        {duration:260, easing:"cubic-bezier(.2,.8,.2,1)", fill:"forwards"}
-      );
+        [
+          { transform: t === "none" ? "translate(0,0)" : t, opacity: Number(el.style.opacity||0.2) },
+          { transform:`translate(${tx}px,${ty}px)`, opacity: 0.78 }
+        ],
+        { duration: assembleMs, easing:"cubic-bezier(.12,.82,.18,1)", fill:"forwards" }
+      ).finished;
     });
-    return Promise.all(t2.map(a=>a.finished));
-  }).finally(()=>{
-    setTimeout(()=>layer.classList.remove("on"), 120);
-    setTimeout(()=>layer.innerHTML="", 260);
-  });
+
+    await Promise.allSettled(assemble);
+
+    layer.animate([{opacity:1},{opacity:0}], { duration: fadeOutMs, easing:"ease", fill:"forwards" });
+    setTimeout(()=>{
+      layer.classList.remove("on");
+      layer.innerHTML = "";
+    }, fadeOutMs + 40);
+  }
+
+  return { stop };
 }
 
 /* =========================
-   Toggle modes
+   Modes toggle
    ========================= */
 const btnToggleTech = document.getElementById("btnToggleTech");
 const modeTranslator = document.getElementById("modeTranslator");
@@ -509,7 +834,7 @@ btnToggleTech.addEventListener("click", ()=>{
 });
 
 /* =========================
-   Translator mode wiring
+   Translator mode
    ========================= */
 const itInputAlien = document.getElementById("itInputAlien");
 const quadraAlien = document.getElementById("quadraAlien");
@@ -523,33 +848,43 @@ async function doAlienTranslate(){
 
   btnTranslateAlien.disabled = true;
   btnTranslateAlien.textContent = "…";
-  try{
-    // start alien animation immediately
-    particlesScatterAndAssemble(quadraAlien, 48);
 
+  const fx = particlesVagueThenAssemble(quadraAlien, {
+    count: 320,
+    wanderMs: 1200,
+    assembleMs: 2200,
+    fadeOutMs: 900
+  });
+
+  try{
+    // start “vagare” subito: niente flash
     const data = await apiTranslate(text);
     const quadra = (data.quadra||"").trim();
     const parsed = parseQuadraString(quadra);
 
-    // small delay to let particles assemble
-    setTimeout(()=>{
-      renderWords(parsed, quadraAlien);
-      glossAlien.textContent = quadraToGloss(quadra);
-    }, 320);
+    // ricompone lentamente
+    await fx.stop();
 
+    // render glifi dopo ricomposizione
+    quadraAlien.style.opacity = "0";
+    quadraAlien.innerHTML = `<div class="particles" id="particles"></div>`;
+    renderWords(parsed, quadraAlien);
+    glossAlien.textContent = quadraToGloss(quadra);
+
+    quadraAlien.animate([{opacity:0},{opacity:1}], {duration:520, easing:"ease", fill:"forwards"});
   }catch(e){
-    quadraAlien.innerHTML = "";
+    await fx.stop();
+    quadraAlien.innerHTML = `<div class="particles" id="particles"></div>`;
     glossAlien.textContent = "Errore API.";
   }finally{
-    setTimeout(()=>{
-      btnTranslateAlien.disabled = false;
-      btnTranslateAlien.textContent = "TRADUCI";
-    }, 360);
+    btnTranslateAlien.disabled = false;
+    btnTranslateAlien.textContent = "TRADUCI";
   }
 }
+
 btnTranslateAlien.addEventListener("click", doAlienTranslate);
 itInputAlien.addEventListener("keydown", (ev)=>{
-  if(ev.key === "Enter" && (ev.metaKey || ev.ctrlKey || !ev.shiftKey)){
+  if(ev.key === "Enter" && !ev.shiftKey){
     ev.preventDefault();
     doAlienTranslate();
   }
@@ -561,15 +896,13 @@ btnClearAlien.addEventListener("click", ()=>{
 });
 
 /* =========================
-   TECH MODE (keeps your features)
+   Technical mode (tools)
    ========================= */
-// Local cache
 const CACHE_KEY="quadra_vocab_cache_v1";
 function loadCache(){ try{ const raw=localStorage.getItem(CACHE_KEY); return raw?JSON.parse(raw):{}; }catch(e){ return {}; } }
 function saveCache(c){ localStorage.setItem(CACHE_KEY, JSON.stringify(c)); }
 let CACHE = loadCache();
 
-// Tech UI refs
 const itInput = document.getElementById("itInput");
 const quadraOutput = document.getElementById("quadraOutput");
 const glossOutput = document.getElementById("glossOutput");
@@ -602,7 +935,6 @@ function refreshCacheList(){
     ? keys.map(k=>`<div class="r"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(CACHE[k])}</div></div>`).join("")
     : `<div class="r"><div class="k">(cache vuota)</div><div class="v"></div></div>`;
 }
-
 function renderLegend(){
   const legend=document.getElementById("legend");
   const legendLabels=document.getElementById("legendLabels");
@@ -611,7 +943,6 @@ function renderLegend(){
   renderWords(parsed, legend);
   legendLabels.textContent = tokens.join(" • ");
 }
-
 function populateSlots(){
   const options=["","OGGETTO","PERSONA","LUOGO","RELAZIONE","ATTIVO","PASSIVO","FERMO","MOVIMENTO","PRESENTE","ASSENTE","INIZIO","FINE",
     "!OGGETTO","!PERSONA","!LUOGO","!RELAZIONE","!ATTIVO","!PASSIVO","!FERMO","!MOVIMENTO","!PRESENTE","!ASSENTE","!INIZIO","!FINE"];
@@ -619,7 +950,6 @@ function populateSlots(){
   slotEls[0].value="OGGETTO"; slotEls[1].value="PASSIVO"; slotEls[2].value="FERMO"; slotEls[3].value="PRESENTE";
   slotEls[4].value=""; slotEls[5].value="";
 }
-
 let phraseWords=[];
 function renderPhrase(){
   const phrase=phraseWords.join(" / ");
@@ -630,7 +960,6 @@ function buildWordFromSlots(){
   const vals=slotEls.map(s=>s.value).filter(v=>v && v.trim());
   return vals.length ? vals.join("+") : "";
 }
-
 function renderAISuggestions(suggestions){
   suggestionsEl.innerHTML="";
   if(!suggestions || suggestions.length===0){
@@ -655,8 +984,12 @@ function renderAISuggestions(suggestions){
       const conf=Number(s.confidence??0);
       const rationale=s.rationale||"";
       const cand=document.createElement("div");
-      cand.style.border="1px solid #f0f0f0"; cand.style.borderRadius="10px"; cand.style.padding="10px";
-      cand.style.display="flex"; cand.style.flexDirection="column"; cand.style.gap="8px";
+      cand.style.border="1px solid #f0f0f0";
+      cand.style.borderRadius="10px";
+      cand.style.padding="10px";
+      cand.style.display="flex";
+      cand.style.flexDirection="column";
+      cand.style.gap="8px";
 
       const line=document.createElement("div"); line.className="out";
       renderWords(parseQuadraString(quadra), line);
@@ -684,8 +1017,12 @@ function renderAISuggestions(suggestions){
       btnEdit.textContent="Modifica (precompila)";
       btnEdit.onclick=()=>{ dictKey.value=tok; dictVal.value=quadra; };
 
-      actions.appendChild(btnAccept); actions.appendChild(btnEdit);
-      cand.appendChild(line); cand.appendChild(why); cand.appendChild(actions);
+      actions.appendChild(btnAccept);
+      actions.appendChild(btnEdit);
+
+      cand.appendChild(line);
+      cand.appendChild(why);
+      cand.appendChild(actions);
       wrap.appendChild(cand);
     });
 
@@ -736,6 +1073,7 @@ btnSaveEntry.addEventListener("click", async()=>{
     btnSaveEntry.disabled=false;
   }
 });
+
 btnFetchEntry.addEventListener("click", async()=>{
   const k=(dictKey.value||"").trim().toLowerCase(); if(!k) return;
   btnFetchEntry.disabled=true;
@@ -752,9 +1090,10 @@ btnFetchEntry.addEventListener("click", async()=>{
     btnFetchEntry.disabled=false;
   }
 });
+
 btnResetLocalCache.addEventListener("click", ()=>{ CACHE={}; saveCache(CACHE); refreshCacheList(); });
 
-// Phrase builder
+// Builder
 btnAddWord.addEventListener("click", ()=>{
   const w=buildWordFromSlots();
   if(!w) return;
@@ -769,14 +1108,13 @@ btnUsePhraseAsOutput.addEventListener("click", ()=>{
   renderWords(parseQuadraString(phrase), quadraOutput);
 });
 
-// init
+/* init */
 apiHealth();
 renderLegend();
 populateSlots();
 refreshCacheList();
 renderPhrase();
 
-// preload
 itInputAlien.value = "luogo assente\npersona attiva presente\ninizio relazione\nnon presente";
 </script>
 </body>
