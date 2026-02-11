@@ -9,340 +9,312 @@
       --bg:#ffffff;
       --fg:#000000;
       --muted:#6b6b6b;
-      --line:#e9e9e9;
+      --line:2.25px;
       --cell:64px;
       --gap:10px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
     *{ box-sizing:border-box; }
-    body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); overflow-x:hidden; }
-
-    /* background particle field */
-    .bg-field{
-      position:fixed; inset:0; z-index:0; pointer-events:none;
-      background: var(--bg);
-    }
-    canvas#dust{
-      width:100%; height:100%;
-      display:block;
-    }
+    body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
 
     header{
-      position:sticky; top:0; z-index:5;
-      background:rgba(255,255,255,0.92);
-      backdrop-filter: blur(6px);
-      border-bottom:1px solid var(--line);
+      position:sticky; top:0; background:var(--bg);
+      border-bottom:1px solid #e9e9e9;
       padding:16px 18px;
       display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      z-index:10;
     }
     header h1{ margin:0; font-size:16px; letter-spacing:0.08em; text-transform:uppercase; }
-    header .sub{ font-family:var(--mono); font-size:12px; color:var(--muted); line-height:1.4; }
+    header .sub{ font-family:var(--mono); font-size:12px; color:var(--muted); }
 
-    .header-right{
-      display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+    .statusbar{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;
       font-family:var(--mono); font-size:12px; color:var(--muted);
     }
     .dot{
       width:8px; height:8px; border-radius:999px; background:#bbb; display:inline-block;
-      border:1px solid var(--line);
+      border:1px solid #e9e9e9;
     }
     .dot.ok{ background:#000; }
     .dot.bad{ background:#fff; border-color:#000; }
 
-    main{
-      position:relative; z-index:2;
-      padding:18px;
-      display:grid;
-      grid-template-columns: 1.2fr 0.9fr;
-      gap:18px;
-    }
+    main{ padding:18px; display:grid; grid-template-columns: 1.3fr 1fr; gap:18px; }
     @media (max-width: 980px){ main{ grid-template-columns: 1fr; } }
 
-    .card{
-      border:1px solid var(--line);
-      border-radius:12px;
-      padding:14px;
-      background:rgba(255,255,255,0.86);
-      backdrop-filter: blur(6px);
-      box-shadow: 0 0 0 0 rgba(0,0,0,0);
-    }
+    .card{ border:1px solid #e9e9e9; border-radius:10px; padding:14px; }
     .card h2{
-      margin:0 0 10px 0;
-      font-size:12px;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-      font-family:var(--mono);
+      margin:0 0 10px 0; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-family:var(--mono);
     }
+
     .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
     .row > *{ flex:1; min-width: 180px; }
 
     textarea, input, select{
-      width:100%;
-      border:1px solid #dcdcdc;
-      border-radius:10px;
-      padding:10px 12px;
-      font-family:var(--mono);
-      font-size:13px;
-      outline:none;
-      background:#fff;
+      width:100%; border:1px solid #dcdcdc; border-radius:10px; padding:10px 12px;
+      font-family:var(--mono); font-size:13px; outline:none; background:#fff;
     }
-    textarea{ min-height:150px; resize:vertical; }
+    textarea{ min-height:140px; resize:vertical; }
 
     button{
-      border:1px solid #dcdcdc;
-      background:#fff;
-      padding:10px 12px;
-      border-radius:10px;
-      font-family:var(--mono);
-      font-size:12px;
-      letter-spacing:0.08em;
-      text-transform:uppercase;
-      cursor:pointer;
-      transition: transform .04s ease, background .12s ease;
+      border:1px solid #dcdcdc; background:#fff; padding:10px 12px; border-radius:10px;
+      font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+      cursor:pointer; transition: transform .04s ease;
     }
     button:disabled{ opacity:.45; cursor:not-allowed; }
     button:active{ transform: translateY(1px); }
     .btn-primary{ border-color:#000; }
-    .btn-dark{ border-color:#000; background:#000; color:#fff; }
+    .btn-danger{ border-color:#000; background:#000; color:#fff; }
+
     .muted{ color:var(--muted); font-size:12px; font-family:var(--mono); }
-    .tiny{ font-size:11px; font-family:var(--mono); color:var(--muted); line-height:1.45; }
-    .hr{ height:1px; background:var(--line); margin:14px 0; }
+    .tiny{ font-size:11px; font-family:var(--mono); color:var(--muted); line-height:1.4; }
+    .hr{ height:1px; background:#e9e9e9; margin:14px 0; }
 
     .quadra-line{
       display:flex; flex-wrap:wrap; gap: var(--gap); align-items:center;
-      padding:10px; border:1px dashed #e1e1e1; border-radius:12px;
+      padding:10px; border:1px dashed #e1e1e1; border-radius:10px;
       min-height: calc(var(--cell) + 24px);
-      background: rgba(255,255,255,0.72);
     }
-    .word{
-      display:flex; gap: var(--gap); align-items:center;
-      padding:8px; border:1px solid #efefef; border-radius:12px;
-      background:#fff;
-    }
+    .word{ display:flex; gap: var(--gap); align-items:center; padding:8px; border:1px solid #efefef; border-radius:10px; }
     .label{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:6px; word-break:break-word; }
 
     .pill{
       display:inline-block; font-family:var(--mono); font-size:11px;
-      border:1px solid var(--line); border-radius:999px; padding:4px 8px; color:#000; background:#fff;
+      border:1px solid #e9e9e9; border-radius:999px; padding:4px 8px; color:#000; background:#fff;
     }
+
     .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
     @media (max-width: 980px){ .grid2{ grid-template-columns:1fr; } }
 
+    .kbd{
+      font-family:var(--mono); border:1px solid #e9e9e9; border-radius:6px;
+      padding:2px 6px; font-size:11px; background:#fafafa;
+    }
+
     .suggest{
-      border:1px solid #efefef; border-radius:12px; padding:10px; background:#fff;
-      display:flex; flex-direction:column; gap:10px;
+      border:1px solid #efefef; border-radius:10px; padding:10px; background:#fff;
+      display:flex; flex-direction:column; gap:8px;
     }
     .suggest .head{ display:flex; justify-content:space-between; gap:8px; align-items:center; }
     .suggest .title{ font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; }
     .suggest .why{ font-family:var(--mono); font-size:11px; color:var(--muted); }
     .suggest .actions{ display:flex; gap:10px; flex-wrap:wrap; }
 
-    .table-like{ border:1px solid #efefef; border-radius:12px; overflow:hidden; background:#fff; }
+    .table-like{ border:1px solid #efefef; border-radius:10px; overflow:hidden; }
     .table-like .r{ display:grid; grid-template-columns: 1fr 1.4fr; gap:10px; padding:10px; border-bottom:1px solid #f0f0f0; }
     .table-like .r:last-child{ border-bottom:none; }
     .table-like .k{ font-family:var(--mono); font-size:12px; }
     .table-like .v{ font-family:var(--mono); font-size:11px; color:var(--muted); word-break:break-word; }
 
-    /* Technical overlay */
+    /* “Area tecnica” gate */
+    .top-actions{ display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap; }
+    .linkbtn{
+      border:1px solid #e9e9e9; padding:8px 10px; border-radius:999px;
+      font-family:var(--mono); font-size:12px; background:#fff; cursor:pointer;
+      letter-spacing:.04em; text-transform:uppercase;
+    }
     .overlay{
-      position:fixed; inset:0; z-index:20;
-      display:none;
-      align-items:center; justify-content:center;
-      background: rgba(0,0,0,0.22);
-      backdrop-filter: blur(6px);
-      padding:18px;
+      position:fixed; inset:0; background:rgba(255,255,255,.96);
+      display:none; align-items:center; justify-content:center; z-index:999;
     }
-    .overlay.show{ display:flex; }
+    .overlay.on{ display:flex; }
     .modal{
-      width:min(720px, 100%);
-      background:#fff;
-      border:1px solid #000;
-      border-radius:14px;
-      padding:14px;
+      width:min(520px, calc(100vw - 32px));
+      border:1px solid #e9e9e9; border-radius:12px; padding:14px; background:#fff;
     }
-    .modal .top{
-      display:flex; justify-content:space-between; align-items:center; gap:12px;
-      margin-bottom:10px;
-    }
-    .modal h3{
-      margin:0;
-      font-family:var(--mono);
-      font-size:12px;
-      letter-spacing:0.12em;
-      text-transform:uppercase;
-    }
-    .kbd{ font-family:var(--mono); border:1px solid var(--line); border-radius:6px; padding:2px 6px; font-size:11px; background:#fafafa; }
-
-    /* Alien recomposition animation container */
-    .recompose{
-      position:relative;
-      min-height: calc(var(--cell) + 40px);
-      border:1px dashed #e1e1e1;
-      border-radius:12px;
-      padding:12px;
-      overflow:hidden;
-      background: rgba(255,255,255,0.68);
-    }
-    .recompose .quadra-line{ border:none; padding:0; background:transparent; min-height:unset; }
-    .float-note{ position:absolute; inset:0; pointer-events:none; }
+    .modal .t{ font-family:var(--mono); font-size:12px; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:10px; }
   </style>
 </head>
 
 <body>
-  <div class="bg-field"><canvas id="dust"></canvas></div>
+<header>
+  <div>
+    <h1>Quadra Translator</h1>
+    <div class="sub">Italiano ⇄ Quadra • lingua concettuale • token definitivi (16) • negazione: assenza interna con <span class="kbd">!TOKEN</span></div>
+  </div>
 
-  <header>
-    <div>
-      <h1>Quadra Translator</h1>
-      <div class="sub">Italiano ⇄ Quadra • sintassi: ENTITÀ → AGENZIA → STATO → CONDIZIONE • negazione: assenza interna</div>
-    </div>
-
-    <div class="header-right">
+  <div class="top-actions">
+    <div class="statusbar" title="Stato backend">
       <span class="dot" id="apiDot"></span>
       <span id="apiLabel">API: check…</span>
-      <button id="btnTech" class="btn-primary">Area tecnica</button>
     </div>
-  </header>
-
-  <main>
-    <!-- LEFT: Translator -->
-    <section class="card">
-      <h2>Traduzione</h2>
-
-      <div class="grid2">
-        <div>
-          <div class="muted">Italiano (parole / frasi)</div>
-          <textarea id="itInput" placeholder="Esempi: ciao&#10;bottiglia città&#10;memoria assente&#10;soglia tra luogo e persona"></textarea>
-
-          <div class="row" style="margin-top:10px;">
-            <button class="btn-primary" id="btnItToQuadra">Italiano → Quadra (AI)</button>
-            <button id="btnClear">Pulisci</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <h2>Proposte AI (se parola non trovata nel vocabolario)</h2>
-          <div class="tiny">
-            Se una parola non esiste ancora, l’API propone traduzioni Quadra. <b>Accetta & salva</b> scrive in Cloudflare D1.
-          </div>
-          <div id="suggestions"></div>
-        </div>
-
-        <div>
-          <div class="muted">Quadra (ricomposizione)</div>
-
-          <div class="recompose">
-            <div class="quadra-line" id="quadraOutput"></div>
-            <div class="float-note" id="floatNote"></div>
-          </div>
-
-          <div class="label" id="glossOutput"></div>
-
-          <div class="row" style="margin-top:10px;">
-            <button class="btn-primary" id="btnCopyGloss">Copia gloss</button>
-          </div>
-
-          <div class="hr"></div>
-
-          <h2>Legenda (16 segni)</h2>
-          <div id="legend" class="quadra-line"></div>
-          <div class="label" id="legendLabels"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- RIGHT: Minimal status / help -->
-    <section class="card">
-      <h2>Note</h2>
-      <div class="tiny">
-        Quadra usa solo 16 segni base. Tutto il resto è vocabolario (DB) + composizione.<br><br>
-        Negazione: usa <span class="kbd">!TOKEN</span> (assenza interna) dentro la sequenza.
-      </div>
-
-      <div class="hr"></div>
-
-      <h2>Cache locale</h2>
-      <div class="tiny">
-        Questa pagina mantiene una cache per UI (veloce). La fonte verità è il backend (D1).
-      </div>
-      <div class="hr"></div>
-      <div id="cacheList" class="table-like"></div>
-    </section>
-  </main>
-
-  <!-- TECH OVERLAY -->
-  <div class="overlay" id="techOverlay" aria-hidden="true">
-    <div class="modal">
-      <div class="top">
-        <h3>Pannello di controllo</h3>
-        <button id="btnCloseTech" class="btn-dark">Chiudi</button>
-      </div>
-
-      <!-- Password gate -->
-      <div id="gate">
-        <div class="tiny">
-          Accesso protetto. La password NON è sicurezza reale se sta nel frontend: usa un <b>ADMIN_TOKEN</b> lato Worker.
-        </div>
-        <div class="row" style="margin-top:10px;">
-          <input id="adminToken" placeholder="ADMIN_TOKEN (Bearer)" />
-          <button id="btnUnlock" class="btn-primary">Sblocca</button>
-        </div>
-        <div class="tiny" id="gateMsg" style="margin-top:8px;"></div>
-      </div>
-
-      <!-- Control panel -->
-      <div id="panel" style="display:none;">
-        <div class="tiny">
-          Questo pannello chiama endpoint admin del Worker (da implementare):<br>
-          <span class="kbd">POST /autogrow/start</span> • <span class="kbd">POST /autogrow/stop</span> • <span class="kbd">GET /autogrow/status</span>
-        </div>
-
-        <div class="hr"></div>
-
-        <h2>AutoGrow</h2>
-        <div class="row">
-          <input id="agN" type="number" min="1" step="1" value="200" placeholder="n frasi (es. 200)" />
-          <input id="agThreshold" type="number" min="0" max="1" step="0.01" value="0.94" placeholder="threshold (0..1)" />
-        </div>
-        <div class="row" style="margin-top:10px;">
-          <input id="agDelay" type="number" min="0" step="10" value="120" placeholder="delay ms" />
-          <select id="agMode">
-            <option value="controlled">controlled</option>
-            <option value="free">free</option>
-          </select>
-        </div>
-        <div class="row" style="margin-top:10px;">
-          <button id="btnAGStart" class="btn-primary">Avvia AutoGrow</button>
-          <button id="btnAGStop" class="btn-dark">Stop</button>
-          <button id="btnAGStatus">Status</button>
-        </div>
-
-        <div class="hr"></div>
-
-        <h2>Log</h2>
-        <textarea id="techLog" readonly style="min-height:160px;"></textarea>
-      </div>
-    </div>
+    <button class="linkbtn" id="btnTech">Area tecnica</button>
   </div>
+</header>
+
+<!-- Password overlay -->
+<div class="overlay" id="techOverlay">
+  <div class="modal">
+    <div class="t">Accesso area tecnica</div>
+    <div class="tiny">Password solo lato client (non è sicurezza “vera”). Serve a evitare tocchi accidentali.</div>
+    <div class="row" style="margin-top:10px;">
+      <input id="techPass" type="password" placeholder="Password" />
+      <button class="btn-primary" id="btnTechEnter">Entra</button>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button id="btnTechCancel">Annulla</button>
+    </div>
+    <div class="tiny" id="techMsg" style="margin-top:10px;"></div>
+  </div>
+</div>
+
+<main>
+  <!-- LEFT -->
+  <section class="card">
+    <h2>Traduzione (AI + vocabolario)</h2>
+
+    <div class="grid2">
+      <div>
+        <div class="muted">Italiano (parole / frasi)</div>
+        <textarea id="itInput" placeholder="Esempi:&#10;ciao&#10;bottiglia città&#10;identità sistema&#10;luogo assente&#10;persona attivo movimento presente"></textarea>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn-primary" id="btnItToQuadra">Italiano → Quadra (AI)</button>
+          <button id="btnClear">Pulisci</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Proposte AI (solo se parola non trovata)</h2>
+        <div class="tiny">
+          L’API propone traduzioni solo con i 16 token ammessi. <b>Accetta & salva</b> scrive su Cloudflare D1.
+        </div>
+        <div id="suggestions"></div>
+      </div>
+
+      <div>
+        <div class="muted">Quadra (glifi + gloss)</div>
+        <div class="quadra-line" id="quadraOutput"></div>
+        <div class="label" id="glossOutput"></div>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn-primary" id="btnCopyGloss">Copia gloss</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Builder frase (manuale)</h2>
+        <div class="tiny">
+          Ogni parola = token separati da <span class="kbd">+</span>. Parole separate da <span class="kbd">/</span>.
+          Negazione: <span class="kbd">!TOKEN</span> (inserisce assenza interna nel glifo).
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <select id="slot1"></select>
+          <select id="slot2"></select>
+          <select id="slot3"></select>
+          <select id="slot4"></select>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <select id="slot5"></select>
+          <select id="slot6"></select>
+          <button class="btn-primary" id="btnAddWord">Aggiungi parola</button>
+        </div>
+
+        <div class="quadra-line" id="phrasePreview" style="margin-top:10px;"></div>
+        <div class="label" id="phraseGloss"></div>
+
+        <div class="row" style="margin-top:10px;">
+          <button id="btnClearPhrase">Pulisci frase</button>
+          <button class="btn-primary" id="btnUsePhraseAsOutput">Usa frase come output</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Vocabolario (Cloudflare D1)</h2>
+    <div class="tiny">
+      <b>Salva</b> scrive su backend. <b>Cerca</b> legge da backend. La lista sotto è solo cache locale UI.
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <input id="dictKey" placeholder="parola italiana (es. bottiglia)" />
+      <input id="dictVal" placeholder="Quadra (es. OGGETTO+PASSIVO+FERMO+PRESENTE)" />
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn-primary" id="btnSaveEntry">Salva (cloud)</button>
+      <button id="btnFetchEntry">Cerca (cloud)</button>
+      <button id="btnResetLocalCache" class="btn-danger">Reset cache locale</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Cache locale</h2>
+    <div id="dictList" class="table-like"></div>
+  </section>
+
+  <!-- RIGHT -->
+  <section class="card">
+    <h2>Legenda (16 token definitivi)</h2>
+    <div class="tiny">
+      Tutti i glifi hanno frame chiuso. La lingua cresce aggiungendo voci (DB), non nuovi segni.
+    </div>
+    <div class="hr"></div>
+    <div id="legend" class="quadra-line"></div>
+    <div class="label" id="legendLabels"></div>
+
+    <div class="hr"></div>
+
+    <h2>Area tecnica</h2>
+    <div class="tiny">
+      Sblocca per mostrare controlli avanzati (autogrow / debug). È un gate lato client.
+    </div>
+
+    <div id="techPanel" style="display:none; margin-top:12px;">
+      <div class="table-like">
+        <div class="r">
+          <div class="k">Autogrow</div>
+          <div class="v">Qui compariranno i controlli quando avrai gli endpoint backend (/autogrow/*).</div>
+        </div>
+        <div class="r">
+          <div class="k">Suggerimento</div>
+          <div class="v">Implementa start/stop/status nel Worker per gestire autogrow in modo affidabile.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
 
 <script type="module">
   import { TOKENS, glyphSVG } from "./quadra-glyphs.js";
 
   /* =========================
      CONFIG
-     ========================= */
+  ========================= */
   const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
 
   /* =========================
-     TOKENS / VALIDATION
-     ========================= */
-  const ALL_TOKENS = TOKENS;
+     LOCAL CACHE (UI convenience)
+  ========================= */
+  const CACHE_KEY = "quadra_vocab_cache_v2";
+  function loadCache(){
+    try{
+      const raw = localStorage.getItem(CACHE_KEY);
+      if(!raw) return {};
+      const parsed = JSON.parse(raw);
+      return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
+    }catch(e){ return {}; }
+  }
+  function saveCache(cache){ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }
+  let CACHE = loadCache();
 
-  function safeToken(t){ return ALL_TOKENS.includes(t); }
+  /* =========================
+     RENDER HELPERS
+  ========================= */
+  function escapeHtml(s){
+    return String(s)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function safeToken(t){ return TOKENS.includes(t); }
 
   function parseQuadraString(s){
-    const words = (s||"").split("/").map(w => w.trim()).filter(Boolean);
+    const words = s.split("/").map(w => w.trim()).filter(Boolean);
     return words.map(word => {
       const rawTokens = word.split("+").map(t => t.trim()).filter(Boolean);
       const tokens = [];
@@ -350,10 +322,7 @@
       rawTokens.forEach(rt => {
         let negate = false;
         let t = rt.toUpperCase();
-        if(t.startsWith("!")){
-          negate = true;
-          t = t.slice(1);
-        }
+        if(t.startsWith("!")){ negate = true; t = t.slice(1); }
         tokens.push(t);
         opts.push({ negate });
       });
@@ -376,13 +345,6 @@
     return outWords.join(" / ");
   }
 
-  /* =========================
-     SVG GLYPH (new definitive)
-     ========================= */
-  function svgGlyph(token, options = {}){
-    return glyphSVG(token, { negate: options.negate === true });
-  }
-
   function renderWords(wordsParsed, targetEl){
     targetEl.innerHTML = "";
     wordsParsed.forEach((w, idx) => {
@@ -390,7 +352,7 @@
       wordWrap.className = "word";
       w.tokens.forEach((t, i) => {
         const cell = document.createElement("div");
-        cell.innerHTML = svgGlyph(t, { negate: w.opts[i]?.negate === true });
+        cell.innerHTML = glyphSVG(t, { negate: w.opts[i]?.negate === true });
         wordWrap.appendChild(cell);
       });
       targetEl.appendChild(wordWrap);
@@ -404,42 +366,8 @@
   }
 
   /* =========================
-     Local cache (UI)
-     ========================= */
-  const CACHE_KEY = "quadra_vocab_cache_v1";
-  function loadCache(){
-    try{
-      const raw = localStorage.getItem(CACHE_KEY);
-      if(!raw) return {};
-      const parsed = JSON.parse(raw);
-      return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
-    }catch(e){ return {}; }
-  }
-  function saveCache(cache){ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }
-  let CACHE = loadCache();
-
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
-
-  function refreshCacheList(){
-    const el = document.getElementById("cacheList");
-    const keys = Object.keys(CACHE).sort((a,b)=>a.localeCompare(b));
-    if(keys.length === 0){
-      el.innerHTML = `<div class="r"><div class="k">(cache vuota)</div><div class="v"></div></div>`;
-      return;
-    }
-    el.innerHTML = keys.map(k => {
-      const v = CACHE[k];
-      return `<div class="r"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`;
-    }).join("");
-  }
-
-  /* =========================
      API
-     ========================= */
+  ========================= */
   async function apiHealth(){
     const dot = document.getElementById("apiDot");
     const label = document.getElementById("apiLabel");
@@ -448,10 +376,10 @@
       const t = await r.text();
       const ok = r.ok && (t || "").includes("quadra-api ok");
       dot.className = "dot " + (ok ? "ok" : "bad");
-      label.textContent = ok ? "API: online" : "API: risposta inattesa";
+      label.textContent = ok ? "API: online (Cloudflare)" : "API: risposta inattesa";
     }catch(e){
       dot.className = "dot bad";
-      label.textContent = "API: offline / rete / CORS";
+      label.textContent = "API: offline / CORS / rete";
     }
   }
 
@@ -477,15 +405,111 @@
     return data;
   }
 
+  async function apiGetVocab(it){
+    const r = await fetch(`${API_BASE}/vocab/get?it=${encodeURIComponent(it)}`, { method:"GET" });
+    const data = await r.json().catch(()=> ({}));
+    if(!r.ok) throw new Error(data?.error || "vocab_get_failed");
+    return data;
+  }
+
   /* =========================
-     AI Suggestions UI
-     ========================= */
+     UI ELEMENTS
+  ========================= */
+  const itInput = document.getElementById("itInput");
+  const quadraOutput = document.getElementById("quadraOutput");
+  const glossOutput = document.getElementById("glossOutput");
+
+  const btnItToQuadra = document.getElementById("btnItToQuadra");
+  const btnClear = document.getElementById("btnClear");
+  const btnCopyGloss = document.getElementById("btnCopyGloss");
+
   const suggestionsEl = document.getElementById("suggestions");
 
+  const dictKey = document.getElementById("dictKey");
+  const dictVal = document.getElementById("dictVal");
+  const btnSaveEntry = document.getElementById("btnSaveEntry");
+  const btnFetchEntry = document.getElementById("btnFetchEntry");
+  const btnResetLocalCache = document.getElementById("btnResetLocalCache");
+  const dictList = document.getElementById("dictList");
+
+  const slotEls = ["slot1","slot2","slot3","slot4","slot5","slot6"].map(id => document.getElementById(id));
+  const btnAddWord = document.getElementById("btnAddWord");
+  const phrasePreview = document.getElementById("phrasePreview");
+  const phraseGloss = document.getElementById("phraseGloss");
+  const btnClearPhrase = document.getElementById("btnClearPhrase");
+  const btnUsePhraseAsOutput = document.getElementById("btnUsePhraseAsOutput");
+
+  /* =========================
+     Cache list
+  ========================= */
+  function refreshCacheList(){
+    const keys = Object.keys(CACHE).sort((a,b)=>a.localeCompare(b));
+    if(keys.length === 0){
+      dictList.innerHTML = `<div class="r"><div class="k">(cache vuota)</div><div class="v"></div></div>`;
+      return;
+    }
+    dictList.innerHTML = keys.map(k => {
+      const v = CACHE[k];
+      return `<div class="r">
+        <div class="k">${escapeHtml(k)}</div>
+        <div class="v">${escapeHtml(v)}</div>
+      </div>`;
+    }).join("");
+  }
+
+  /* =========================
+     Legend
+  ========================= */
+  function renderLegend(){
+    const legend = document.getElementById("legend");
+    const legendLabels = document.getElementById("legendLabels");
+    legend.innerHTML = "";
+    TOKENS.forEach(t => {
+      const w = document.createElement("div");
+      w.className = "word";
+      w.innerHTML = glyphSVG(t);
+      legend.appendChild(w);
+    });
+    legendLabels.textContent = TOKENS.join(" • ");
+  }
+
+  /* =========================
+     Builder slots
+  ========================= */
+  function populateSlots(){
+    const options = ["", ...TOKENS, ...TOKENS.map(t => "!" + t)];
+    slotEls.forEach(sel => {
+      sel.innerHTML = options.map(o => `<option value="${o}">${o || "(vuoto)"}</option>`).join("");
+    });
+
+    // suggested defaults: ENTITÀ → AGENZIA → STATO → TEMPO
+    slotEls[0].value = "OGGETTO";
+    slotEls[1].value = "PASSIVO";
+    slotEls[2].value = "FERMO";
+    slotEls[3].value = "PRESENTE";
+    slotEls[4].value = "";
+    slotEls[5].value = "";
+  }
+
+  let phraseWords = [];
+  function renderPhrase(){
+    const phrase = phraseWords.join(" / ");
+    renderWords(parseQuadraString(phrase), phrasePreview);
+    phraseGloss.textContent = phrase ? quadraToGloss(phrase) : "";
+  }
+  function buildWordFromSlots(){
+    const values = slotEls.map(s => s.value).filter(v => v && v.trim().length>0);
+    if(values.length === 0) return "";
+    return values.join("+");
+  }
+
+  /* =========================
+     AI Suggestions renderer
+  ========================= */
   function renderAISuggestions(suggestions){
     suggestionsEl.innerHTML = "";
     if(!suggestions || suggestions.length === 0){
-      suggestionsEl.innerHTML = `<div class="tiny">(nessuna proposta: tutto già noto)</div>`;
+      suggestionsEl.innerHTML = `<div class="tiny">(nessuna proposta: tutto già noto nel vocabolario)</div>`;
       return;
     }
 
@@ -515,7 +539,7 @@
 
         const cand = document.createElement("div");
         cand.style.border = "1px solid #f0f0f0";
-        cand.style.borderRadius = "12px";
+        cand.style.borderRadius = "10px";
         cand.style.padding = "10px";
         cand.style.display = "flex";
         cand.style.flexDirection = "column";
@@ -540,9 +564,14 @@
           btnAccept.disabled = true;
           try{
             await apiAddVocab(tok, quadra);
+
             CACHE[tok] = quadra;
             saveCache(CACHE);
             refreshCacheList();
+
+            dictKey.value = tok;
+            dictVal.value = quadra;
+
             await doTranslate();
           }catch(e){
             alert("Salvataggio fallito (cloud).");
@@ -551,10 +580,20 @@
           }
         });
 
+        const btnEdit = document.createElement("button");
+        btnEdit.textContent = "Modifica (precompila)";
+        btnEdit.addEventListener("click", () => {
+          dictKey.value = tok;
+          dictVal.value = quadra;
+        });
+
         actions.appendChild(btnAccept);
+        actions.appendChild(btnEdit);
+
         cand.appendChild(line);
         cand.appendChild(why);
         cand.appendChild(actions);
+
         wrap.appendChild(cand);
       });
 
@@ -563,43 +602,8 @@
   }
 
   /* =========================
-     Translator / Recomposition effect
-     ========================= */
-  const itInput = document.getElementById("itInput");
-  const quadraOutput = document.getElementById("quadraOutput");
-  const glossOutput = document.getElementById("glossOutput");
-  const floatNote = document.getElementById("floatNote");
-  const btnItToQuadra = document.getElementById("btnItToQuadra");
-  const btnClear = document.getElementById("btnClear");
-  const btnCopyGloss = document.getElementById("btnCopyGloss");
-
-  function driftRecomposeAnimation(){
-    // semplice effetto: scritta “recomposing…” e fade-in lento dei glifi
-    floatNote.innerHTML = "";
-    const note = document.createElement("div");
-    note.style.position = "absolute";
-    note.style.left = "12px";
-    note.style.bottom = "10px";
-    note.style.fontFamily = "var(--mono)";
-    note.style.fontSize = "11px";
-    note.style.color = "var(--muted)";
-    note.textContent = "recompose…";
-    floatNote.appendChild(note);
-
-    quadraOutput.style.opacity = "0";
-    quadraOutput.style.filter = "blur(6px)";
-    quadraOutput.style.transform = "translateY(6px)";
-    quadraOutput.style.transition = "opacity 900ms ease, filter 1200ms ease, transform 900ms ease";
-
-    requestAnimationFrame(() => {
-      quadraOutput.style.opacity = "1";
-      quadraOutput.style.filter = "blur(0px)";
-      quadraOutput.style.transform = "translateY(0px)";
-    });
-
-    setTimeout(()=>{ floatNote.innerHTML = ""; }, 900);
-  }
-
+     Main translate
+  ========================= */
   async function doTranslate(){
     const text = itInput.value || "";
     btnItToQuadra.disabled = true;
@@ -608,20 +612,22 @@
       const data = await apiTranslate(text);
       const quadra = (data.quadra || "").trim();
 
-      renderWords(parseQuadraString(quadra), quadraOutput);
       glossOutput.textContent = quadraToGloss(quadra);
+      renderWords(parseQuadraString(quadra), quadraOutput);
       renderAISuggestions(data.suggestions || []);
-      driftRecomposeAnimation();
     }catch(e){
       quadraOutput.innerHTML = "";
       glossOutput.textContent = "";
-      suggestionsEl.innerHTML = `<div class="tiny">Errore API: impossibile tradurre. Verifica Worker e OpenAI key.</div>`;
+      suggestionsEl.innerHTML = `<div class="tiny">Errore API: impossibile tradurre.</div>`;
     }finally{
       btnItToQuadra.disabled = false;
       btnItToQuadra.textContent = "Italiano → Quadra (AI)";
     }
   }
 
+  /* =========================
+     Buttons
+  ========================= */
   btnItToQuadra.addEventListener("click", doTranslate);
 
   btnClear.addEventListener("click", () => {
@@ -637,208 +643,151 @@
     try{ await navigator.clipboard.writeText(t); }catch(e){}
   });
 
-  /* =========================
-     Legend (16)
-     ========================= */
-  function renderLegend(){
-    const legend = document.getElementById("legend");
-    const legendLabels = document.getElementById("legendLabels");
-    legend.innerHTML = "";
-    ALL_TOKENS.forEach(t => {
-      const w = document.createElement("div");
-      w.className = "word";
-      w.innerHTML = svgGlyph(t);
-      legend.appendChild(w);
-    });
-    legendLabels.textContent = ALL_TOKENS.join(" • ");
-  }
+  btnSaveEntry.addEventListener("click", async () => {
+    const k = (dictKey.value || "").trim().toLowerCase();
+    const v = (dictVal.value || "").trim().toUpperCase();
+    if(!k || !v) return;
+
+    // validate tokens on client
+    const words = parseQuadraString(v);
+    for(const w of words){
+      for(const t of w.tokens){
+        if(!safeToken(t)) { alert("Token non valido: " + t); return; }
+      }
+    }
+
+    btnSaveEntry.disabled = true;
+    try{
+      await apiAddVocab(k, v);
+      CACHE[k] = v;
+      saveCache(CACHE);
+      refreshCacheList();
+      alert("Salvato su cloud (D1).");
+    }catch(e){
+      alert("Salvataggio su cloud fallito.");
+    }finally{
+      btnSaveEntry.disabled = false;
+    }
+  });
+
+  btnFetchEntry.addEventListener("click", async () => {
+    const k = (dictKey.value || "").trim().toLowerCase();
+    if(!k) return;
+
+    btnFetchEntry.disabled = true;
+    try{
+      const res = await apiGetVocab(k);
+      if(!res.found){
+        alert("Non trovata sul cloud.");
+        return;
+      }
+      const quadra = (res.row?.quadra || "").toUpperCase().trim();
+      dictVal.value = quadra;
+      CACHE[k] = quadra;
+      saveCache(CACHE);
+      refreshCacheList();
+      alert("Trovata sul cloud e aggiornata cache locale.");
+    }catch(e){
+      alert("Lookup fallito (cloud).");
+    }finally{
+      btnFetchEntry.disabled = false;
+    }
+  });
+
+  btnResetLocalCache.addEventListener("click", () => {
+    CACHE = {};
+    saveCache(CACHE);
+    refreshCacheList();
+  });
+
+  btnAddWord.addEventListener("click", () => {
+    const w = buildWordFromSlots();
+    if(!w) return;
+    phraseWords.push(w);
+    renderPhrase();
+  });
+
+  btnClearPhrase.addEventListener("click", () => {
+    phraseWords = [];
+    renderPhrase();
+  });
+
+  btnUsePhraseAsOutput.addEventListener("click", () => {
+    glossOutput.textContent = phraseGloss.textContent || "";
+    renderWords(parseQuadraString(glossOutput.textContent), quadraOutput);
+  });
 
   /* =========================
-     TECH PANEL (password gate + autogrow controls)
-     ========================= */
-  const techOverlay = document.getElementById("techOverlay");
+     “Area tecnica” gate
+  ========================= */
+  const TECH_HASH_KEY = "quadra_tech_gate_v1";
+  const TECH_PASSWORD = "quadra"; // cambia qui, oppure rimuovi il gate
+
   const btnTech = document.getElementById("btnTech");
-  const btnCloseTech = document.getElementById("btnCloseTech");
+  const techOverlay = document.getElementById("techOverlay");
+  const techPass = document.getElementById("techPass");
+  const btnTechEnter = document.getElementById("btnTechEnter");
+  const btnTechCancel = document.getElementById("btnTechCancel");
+  const techMsg = document.getElementById("techMsg");
+  const techPanel = document.getElementById("techPanel");
 
-  const gate = document.getElementById("gate");
-  const panel = document.getElementById("panel");
-  const adminTokenEl = document.getElementById("adminToken");
-  const btnUnlock = document.getElementById("btnUnlock");
-  const gateMsg = document.getElementById("gateMsg");
-
-  const techLog = document.getElementById("techLog");
-  const agN = document.getElementById("agN");
-  const agThreshold = document.getElementById("agThreshold");
-  const agDelay = document.getElementById("agDelay");
-  const agMode = document.getElementById("agMode");
-  const btnAGStart = document.getElementById("btnAGStart");
-  const btnAGStop = document.getElementById("btnAGStop");
-  const btnAGStatus = document.getElementById("btnAGStatus");
-
-  const ADMIN_TOKEN_KEY = "quadra_admin_token_v1";
-
-  function logTech(s){
-    techLog.value += (techLog.value ? "\n" : "") + s;
-    techLog.scrollTop = techLog.scrollHeight;
+  function openTechOverlay(){
+    techMsg.textContent = "";
+    techPass.value = "";
+    techOverlay.classList.add("on");
+    setTimeout(()=> techPass.focus(), 50);
   }
-
-  function getAdminToken(){
-    return (localStorage.getItem(ADMIN_TOKEN_KEY) || "").trim();
+  function closeTechOverlay(){
+    techOverlay.classList.remove("on");
   }
-  function setAdminToken(t){
-    localStorage.setItem(ADMIN_TOKEN_KEY, t);
+  function isTechUnlocked(){
+    return localStorage.getItem(TECH_HASH_KEY) === "1";
+  }
+  function setTechUnlocked(){
+    localStorage.setItem(TECH_HASH_KEY, "1");
+  }
+  function refreshTechUI(){
+    techPanel.style.display = isTechUnlocked() ? "block" : "none";
   }
 
   btnTech.addEventListener("click", () => {
-    techOverlay.classList.add("show");
-    techOverlay.setAttribute("aria-hidden", "false");
-    adminTokenEl.value = getAdminToken();
-    gateMsg.textContent = "";
+    if(isTechUnlocked()){
+      techPanel.style.display = (techPanel.style.display === "none") ? "block" : "none";
+      return;
+    }
+    openTechOverlay();
   });
 
-  btnCloseTech.addEventListener("click", () => {
-    techOverlay.classList.remove("show");
-    techOverlay.setAttribute("aria-hidden", "true");
-  });
+  btnTechCancel.addEventListener("click", closeTechOverlay);
 
-  async function adminFetch(path, method="GET", body=null){
-    const token = getAdminToken();
-    if(!token) throw new Error("missing_admin_token");
-    const r = await fetch(`${API_BASE}${path}`, {
-      method,
-      headers: {
-        "Content-Type":"application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: body ? JSON.stringify(body) : null
-    });
-    const data = await r.json().catch(()=> ({}));
-    if(!r.ok) throw new Error(data?.error || `admin_${method}_${path}_failed`);
-    return data;
-  }
-
-  btnUnlock.addEventListener("click", async () => {
-    const t = (adminTokenEl.value || "").trim();
-    if(!t){ gateMsg.textContent = "Inserisci ADMIN_TOKEN."; return; }
-    setAdminToken(t);
-
-    // quick check: try status endpoint (must exist in Worker)
-    gateMsg.textContent = "Verifica token…";
-    try{
-      await adminFetch("/autogrow/status", "GET");
-      gate.style.display = "none";
-      panel.style.display = "block";
-      gateMsg.textContent = "";
-      logTech("[OK] token valido, pannello sbloccato.");
-    }catch(e){
-      gateMsg.textContent = "Token non valido oppure endpoint admin non esiste ancora.";
+  btnTechEnter.addEventListener("click", () => {
+    const p = (techPass.value || "").trim();
+    if(p === TECH_PASSWORD){
+      setTechUnlocked();
+      refreshTechUI();
+      closeTechOverlay();
+    }else{
+      techMsg.textContent = "Password errata.";
     }
   });
 
-  btnAGStart.addEventListener("click", async () => {
-    btnAGStart.disabled = true;
-    try{
-      const payload = {
-        n: Number(agN.value || 200),
-        threshold: Number(agThreshold.value || 0.94),
-        delay: Number(agDelay.value || 120),
-        mode: String(agMode.value || "controlled")
-      };
-      logTech(`[START] ${JSON.stringify(payload)}`);
-      const res = await adminFetch("/autogrow/start", "POST", payload);
-      logTech(`[OK] ${JSON.stringify(res)}`);
-    }catch(e){
-      logTech(`[ERR] ${String(e.message||e)}`);
-    }finally{
-      btnAGStart.disabled = false;
-    }
-  });
-
-  btnAGStop.addEventListener("click", async () => {
-    btnAGStop.disabled = true;
-    try{
-      logTech("[STOP]");
-      const res = await adminFetch("/autogrow/stop", "POST", {});
-      logTech(`[OK] ${JSON.stringify(res)}`);
-    }catch(e){
-      logTech(`[ERR] ${String(e.message||e)}`);
-    }finally{
-      btnAGStop.disabled = false;
-    }
-  });
-
-  btnAGStatus.addEventListener("click", async () => {
-    btnAGStatus.disabled = true;
-    try{
-      const res = await adminFetch("/autogrow/status", "GET");
-      logTech(`[STATUS] ${JSON.stringify(res)}`);
-    }catch(e){
-      logTech(`[ERR] ${String(e.message||e)}`);
-    }finally{
-      btnAGStatus.disabled = false;
-    }
+  techPass.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") btnTechEnter.click();
+    if(e.key === "Escape") closeTechOverlay();
   });
 
   /* =========================
-     Background dust (white particles on white -> subtle)
-     ========================= */
-  const dust = document.getElementById("dust");
-  const ctx = dust.getContext("2d", { alpha: true });
-
-  let W = 0, H = 0;
-  const dots = [];
-  const DOT_COUNT = 900; // dense but lightweight
-
-  function resize(){
-    const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-    W = dust.clientWidth;
-    H = dust.clientHeight;
-    dust.width = Math.floor(W * dpr);
-    dust.height = Math.floor(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    dots.length = 0;
-    for(let i=0;i<DOT_COUNT;i++){
-      dots.push({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        vx: (Math.random()-0.5)*0.25,
-        vy: (Math.random()-0.5)*0.25,
-        r: 0.8 + Math.random()*1.2,
-        a: 0.05 + Math.random()*0.10
-      });
-    }
-  }
-  window.addEventListener("resize", resize);
-
-  function tick(){
-    ctx.clearRect(0,0,W,H);
-    // subtle: near-white dots, barely visible
-    ctx.fillStyle = "rgba(0,0,0,0.06)";
-    for(const p of dots){
-      p.x += p.vx; p.y += p.vy;
-      if(p.x<0) p.x=W;
-      if(p.x>W) p.x=0;
-      if(p.y<0) p.y=H;
-      if(p.y>H) p.y=0;
-
-      ctx.globalAlpha = p.a;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.globalAlpha = 1;
-    requestAnimationFrame(tick);
-  }
-
-  /* init */
+     Init
+  ========================= */
   renderLegend();
+  populateSlots();
   refreshCacheList();
+  renderPhrase();
+  refreshTechUI();
   apiHealth();
-  resize();
-  tick();
 
   // demo
-  itInput.value = "memoria soglia città bottiglia assenza";
+  itInput.value = "identità sistema flusso luogo assente";
   doTranslate();
 </script>
 </body>
