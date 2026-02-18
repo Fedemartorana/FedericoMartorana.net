@@ -5,17 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Quadra Translator</title>
 
-  <!-- Swiss / clean: Helvetica-first -->
+  <!-- Glyph library -->
+  <script src="./quadra-glyphs.js"></script>
+
   <style>
     :root{
-      --bg:#fff;
-      --fg:#000;
-      --muted:#6b6b6b;
-      --hair:#e9e9e9;
-      --soft:#f5f5f5;
+      --bg:#ffffff;
 
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      /* from your screenshots: desaturated pastel blue/grey */
+      --ink:#8FA3AE;          /* primary text/UI */
+      --ink-2:#A7B7C0;        /* secondary */
+      --hair: rgba(143,163,174,.28);
+
       --sans: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, Segoe UI, Roboto;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+      --maxw: 1400px;
     }
 
     *{ box-sizing:border-box; }
@@ -23,448 +28,266 @@
     body{
       margin:0;
       background:var(--bg);
-      color:var(--fg);
+      color:var(--ink);
       font-family:var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: geometricPrecision;
+      overflow-x:hidden;
     }
 
-    /* Layout */
-    .page{
-      max-width: 1120px;
+    /* page */
+    .wrap{
+      max-width: var(--maxw);
       margin: 0 auto;
-      padding: 18px 18px 64px 18px;
-    }
-
-    /* Top bar */
-    header{
-      position: sticky;
-      top:0;
-      background: var(--bg);
-      border-bottom: 1px solid var(--hair);
-      z-index: 10;
-    }
-    .topbar{
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 14px 18px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:16px;
-    }
-    .brand{
-      display:flex;
-      flex-direction:column;
-      gap:4px;
-      min-width: 260px;
-    }
-    .brand .title{
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-    .brand .sub{
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap: wrap;
-      justify-content:flex-end;
-    }
-    .square-btn{
-      width: 18px; height: 18px;
-      border: 2px solid #000;
-      background:#fff;
-      cursor:pointer;
-      padding:0;
-    }
-    .status{
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      display:flex;
-      align-items:center;
-      gap:8px;
-    }
-    .dot{
-      width:7px; height:7px; border-radius:999px;
-      border:1px solid var(--hair);
-      background:#bbb;
-      display:inline-block;
-    }
-    .dot.ok{ background:#000; border-color:#000; }
-    .dot.bad{ background:#fff; border-color:#000; }
-
-    /* Hero */
-    .hero{
-      padding: 26px 0 18px 0;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .hero h1{
-      margin:0;
-      font-size: 44px;
-      letter-spacing: -0.02em;
-      font-weight: 900;
-      line-height: 1.05;
-    }
-    .hero p{
-      margin:0;
-      max-width: 70ch;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-      font-family: var(--mono);
-    }
-
-    /* Translator layout */
-    .grid{
+      padding: 0 28px;
+      min-height: 100vh;
       display:grid;
-      grid-template-columns: 1.25fr 1fr;
-      gap: 18px;
-      margin-top: 14px;
-      align-items:start;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: 1fr auto;
+      column-gap: 36px;
     }
+
     @media (max-width: 980px){
-      .grid{ grid-template-columns:1fr; }
-      .hero h1{ font-size: 34px; }
+      .wrap{
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        padding: 0 18px;
+        row-gap: 24px;
+      }
     }
 
-    .panel{
-      border: 1px solid var(--hair);
-      border-radius: 12px;
-      padding: 14px;
-      background:#fff;
+    /* left legend */
+    aside{
+      padding-top: 34px;
     }
-
-    .label{
+    .legend-title{
       font-family: var(--mono);
       font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 8px;
+      letter-spacing: .10em;
       text-transform: uppercase;
-      letter-spacing: .08em;
+      color: var(--ink);
+      margin-bottom: 10px;
     }
-
-    textarea, input, select{
-      width:100%;
-      border:1px solid #dcdcdc;
-      border-radius: 12px;
-      padding: 12px 12px;
-      font-family: var(--mono);
-      font-size: 13px;
-      outline: none;
-      background:#fff;
-    }
-    textarea{ min-height: 150px; resize: vertical; }
-
-    .row{
+    .legend{
       display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
+      flex-direction:column;
+      gap: 14px;
+    }
+    .legend-item{
+      display:flex;
       align-items:center;
+      gap: 12px;
+    }
+    .legend-item svg{
+      width: 42px;
+      height: 42px;
+      opacity: .95;
+    }
+    .legend-name{
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+    .legend-desc{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-2);
+      line-height: 1.35;
+      margin-top: 3px;
+    }
+
+    /* main */
+    main{
+      padding-top: 34px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap: 18px;
+      min-height: 72vh;
+    }
+
+    .title{
+      margin:0;
+      font-size: clamp(44px, 6.2vw, 96px);
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-align:center;
+      line-height: 0.98;
+    }
+
+    .desc{
+      max-width: 760px;
+      text-align:center;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--ink-2);
+      margin: 0;
+    }
+
+    .inputBlock{
+      width: min(820px, 92%);
+      display:flex;
+      flex-direction:column;
+      gap: 16px;
       margin-top: 10px;
     }
-    .row > *{ flex: 1; min-width: 180px; }
+
+    textarea{
+      width:100%;
+      min-height: 120px;
+      resize: vertical;
+      border: 1px solid var(--hair);
+      border-radius: 0;
+      outline: none;
+      padding: 16px 16px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--ink);
+      background: transparent;
+    }
+    textarea::placeholder{ color: rgba(143,163,174,.55); }
+
+    .btnRow{
+      display:flex;
+      justify-content:center;
+    }
 
     button{
-      border:1px solid #dcdcdc;
-      background:#fff;
-      padding: 11px 12px;
-      border-radius: 12px;
-      cursor:pointer;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.08em;
+      width: min(520px, 92%);
+      padding: 18px 18px;
+      border: 1px solid var(--ink);
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 18px;
+      letter-spacing: .10em;
       text-transform: uppercase;
+      font-weight: 600;
+      cursor:pointer;
       transition: transform .04s ease, opacity .15s ease;
     }
     button:active{ transform: translateY(1px); }
     button:disabled{ opacity:.45; cursor:not-allowed; }
-    .primary{ border-color:#000; }
-    .danger{ background:#000; color:#fff; border-color:#000; }
 
-    /* Output area */
-    .quadra-output{
-      border: 1px dashed #e1e1e1;
-      border-radius: 12px;
-      padding: 12px;
-      min-height: 96px;
-      display:flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      align-items:center;
-      overflow:hidden;
-      position:relative;
-    }
-    .gloss{
-      margin-top: 8px;
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--muted);
-      word-break: break-word;
-      line-height: 1.45;
-    }
-
-    /* Simple “cool” generation effect: dust -> settle */
-    .dust{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-      border-radius: 12px;
-    }
-    .dust i{
-      position:absolute;
-      width: 4px; height: 4px;
-      border-radius: 999px;
-      background:#000;
-      opacity: .12;
-      transform: translate3d(0,0,0);
-      animation: drift 1200ms ease-out forwards;
-    }
-    @keyframes drift{
-      from{
-        opacity:.22;
-        transform: translate3d(var(--sx), var(--sy), 0);
-      }
-      to{
-        opacity: 0;
-        transform: translate3d(0,0,0);
-      }
-    }
-
-    .word{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      padding: 8px;
-      border: 1px solid #efefef;
-      border-radius: 12px;
-      background:#fff;
-    }
-    .pill{
-      display:inline-block;
-      font-family: var(--mono);
-      font-size: 11px;
-      border: 1px solid var(--hair);
-      border-radius: 999px;
-      padding: 4px 8px;
-      color:#000;
-      background:#fff;
-    }
-
-    /* Legend */
-    .section-title{
-      margin-top: 28px;
-      padding-top: 22px;
+    /* bottom output */
+    .bottom{
+      grid-column: 1 / span 2;
+      padding: 16px 0 18px 0;
       border-top: 1px solid var(--hair);
-      font-weight: 900;
-      letter-spacing: .02em;
-      font-size: 14px;
-      text-transform: uppercase;
-    }
-    .legend{
-      margin-top: 12px;
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
+      display:flex;
+      flex-direction:column;
       gap: 10px;
+      min-height: 160px;
     }
     @media (max-width: 980px){
-      .legend{ grid-template-columns: repeat(2, 1fr); }
+      .bottom{ grid-column: 1; }
     }
-    .legend-item{
-      border:1px solid var(--hair);
-      border-radius: 12px;
-      padding: 10px;
+
+    .outLabel{
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: var(--ink);
       display:flex;
+      justify-content:space-between;
       align-items:center;
-      gap: 10px;
-      background:#fff;
-    }
-    .legend-item .name{
-      font-family: var(--mono);
-      font-size: 12px;
-      color:#000;
-      text-transform: uppercase;
-      letter-spacing:.06em;
-      font-weight: 700;
-    }
-    .legend-item .desc{
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 3px;
-      line-height: 1.35;
+      gap: 12px;
     }
 
-    /* Modal */
-    .modal{
-      position:fixed;
-      inset:0;
-      background: rgba(0,0,0,.35);
-      display:none;
+    .outLabel .api{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-2);
+      letter-spacing: .02em;
+      text-transform:none;
+    }
+
+    .quadraLine{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 12px;
       align-items:center;
-      justify-content:center;
-      padding: 18px;
-      z-index: 50;
+      padding: 10px 0;
+      min-height: 84px;
     }
-    .modal.show{ display:flex; }
-    .modal-card{
-      width: min(520px, 100%);
-      background:#fff;
-      border:1px solid var(--hair);
-      border-radius: 14px;
-      padding: 14px;
+    .word{
+      display:flex;
+      gap: 12px;
+      align-items:center;
     }
-    .modal-card h3{
-      margin:0 0 10px 0;
-      font-weight: 900;
-      letter-spacing:.02em;
-      text-transform: uppercase;
-      font-size: 13px;
-    }
-    .modal-card .help{
+    .sep{
       font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.5;
-      margin: 0 0 12px 0;
+      color: rgba(143,163,174,.55);
+      letter-spacing:.08em;
+      user-select:none;
     }
 
-    /* Technical area wrapper */
-    #techArea{
-      display:none;
-      margin-top: 18px;
-      padding-top: 18px;
-      border-top: 1px solid var(--hair);
+    /* subtle reveal */
+    .fadeIn{
+      animation: fadeIn .22s ease-out;
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(2px); }
+      to{ opacity:1; transform: translateY(0); }
     }
 
-    /* Small utility */
-    .tiny{
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      line-height: 1.5;
+    /* make glyph strokes pastel too if glyph lib uses black strokes */
+    .quadraLine svg line,
+    .quadraLine svg rect,
+    .quadraLine svg circle,
+    .quadraLine svg path{
+      stroke: var(--ink) !important;
+      fill: currentColor;
     }
-    .hr{ height:1px; background: var(--hair); margin: 14px 0; }
+    /* but if svg is built with explicit fill="#000", we can't override reliably;
+       in that case, update quadra-glyphs.js to use currentColor/stroke currentColor. */
+    .quadraLine svg{ color: var(--ink); }
+    aside svg{ color: var(--ink); }
   </style>
-
-  <!-- Glyph library -->
-  <script src="./quadra-glyphs.js"></script>
 </head>
 
 <body>
-<header>
-  <div class="topbar">
-    <div class="brand">
-      <div class="title">Quadra Translator</div>
-      <div class="sub">Italiano → Quadra • sintassi: ENTITÀ → AGENZIA → STATO → TEMPO • negazione: assenza interna</div>
-    </div>
-    <div class="actions">
-      <div class="status"><span class="dot" id="apiDot"></span><span id="apiLabel">API: check…</span></div>
-      <button class="square-btn" id="openTech" aria-label="Area tecnica"></button>
-    </div>
+  <div class="wrap">
+    <!-- LEFT: legend -->
+    <aside>
+      <div class="legend-title">Legend</div>
+      <div class="legend" id="legend"></div>
+    </aside>
+
+    <!-- CENTER: translator -->
+    <main>
+      <h1 class="title">Quadra Translator</h1>
+      <p class="desc">
+        Quadra non “traduce” parole: riduce il linguaggio a unità di intenzione.
+        Ogni frase diventa una composizione di concetti — entità, agenzia, stato, tempo —
+        come una grammatica geometrica che descrive relazioni invece che suoni.
+      </p>
+
+      <div class="inputBlock">
+        <textarea id="itInput" placeholder="Scrivi una frase… (es. 'bottiglia piena vicino al luogo')"></textarea>
+        <div class="btnRow">
+          <button id="btnTranslate">Translate</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- BOTTOM: output -->
+    <section class="bottom">
+      <div class="outLabel">
+        <span>Output Quadra</span>
+        <span class="api" id="apiLabel">API: …</span>
+      </div>
+      <div class="quadraLine" id="quadraOutput"></div>
+    </section>
   </div>
-</header>
-
-<div class="page">
-  <!-- LANDING -->
-  <section class="hero">
-    <h1>Traduci concetti,<br/>non parole.</h1>
-    <p>
-      Quadra comprime l’italiano in sequenze di segni: entità, agenzia, stato, tempo.
-      Scrivi una frase e ottieni la composizione Quadra.
-    </p>
-  </section>
-
-  <section class="grid" id="landing">
-    <div class="panel">
-      <div class="label">Testo italiano</div>
-      <textarea id="itInput" placeholder="Esempi:
-bottiglia piena
-luogo abbandonato
-persona vicino
-non possibile"></textarea>
-
-      <div class="row">
-        <button class="primary" id="btnTranslate">Genera Quadra</button>
-        <button id="btnClear">Pulisci</button>
-      </div>
-
-      <div class="hr"></div>
-
-      <div class="tiny">
-        Se un termine non esiste nel vocabolario, l’API propone soluzioni coerenti. Puoi accettarle nell’area tecnica.
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="label">Output Quadra</div>
-      <div class="quadra-output" id="quadraOutput">
-        <div class="dust" id="dust"></div>
-      </div>
-      <div class="gloss" id="glossOutput"></div>
-
-      <div class="row">
-        <button id="btnCopyGloss">Copia gloss</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- LEGEND (bottom of landing) -->
-  <div class="section-title">Segni disponibili</div>
-  <div class="tiny">Legenda dei glifi e significato (token). L’ordine consigliato rimane ENTITÀ → AGENZIA → STATO → TEMPO.</div>
-
-  <section class="legend" id="legend"></section>
-
-  <!-- TECH AREA (password-gated) -->
-  <section id="techArea">
-    <div class="section-title">Area tecnica</div>
-    <div class="tiny">Qui restano tutte le funzioni avanzate (vocabolario, autosave, autogrow, ecc.).</div>
-
-    <!--
-      Per non rompere quello che già funziona:
-      incolla qui sotto (oppure mantieni) IL TUO PANNELLO TECNICO ATTUALE.
-      Se il tuo file già lo contiene, non devi fare nulla: lo lascio “slot” per compatibilità.
-    -->
-
-    <div class="hr"></div>
-
-    <!-- TECH PANEL CONTENT (minimal placeholder)
-         Se nel tuo index attuale hai già tutto, sostituisci questo blocco con il tuo pannello tecnico completo.
-         Oppure dimmi “incolla qui il tuo pannello tecnico attuale” e te lo reintegro pulito.
-    -->
-    <div class="panel">
-      <div class="label">Nota</div>
-      <div class="tiny">
-        Se il tuo pannello tecnico era già dentro questo file (prima di questa modifica),
-        reinseriscilo qui per mantenerlo identico. Io ho solo costruito landing + gate + legenda.
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- PASSWORD MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-card">
-    <h3>Accesso area tecnica</h3>
-    <p class="help">Inserisci la password per aprire il pannello tecnico. (password attuale: <span class="pill">tecnico</span>)</p>
-    <input id="pwd" type="password" placeholder="Password" autocomplete="current-password"/>
-    <div class="row">
-      <button class="primary" id="btnEnter">Entra</button>
-      <button id="btnCancel">Annulla</button>
-    </div>
-    <div class="tiny" id="pwdMsg" style="margin-top:10px;"></div>
-  </div>
-</div>
 
 <script>
   /* =========================
@@ -473,14 +296,14 @@ non possibile"></textarea>
   const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
 
   /* =========================
-     GLYPHS API BRIDGE
+     GLYPH LIB BRIDGE
      ========================= */
   const Q = window.QUADRA || window.QuadraGlyphs || null;
 
-  function mustHaveGlyphLib(){
-    if(!Q || typeof Q.svgGlyph !== "function" || typeof Q.parseQuadraString !== "function"){
-      throw new Error("quadra-glyphs.js non espone QUADRA/QuadraGlyphs con svgGlyph/parseQuadraString");
-    }
+  function assertGlyphLib(){
+    if(!Q) throw new Error("quadra-glyphs.js non caricato (QUADRA/QuadraGlyphs mancante).");
+    if(typeof Q.svgGlyph !== "function") throw new Error("svgGlyph() mancante.");
+    if(typeof Q.parseQuadraString !== "function") throw new Error("parseQuadraString() mancante.");
   }
 
   /* =========================
@@ -488,103 +311,9 @@ non possibile"></textarea>
      ========================= */
   const itInput = document.getElementById("itInput");
   const btnTranslate = document.getElementById("btnTranslate");
-  const btnClear = document.getElementById("btnClear");
   const quadraOutput = document.getElementById("quadraOutput");
-  const glossOutput = document.getElementById("glossOutput");
-  const dust = document.getElementById("dust");
-
-  const apiDot = document.getElementById("apiDot");
-  const apiLabel = document.getElementById("apiLabel");
-
-  const btnCopyGloss = document.getElementById("btnCopyGloss");
-
-  const openTech = document.getElementById("openTech");
-  const techArea = document.getElementById("techArea");
-  const modal = document.getElementById("modal");
-  const pwd = document.getElementById("pwd");
-  const btnEnter = document.getElementById("btnEnter");
-  const btnCancel = document.getElementById("btnCancel");
-  const pwdMsg = document.getElementById("pwdMsg");
-
   const legendEl = document.getElementById("legend");
-
-  /* =========================
-     HELPERS
-     ========================= */
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  function renderWords(wordsParsed, targetEl){
-    // If glyph lib provides renderWords, use it. Otherwise a minimal renderer.
-    if(typeof Q.renderWords === "function"){
-      // Ensure we don't wipe dust overlay container
-      const keepDust = targetEl.querySelector(".dust");
-      Q.renderWords(wordsParsed, targetEl);
-      if(keepDust && !targetEl.querySelector(".dust")) targetEl.prepend(keepDust);
-      return;
-    }
-
-    targetEl.innerHTML = `<div class="dust" id="dust"></div>`;
-    const dustEl = targetEl.querySelector(".dust");
-
-    wordsParsed.forEach((w, idx) => {
-      const wordWrap = document.createElement("div");
-      wordWrap.className = "word";
-      w.tokens.forEach((t, i) => {
-        const cell = document.createElement("div");
-        cell.innerHTML = Q.svgGlyph(t, { negate: w.opts?.[i]?.negate === true });
-        wordWrap.appendChild(cell);
-      });
-      targetEl.appendChild(wordWrap);
-      if(idx !== wordsParsed.length - 1){
-        const pill = document.createElement("span");
-        pill.className = "pill";
-        pill.textContent = "⟂";
-        targetEl.appendChild(pill);
-      }
-    });
-
-    // restore dust reference
-    if(dustEl) targetEl.prepend(dustEl);
-  }
-
-  function quadraToGlossSafe(s){
-    if(typeof Q.quadraToGloss === "function") return Q.quadraToGloss(s);
-    // fallback: identity
-    return (s||"").trim();
-  }
-
-  function spawnDust(){
-    // wipe previous
-    dust.innerHTML = "";
-    const n = 120; // dense, fast
-    const rect = quadraOutput.getBoundingClientRect();
-    const w = rect.width;
-    const h = Math.max(rect.height, 96);
-
-    for(let i=0;i<n;i++){
-      const p = document.createElement("i");
-      const x = Math.random()*w;
-      const y = Math.random()*h;
-
-      // start offset (scatter) -> 0
-      const sx = (Math.random()*2-1) * (w*0.35);
-      const sy = (Math.random()*2-1) * (h*0.35);
-
-      p.style.left = x + "px";
-      p.style.top  = y + "px";
-      p.style.setProperty("--sx", sx + "px");
-      p.style.setProperty("--sy", sy + "px");
-      p.style.animationDelay = (Math.random()*110) + "ms";
-      dust.appendChild(p);
-    }
-  }
+  const apiLabel = document.getElementById("apiLabel");
 
   /* =========================
      API
@@ -594,10 +323,8 @@ non possibile"></textarea>
       const r = await fetch(`${API_BASE}/`, { method:"GET" });
       const t = await r.text();
       const ok = r.ok && (t || "").includes("quadra-api ok");
-      apiDot.className = "dot " + (ok ? "ok" : "bad");
-      apiLabel.textContent = ok ? "API: online" : "API: inattesa";
+      apiLabel.textContent = ok ? "API: online" : "API: risposta inattesa";
     }catch(e){
-      apiDot.className = "dot bad";
       apiLabel.textContent = "API: offline";
     }
   }
@@ -614,79 +341,66 @@ non possibile"></textarea>
   }
 
   /* =========================
-     LANDING LOGIC (IT -> QUADRA only)
+     RENDER
      ========================= */
-  async function doTranslate(){
-    mustHaveGlyphLib();
+  function renderWords(parsed){
+    quadraOutput.innerHTML = "";
+    quadraOutput.classList.remove("fadeIn");
+    // word separation: the parser returns array of words with tokens
+    parsed.forEach((w, idx) => {
+      const word = document.createElement("div");
+      word.className = "word";
+      w.tokens.forEach((t, i) => {
+        const cell = document.createElement("div");
+        cell.innerHTML = Q.svgGlyph(t, { negate: w.opts?.[i]?.negate === true });
+        word.appendChild(cell);
+      });
+      quadraOutput.appendChild(word);
 
-    const text = (itInput.value || "").trim();
-    if(!text){
-      quadraOutput.innerHTML = `<div class="dust" id="dust"></div>`;
-      glossOutput.textContent = "";
-      return;
-    }
-
-    btnTranslate.disabled = true;
-    btnTranslate.textContent = "Generazione…";
-
-    try{
-      spawnDust();
-      const data = await apiTranslate(text);
-      const quadra = (data.quadra || "").trim();
-
-      const parsed = Q.parseQuadraString(quadra);
-      renderWords(parsed, quadraOutput);
-
-      glossOutput.textContent = quadraToGlossSafe(quadra);
-    }catch(e){
-      quadraOutput.innerHTML = `<div class="dust" id="dust"></div>`;
-      glossOutput.textContent = "Errore API: impossibile tradurre.";
-    }finally{
-      btnTranslate.disabled = false;
-      btnTranslate.textContent = "Genera Quadra";
-    }
+      if(idx !== parsed.length - 1){
+        const sep = document.createElement("div");
+        sep.className = "sep";
+        sep.textContent = "⟂";
+        quadraOutput.appendChild(sep);
+      }
+    });
+    quadraOutput.classList.add("fadeIn");
   }
 
-  btnTranslate.addEventListener("click", doTranslate);
-
-  btnClear.addEventListener("click", () => {
-    itInput.value = "";
-    quadraOutput.innerHTML = `<div class="dust" id="dust"></div>`;
-    glossOutput.textContent = "";
-  });
-
-  btnCopyGloss.addEventListener("click", async () => {
-    const t = glossOutput.textContent || "";
-    if(!t) return;
-    try{ await navigator.clipboard.writeText(t); }catch(e){}
-  });
-
-  /* =========================
-     LEGEND (bottom)
-     ========================= */
-  function legendDescription(token){
-    // qui puoi scrivere micro-significati “umani” migliori, se vuoi.
-    // fallback: token stesso.
+  function legendMeaning(token){
     const map = {
       OGGETTO:"entità oggettuale",
-      PERSONA:"agente/persona",
-      LUOGO:"spazio/luogo",
+      PERSONA:"agente / persona",
+      LUOGO:"spazio / luogo",
       ATTIVO:"agenzia attiva",
       PASSIVO:"agenzia passiva",
       FERMO:"stato stabile",
       MOVIMENTO:"stato dinamico",
-      PRESENTE:"tempo/presenza",
-      ASSENTE:"assenza/negazione",
+      PRESENTE:"presenza / tempo",
+      ASSENTE:"assenza (negazione interna)",
       RELAZIONE:"relazione",
       INIZIO:"inizio",
-      FINE:"fine"
+      FINE:"fine",
+      CONTENITORE:"contenitore",
+      APERTO:"aperto",
+      CHIUSO:"chiuso",
+      PIENO:"pieno",
+      VUOTO:"vuoto",
+      DENTRO:"dentro",
+      FUORI:"fuori",
+      VICINO:"vicino",
+      LONTANO:"lontano",
+      TRASFORMAZIONE:"trasformazione",
+      CAUSA:"causa",
+      SCOPO:"scopo",
+      POSSESSO:"possesso",
+      POSSIBILE:"possibile",
+      DOVERE:"dovere"
     };
     return map[token] || "concetto";
   }
 
   function renderLegend(){
-    mustHaveGlyphLib();
-
     const defs = Q.GLYPH_DEFS || {};
     const tokens = Object.keys(defs);
 
@@ -697,8 +411,8 @@ non possibile"></textarea>
       item.innerHTML = `
         <div>${Q.svgGlyph(t)}</div>
         <div>
-          <div class="name">${escapeHtml(t)}</div>
-          <div class="desc">${escapeHtml(legendDescription(t))}</div>
+          <div class="legend-name">${t}</div>
+          <div class="legend-desc">${legendMeaning(t)}</div>
         </div>
       `;
       legendEl.appendChild(item);
@@ -706,54 +420,41 @@ non possibile"></textarea>
   }
 
   /* =========================
-     TECH GATE
+     ACTIONS
      ========================= */
-  function openModal(){
-    pwd.value = "";
-    pwdMsg.textContent = "";
-    modal.classList.add("show");
-    setTimeout(()=> pwd.focus(), 50);
-  }
-  function closeModal(){
-    modal.classList.remove("show");
-  }
-
-  openTech.addEventListener("click", openModal);
-  btnCancel.addEventListener("click", closeModal);
-  modal.addEventListener("click", (e) => {
-    if(e.target === modal) closeModal();
-  });
-
-  function unlockTech(){
-    techArea.style.display = "block";
-    closeModal();
-    // scroll leggero
-    window.scrollTo({ top: techArea.getBoundingClientRect().top + window.scrollY - 90, behavior:"smooth" });
-  }
-
-  btnEnter.addEventListener("click", () => {
-    const val = (pwd.value || "").trim();
-    if(val === "tecnico"){
-      unlockTech();
-    }else{
-      pwdMsg.textContent = "Password errata.";
+  async function doTranslate(){
+    assertGlyphLib();
+    const text = (itInput.value || "").trim();
+    if(!text){
+      quadraOutput.innerHTML = "";
+      return;
     }
+
+    btnTranslate.disabled = true;
+    btnTranslate.textContent = "…";
+
+    try{
+      const data = await apiTranslate(text);
+      const quadra = (data.quadra || "").trim();
+      const parsed = Q.parseQuadraString(quadra);
+      renderWords(parsed);
+    }catch(e){
+      quadraOutput.innerHTML = "";
+      apiLabel.textContent = "API: errore";
+    }finally{
+      btnTranslate.disabled = false;
+      btnTranslate.textContent = "Translate";
+    }
+  }
+
+  btnTranslate.addEventListener("click", doTranslate);
+  itInput.addEventListener("keydown", (e) => {
+    if((e.metaKey || e.ctrlKey) && e.key === "Enter") doTranslate();
   });
 
-  pwd.addEventListener("keydown", (e) => {
-    if(e.key === "Enter") btnEnter.click();
-    if(e.key === "Escape") closeModal();
-  });
-
-  /* =========================
-     INIT
-     ========================= */
+  /* init */
   apiHealth();
   renderLegend();
-
-  // demo (facoltativo)
-  itInput.value = "bottiglia piena luogo abbandonato";
-  doTranslate();
 </script>
 </body>
 </html>
