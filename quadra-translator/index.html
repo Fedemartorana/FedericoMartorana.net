@@ -10,61 +10,57 @@
       --fg:#000000;
       --muted:#6b6b6b;
       --hair:#e9e9e9;
+      --radius:14px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      --radius:12px;
+      --sans: "Neue Haas Grotesk Text Pro", "Neue Haas Grotesk", Helvetica, Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --cell:64px;
+      --gap:10px;
     }
     *{ box-sizing:border-box; }
     body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
-    a{ color:inherit; }
-
     header{
-      position:sticky; top:0; z-index:10;
+      position:sticky; top:0; z-index:20;
       background:var(--bg);
       border-bottom:1px solid var(--hair);
       padding:14px 18px;
       display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
-    header .brand{
-      display:flex; flex-direction:column; gap:4px;
-    }
-    header h1{
+    .brand{ display:flex; flex-direction:column; gap:4px; }
+    h1{
       margin:0;
       font-size:14px;
       letter-spacing:0.12em;
       text-transform:uppercase;
       font-weight:600;
     }
-    header .sub{
-      font-family:var(--mono);
-      font-size:11px;
+    .sub{
+      font-size:12px;
       color:var(--muted);
       letter-spacing:0.02em;
     }
 
-    /* top-right square portal */
-    .portalBtn{
+    /* top-right square */
+    .techDot{
       width:16px; height:16px;
-      border:1px solid #000;
+      border:1.5px solid #000;
       cursor:pointer;
       user-select:none;
     }
-    .portalBtn:active{ transform: translateY(1px); }
+    .techDot:active{ transform: translateY(1px); }
 
     main{
-      padding:18px;
       max-width:1100px;
       margin:0 auto;
+      padding:18px;
     }
 
-    /* Landing layout */
-    .landing{
+    .grid{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap:16px;
     }
     @media (max-width: 980px){
-      .landing{ grid-template-columns:1fr; }
+      .grid{ grid-template-columns: 1fr; }
     }
 
     .card{
@@ -78,10 +74,15 @@
       font-size:12px;
       letter-spacing:0.12em;
       text-transform:uppercase;
-      font-family:var(--mono);
       font-weight:600;
     }
-    .muted{ color:var(--muted); font-family:var(--mono); font-size:12px; }
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:10px;
+      line-height:1.45;
+    }
+
     textarea, input, select{
       width:100%;
       border:1px solid #dcdcdc;
@@ -92,13 +93,13 @@
       outline:none;
       background:#fff;
     }
-    textarea{ min-height:170px; resize:vertical; }
+    textarea{ min-height:180px; resize:vertical; }
 
     .row{
       display:flex; gap:10px; flex-wrap:wrap; align-items:center;
       margin-top:10px;
     }
-    .row > *{ flex:1; min-width: 160px; }
+    .row > *{ flex:1; min-width:160px; }
 
     button{
       border:1px solid #dcdcdc;
@@ -110,27 +111,24 @@
       letter-spacing:0.08em;
       text-transform:uppercase;
       cursor:pointer;
-      transition: transform .04s ease, opacity .15s ease;
     }
     button:disabled{ opacity:.45; cursor:not-allowed; }
-    button:active{ transform: translateY(1px); }
     .btn-primary{ border-color:#000; }
 
     .hr{ height:1px; background:var(--hair); margin:14px 0; }
 
-    /* Output area */
-    .outputBox{
+    /* Quadra output */
+    .outBox{
+      position:relative;
       border:1px dashed #e1e1e1;
       border-radius:12px;
       padding:10px;
-      min-height:120px;
-      position:relative;
+      min-height: calc(var(--cell) + 44px);
       overflow:hidden;
     }
     .quadra-line{
-      display:flex; flex-wrap:wrap; gap:10px; align-items:center;
-      position:relative;
-      z-index:2;
+      display:flex; flex-wrap:wrap; gap:var(--gap); align-items:center;
+      position:relative; z-index:2;
       opacity:0;
       transform: translateY(6px);
       transition: opacity .35s ease, transform .35s ease;
@@ -139,13 +137,7 @@
       opacity:1;
       transform: translateY(0);
     }
-    .word{
-      display:flex; gap:10px; align-items:center;
-      padding:8px;
-      border:1px solid #efefef;
-      border-radius:12px;
-      background:#fff;
-    }
+    .word{ display:flex; gap:var(--gap); align-items:center; padding:8px; border:1px solid #efefef; border-radius:12px; background:#fff; }
     .pill{
       display:inline-block;
       font-family:var(--mono);
@@ -153,8 +145,7 @@
       border:1px solid #e9e9e9;
       border-radius:999px;
       padding:4px 8px;
-      color:#000;
-      background:#fff;
+      color:#000; background:#fff;
     }
     .label{
       margin-top:8px;
@@ -164,13 +155,13 @@
       word-break:break-word;
     }
 
-    /* Particle field (effect) */
+    /* Particles */
     .particles{
       position:absolute;
       inset:0;
       z-index:1;
-      opacity:0;
       pointer-events:none;
+      opacity:0;
       transition: opacity .2s ease;
     }
     .particles.on{ opacity:1; }
@@ -179,20 +170,20 @@
       width:3px; height:3px;
       border-radius:999px;
       background:#000;
-      opacity:.75;
+      opacity:.6;
       transform: translate(-50%,-50%);
-      animation: wander 1.1s linear infinite;
+      animation: wander 1.25s linear infinite;
       will-change: transform, left, top, opacity;
     }
     @keyframes wander{
-      0%   { transform: translate(-50%,-50%) translate(0,0); opacity:.55; }
-      25%  { transform: translate(-50%,-50%) translate(10px,-8px); opacity:.85; }
-      50%  { transform: translate(-50%,-50%) translate(-6px,12px); opacity:.7; }
-      75%  { transform: translate(-50%,-50%) translate(8px,6px); opacity:.9; }
-      100% { transform: translate(-50%,-50%) translate(0,0); opacity:.55; }
+      0%   { transform: translate(-50%,-50%) translate(0,0); opacity:.45; }
+      25%  { transform: translate(-50%,-50%) translate(10px,-6px); opacity:.8; }
+      50%  { transform: translate(-50%,-50%) translate(-7px,12px); opacity:.6; }
+      75%  { transform: translate(-50%,-50%) translate(8px,6px); opacity:.85; }
+      100% { transform: translate(-50%,-50%) translate(0,0); opacity:.45; }
     }
 
-    /* Modal */
+    /* Modal password */
     .modal{
       position:fixed;
       inset:0;
@@ -205,7 +196,7 @@
     .modal.on{ display:flex; }
     .modalCard{
       width:min(520px, calc(100vw - 36px));
-      border:1px solid #000;
+      border:1.5px solid #000;
       border-radius:16px;
       padding:16px;
       background:#fff;
@@ -218,39 +209,19 @@
       margin:0 0 10px 0;
     }
     .modalHint{
-      font-family:var(--mono);
-      font-size:11px;
+      font-size:12px;
       color:var(--muted);
       line-height:1.45;
       margin:0 0 12px 0;
     }
+    .msg{ font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right; }
 
-    /* Technical portal area */
-    .tech{
-      display:none;
-      margin-top:18px;
-    }
-    .tech.on{ display:block; }
+    /* Tech area visibility */
+    #techArea{ display:none; margin-top:18px; }
+    #techArea.on{ display:block; }
+    #landingArea.off{ display:none; }
 
-    .statusbar{
-      display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;
-      font-family:var(--mono); font-size:12px; color:var(--muted);
-    }
-    .dot{
-      width:8px; height:8px; border-radius:999px; background:#bbb; display:inline-block;
-      border:1px solid #e9e9e9;
-    }
-    .dot.ok{ background:#000; }
-    .dot.bad{ background:#fff; border-color:#000; }
-
-    .suggest{
-      border:1px solid #efefef; border-radius:12px; padding:10px; background:#fff;
-      display:flex; flex-direction:column; gap:10px;
-    }
-    .suggest .head{ display:flex; justify-content:space-between; gap:8px; align-items:center; }
-    .suggest .title{ font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; }
-    .suggest .why{ font-family:var(--mono); font-size:11px; color:var(--muted); }
-    .suggest .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    /* Tech: compact table */
     .table-like{ border:1px solid #efefef; border-radius:12px; overflow:hidden; }
     .table-like .r{ display:grid; grid-template-columns: 1fr 1.4fr; gap:10px; padding:10px; border-bottom:1px solid #f0f0f0; }
     .table-like .r:last-child{ border-bottom:none; }
@@ -265,33 +236,25 @@
     <h1>Quadra Translator</h1>
     <div class="sub">Italiano ⇄ Quadra • concetti • negazione = assenza interna</div>
   </div>
-
-  <div style="display:flex; gap:14px; align-items:center;">
-    <div class="statusbar" style="min-width:180px;">
-      <span class="dot" id="apiDot"></span>
-      <span id="apiLabel">API: check…</span>
-    </div>
-    <div class="portalBtn" id="portalBtn" title="Area tecnica"></div>
-  </div>
+  <div class="techDot" id="techDot" title="Area tecnica"></div>
 </header>
 
 <main>
   <!-- LANDING -->
-  <section class="landing" id="landing">
+  <section id="landingArea" class="grid">
     <div class="card">
       <h2>Italiano → Quadra</h2>
-      <div class="muted">Testo (parole / frasi)</div>
-      <textarea id="itInput" placeholder="Esempi: ciao / bottiglia / luogo abbandonato / non presente"></textarea>
+      <div class="hint">Scrivi una frase. Il backend traduce e propone concetti (token) se manca vocabolario.</div>
+      <textarea id="itInput" placeholder="es: ciao / bottiglia / luogo abbandonato / non presente"></textarea>
 
       <div class="row">
-        <button class="btn-primary" id="btnItToQuadra">Traduci</button>
-        <button id="btnClearLanding">Pulisci</button>
+        <button class="btn-primary" id="btnTranslate">Traduci</button>
+        <button id="btnClear">Pulisci</button>
       </div>
 
       <div class="hr"></div>
 
-      <h2>Output Quadra</h2>
-      <div class="outputBox" id="outBox">
+      <div class="outBox" id="outBox">
         <div class="particles" id="particles"></div>
         <div class="quadra-line" id="quadraOutput"></div>
       </div>
@@ -299,40 +262,31 @@
     </div>
 
     <div class="card">
-      <h2>Quadra → Italiano (gloss)</h2>
-      <div class="muted">Incolla una sequenza token (es: OGGETTO+PASSIVO+FERMO+PRESENTE / ...)</div>
-      <textarea id="quadraInput" placeholder="Es: OGGETTO+PASSIVO+FERMO+PRESENTE / LUOGO+PASSIVO+FERMO+ASSENTE"></textarea>
+      <h2>Quadra → Gloss</h2>
+      <div class="hint">Incolla token Quadra. Qui ottieni la lettura strutturale (gloss).</div>
+      <textarea id="quadraInput" placeholder="es: OGGETTO+PASSIVO+FERMO+PRESENTE / LUOGO+PASSIVO+FERMO+ASSENTE"></textarea>
 
       <div class="row">
-        <button class="btn-primary" id="btnQuadraToGloss">Converti</button>
-        <button id="btnCopyGloss">Copia gloss</button>
+        <button class="btn-primary" id="btnGloss">Converti</button>
+        <button id="btnCopyGloss">Copia</button>
       </div>
 
       <div class="hr"></div>
 
-      <div class="muted">Gloss</div>
       <textarea id="glossOnly" readonly></textarea>
-      <div class="tiny" style="font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:8px;">
-        Nota: qui la “traduzione” è una lettura strutturale dei token (gloss), non una parafrasi naturale.
-      </div>
     </div>
   </section>
 
-  <!-- TECH PORTAL (hidden until password) -->
-  <section class="tech" id="tech">
+  <!-- TECH AREA (existing functions) -->
+  <section id="techArea">
     <div class="card">
       <h2>Area tecnica</h2>
-      <div class="muted">Vocabolario (Cloud D1) + suggerimenti AI + builder</div>
+      <div class="hint">Suggerimenti AI, salvataggio su Cloud D1, builder e cache locale.</div>
 
-      <div class="hr"></div>
-
-      <div class="landing" style="grid-template-columns: 1.3fr 1fr; gap:16px;">
+      <div class="grid" style="grid-template-columns: 1.3fr 1fr; gap:16px;">
         <div class="card" style="border:none; padding:0;">
-          <h2>Traduzione & Proposte AI</h2>
-
-          <div class="muted">Italiano</div>
+          <h2>Traduzione AI + proposte</h2>
           <textarea id="itInputTech" placeholder="Scrivi parole/frasi..."></textarea>
-
           <div class="row">
             <button class="btn-primary" id="btnTranslateTech">Italiano → Quadra (AI)</button>
             <button id="btnClearTech">Pulisci</button>
@@ -340,45 +294,34 @@
 
           <div class="hr"></div>
 
-          <h2>Proposte AI (parole non in vocabolario)</h2>
-          <div class="muted" style="margin-bottom:10px;">
-            Accetta & salva → scrive su Cloudflare D1 (persistente).
-          </div>
+          <h2>Proposte (missing)</h2>
           <div id="suggestionsTech"></div>
 
           <div class="hr"></div>
 
           <h2>Vocabolario (cloud)</h2>
           <div class="row">
-            <input id="dictKey" placeholder="parola italiana (es. bottiglia)" />
-            <input id="dictVal" placeholder="sequenza (es. OGGETTO+PASSIVO+FERMO+PRESENTE)" />
+            <input id="dictKey" placeholder="parola italiana" />
+            <input id="dictVal" placeholder="token (es: OGGETTO+PASSIVO+FERMO+PRESENTE)" />
           </div>
           <div class="row">
-            <button class="btn-primary" id="btnSaveEntry">Salva voce (cloud)</button>
-            <button id="btnFetchEntry">Cerca voce (cloud)</button>
-            <button id="btnResetLocalCache">Reset cache locale</button>
+            <button class="btn-primary" id="btnSaveEntry">Salva (cloud)</button>
+            <button id="btnFetchEntry">Cerca (cloud)</button>
+            <button id="btnResetLocalCache">Reset cache</button>
           </div>
 
           <div class="hr"></div>
 
-          <h2>Cache locale (browser)</h2>
+          <h2>Cache locale</h2>
           <div id="dictList" class="table-like"></div>
         </div>
 
         <div class="card" style="border:none; padding:0;">
-          <h2>Output Quadra</h2>
-          <div class="outputBox">
+          <h2>Output</h2>
+          <div class="outBox" style="min-height:auto;">
             <div class="quadra-line show" id="quadraOutputTech"></div>
           </div>
           <div class="label" id="glossOutputTech"></div>
-
-          <div class="hr"></div>
-
-          <h2>Legenda</h2>
-          <div class="outputBox" style="min-height:auto;">
-            <div class="quadra-line show" id="legend"></div>
-          </div>
-          <div class="label" id="legendLabels"></div>
 
           <div class="hr"></div>
 
@@ -392,17 +335,17 @@
           <div class="row">
             <select id="slot5"></select>
             <select id="slot6"></select>
-            <button class="btn-primary" id="btnAddWord">Aggiungi parola</button>
+            <button class="btn-primary" id="btnAddWord">Aggiungi</button>
           </div>
 
-          <div class="outputBox" style="margin-top:10px; min-height:auto;">
+          <div class="outBox" style="min-height:auto; margin-top:10px;">
             <div class="quadra-line show" id="phrasePreview"></div>
           </div>
           <div class="label" id="phraseGloss"></div>
 
           <div class="row">
             <button id="btnClearPhrase">Pulisci frase</button>
-            <button class="btn-primary" id="btnUsePhraseAsOutput">Usa frase come output</button>
+            <button class="btn-primary" id="btnUsePhraseAsOutput">Usa frase</button>
           </div>
         </div>
       </div>
@@ -413,608 +356,704 @@
 <!-- PASSWORD MODAL -->
 <div class="modal" id="modal">
   <div class="modalCard">
-    <p class="modalTitle">Portale tecnico</p>
-    <p class="modalHint">
-      Inserisci password per accedere all’area tecnica.
-      <br/>Suggerimento: è letterale.
-    </p>
-
+    <p class="modalTitle">Area tecnica</p>
+    <p class="modalHint">Inserisci password per entrare.</p>
     <div class="row" style="margin-top:0;">
       <input id="passInput" type="password" placeholder="password" autocomplete="off" />
       <button class="btn-primary" id="btnEnter">Entra</button>
     </div>
     <div class="row">
       <button id="btnCancel">Annulla</button>
-      <div class="muted" id="passMsg" style="text-align:right;"></div>
+      <div class="msg" id="passMsg"></div>
     </div>
   </div>
 </div>
 
-<script type="module">
-  import { GLYPHS, glyphSVG } from "./quadra-glyphs.js";
+<script>
+/* =========================
+   CONFIG
+   ========================= */
+const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
 
-  /* =========================
-     CONFIG
-     ========================= */
-  const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
+/* =========================
+   GLYPHS (SVG RENDERER)
+   NOTE: this is self-contained and does NOT depend on quadra-glyphs.js
+   ========================= */
+const GLYPH_DEFS = {
+  OGGETTO:   { frame: "closed", fill: "empty" },     // unico con contorno (rimane)
+  PERSONA:   { frame: "none", fill: "solid" },
+  LUOGO:     { frame: "none", fill: "empty", base:"bottom" },
 
-  const ALL_TOKENS = Object.keys(GLYPHS);
+  ATTIVO:    { frame: "none", fill: "empty", dot: "top" },
+  PASSIVO:   { frame: "none", fill: "empty", dot: "bottom" },
 
-  /* =========================
-     UTIL
-     ========================= */
-  function escapeHtml(s){
-    return String(s)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+  FERMO:     { frame: "none", fill: "empty", nucleus: true },
+  MOVIMENTO: { frame: "none", fill: "empty", band: true },
+
+  PRESENTE:  { frame: "none", fill: "empty", corners: true },
+  ASSENTE:   { frame: "none", fill: "empty", absence: true },
+
+  RELAZIONE: { frame: "none", fill: "empty", link: true },
+  INIZIO:    { frame: "none", fill: "empty", strokeTop: true },
+  FINE:      { frame: "none", fill: "empty", strokeBot: true },
+
+  // nuovi token (coerenti con Worker)
+  CONTENITORE: { frame:"none", fill:"empty", innerBox:true },
+  APERTO:      { frame:"none", fill:"empty", openTop:true },
+  CHIUSO:      { frame:"none", fill:"empty", barTop:true },
+  PIENO:       { frame:"none", fill:"solid", bigCore:true },
+  VUOTO:       { frame:"none", fill:"empty", bigRing:true },
+  DENTRO:      { frame:"none", fill:"empty", dot:"centerSmall" },
+  FUORI:       { frame:"none", fill:"empty", dot:"rightSmall" },
+  VICINO:      { frame:"none", fill:"empty", dot:"leftSmall" },
+  LONTANO:     { frame:"none", fill:"empty", dot:"farRightSmall" },
+  TRASFORMAZIONE:{ frame:"none", fill:"empty", diag:true },
+
+  CAUSA:       { frame:"none", fill:"empty", arrowRight:true },
+  SCOPO:       { frame:"none", fill:"empty", arrowUp:true },
+  POSSESSO:    { frame:"none", fill:"empty", doubleCore:true },
+  POSSIBILE:   { frame:"none", fill:"empty", dashedRing:true },
+  DOVERE:      { frame:"none", fill:"empty", heavyBottom:true }
+};
+
+const ALL_TOKENS = Object.keys(GLYPH_DEFS);
+
+function svgGlyph(token, options = {}){
+  const def = GLYPH_DEFS[token];
+  if(!def) return "";
+
+  const size = 64;
+  const pad = 7;
+  const x0 = pad, y0 = pad, w = size - 2*pad, h = size - 2*pad;
+  const stroke = "#000";
+  const line = 2.5;
+  const fillSolid = "#000";
+  const fillEmpty = "none";
+
+  // frame segments (only OGGETTO uses closed)
+  const frameType = def.frame || "none";
+  let frame = "";
+  if(frameType === "closed"){
+    frame = `
+      <rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="none" stroke="${stroke}" stroke-width="${line}"/>
+    `;
   }
 
-  function safeToken(t){ return ALL_TOKENS.includes(t); }
+  const baseFill = (def.fill === "solid") ? fillSolid : fillEmpty;
 
-  function parseQuadraString(s){
-    const words = (s || "").split("/").map(w => w.trim()).filter(Boolean);
-    return words.map(word => {
-      const rawTokens = word.split("+").map(t => t.trim()).filter(Boolean);
-      const tokens = [];
-      const opts = [];
-      rawTokens.forEach(rt => {
-        let negate = false;
-        let t = rt.toUpperCase();
-        if(t.startsWith("!")){
-          negate = true;
-          t = t.slice(1);
-        }
-        tokens.push(t);
-        opts.push({ negate });
-      });
-      return { tokens, opts };
+  // base: PERSONA etc no frame; use shapes
+  let shapes = "";
+
+  if(def.fill === "solid" && token === "PERSONA"){
+    shapes += `<circle cx="${x0+w/2}" cy="${y0+h/2}" r="${w*0.18}" fill="${fillSolid}"/>`;
+  }
+
+  if(def.base === "bottom"){
+    shapes += `<line x1="${x0+w*0.2}" y1="${y0+h*0.85}" x2="${x0+w*0.8}" y2="${y0+h*0.85}" stroke="${stroke}" stroke-width="${line+0.6}" />`;
+  }
+
+  if(def.dot){
+    const cx = x0 + w/2;
+    let cy = y0 + h*0.22;
+    let r = 3.2;
+
+    if(def.dot === "bottom"){ cy = y0 + h*0.78; }
+    if(def.dot === "centerSmall"){ cy = y0 + h/2; r = 2.6; }
+    if(def.dot === "rightSmall"){ cy = y0 + h/2; r = 2.6; return wrapDot(x0+w*0.82, cy, r); }
+    if(def.dot === "leftSmall"){ cy = y0 + h/2; r = 2.6; return wrapDot(x0+w*0.18, cy, r); }
+    if(def.dot === "farRightSmall"){ cy = y0 + h/2; r = 2.6; return wrapDot(x0+w*0.92, cy, r); }
+
+    shapes += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fillSolid}" />`;
+  }
+
+  function wrapDot(cx, cy, r){
+    return `
+      <svg width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="${token}">
+        ${frame}
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${fillSolid}" />
+        ${negOverlay()}
+      </svg>
+    `;
+  }
+
+  if(def.nucleus){
+    shapes += `<rect x="${x0 + w*0.42}" y="${y0 + h*0.42}" width="${w*0.16}" height="${h*0.16}" fill="${fillSolid}" />`;
+  }
+  if(def.band){
+    shapes += `<rect x="${x0 + w*0.18}" y="${y0 + h*0.44}" width="${w*0.64}" height="${h*0.12}" fill="${fillSolid}" />`;
+  }
+  if(def.corners){
+    const c = 8;
+    shapes += `
+      <rect x="${x0}" y="${y0}" width="${c}" height="${c}" fill="${fillSolid}"/>
+      <rect x="${x0+w-c}" y="${y0}" width="${c}" height="${c}" fill="${fillSolid}"/>
+      <rect x="${x0}" y="${y0+h-c}" width="${c}" height="${c}" fill="${fillSolid}"/>
+      <rect x="${x0+w-c}" y="${y0+h-c}" width="${c}" height="${c}" fill="${fillSolid}"/>
+    `;
+  }
+  if(def.absence){
+    const pts = [
+      [x0+w*0.30, y0+h*0.30],
+      [x0+w*0.70, y0+h*0.30],
+      [x0+w*0.30, y0+h*0.70],
+      [x0+w*0.70, y0+h*0.70],
+      [x0+w*0.50, y0+h*0.50]
+    ];
+    shapes += pts.map(([cx,cy]) =>
+      `<rect x="${cx-2.6}" y="${cy-2.6}" width="5.2" height="5.2" fill="${fillSolid}" />`
+    ).join("");
+  }
+  if(def.link){
+    shapes += `<rect x="${x0+w*0.48}" y="${y0+h*0.20}" width="${w*0.04}" height="${h*0.60}" fill="${fillSolid}" />`;
+  }
+  if(def.strokeTop){
+    shapes += `<line x1="${x0+w*0.2}" y1="${y0+h*0.20}" x2="${x0+w*0.8}" y2="${y0+h*0.20}" stroke="${stroke}" stroke-width="${line+1.2}"/>`;
+  }
+  if(def.strokeBot){
+    shapes += `<line x1="${x0+w*0.2}" y1="${y0+h*0.80}" x2="${x0+w*0.8}" y2="${y0+h*0.80}" stroke="${stroke}" stroke-width="${line+1.2}"/>`;
+  }
+
+  if(def.innerBox){
+    shapes += `<rect x="${x0+w*0.32}" y="${y0+h*0.32}" width="${w*0.36}" height="${h*0.36}" fill="none" stroke="${stroke}" stroke-width="${line}"/>`;
+  }
+  if(def.openTop){
+    shapes += `<line x1="${x0+w*0.2}" y1="${y0+h*0.22}" x2="${x0+w*0.8}" y2="${y0+h*0.22}" stroke="${stroke}" stroke-width="${line}"/>`;
+  }
+  if(def.barTop){
+    shapes += `<rect x="${x0+w*0.2}" y="${y0+h*0.16}" width="${w*0.6}" height="${h*0.10}" fill="${fillSolid}"/>`;
+  }
+  if(def.bigCore){
+    shapes += `<circle cx="${x0+w/2}" cy="${y0+h/2}" r="${w*0.22}" fill="${fillSolid}"/>`;
+  }
+  if(def.bigRing){
+    shapes += `<circle cx="${x0+w/2}" cy="${y0+h/2}" r="${w*0.22}" fill="none" stroke="${stroke}" stroke-width="${line}"/>`;
+  }
+  if(def.diag){
+    shapes += `<line x1="${x0+w*0.25}" y1="${y0+h*0.75}" x2="${x0+w*0.75}" y2="${y0+h*0.25}" stroke="${stroke}" stroke-width="${line}"/>`;
+  }
+  if(def.arrowRight){
+    shapes += `
+      <line x1="${x0+w*0.2}" y1="${y0+h*0.5}" x2="${x0+w*0.72}" y2="${y0+h*0.5}" stroke="${stroke}" stroke-width="${line}"/>
+      <polygon points="${x0+w*0.72},${y0+h*0.40} ${x0+w*0.85},${y0+h*0.50} ${x0+w*0.72},${y0+h*0.60}" fill="${fillSolid}"/>
+    `;
+  }
+  if(def.arrowUp){
+    shapes += `
+      <line x1="${x0+w*0.5}" y1="${y0+h*0.72}" x2="${x0+w*0.5}" y2="${y0+h*0.32}" stroke="${stroke}" stroke-width="${line}"/>
+      <polygon points="${x0+w*0.40},${y0+h*0.32} ${x0+w*0.50},${y0+h*0.18} ${x0+w*0.60},${y0+h*0.32}" fill="${fillSolid}"/>
+    `;
+  }
+  if(def.doubleCore){
+    shapes += `
+      <circle cx="${x0+w*0.42}" cy="${y0+h*0.5}" r="${w*0.11}" fill="${fillSolid}"/>
+      <circle cx="${x0+w*0.58}" cy="${y0+h*0.5}" r="${w*0.11}" fill="${fillSolid}"/>
+    `;
+  }
+  if(def.dashedRing){
+    shapes += `<circle cx="${x0+w/2}" cy="${y0+h/2}" r="${w*0.22}" fill="none" stroke="${stroke}" stroke-width="${line}" stroke-dasharray="6 4"/>`;
+  }
+  if(def.heavyBottom){
+    shapes += `<rect x="${x0+w*0.2}" y="${y0+h*0.72}" width="${w*0.6}" height="${h*0.12}" fill="${fillSolid}"/>`;
+  }
+
+  function negOverlay(){
+    if(options.negate !== true) return "";
+    const pts = [
+      [x0+w*0.38, y0+h*0.38],
+      [x0+w*0.62, y0+h*0.38],
+      [x0+w*0.38, y0+h*0.62],
+      [x0+w*0.62, y0+h*0.62]
+    ];
+    return pts.map(([cx,cy]) => `<rect x="${cx-2.2}" y="${cy-2.2}" width="4.4" height="4.4" fill="${fillSolid}" />`).join("");
+  }
+
+  return `
+    <svg width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="${token}">
+      ${frame}
+      ${shapes}
+      ${negOverlay()}
+    </svg>
+  `;
+}
+
+function renderWords(wordsParsed, targetEl){
+  targetEl.innerHTML = "";
+  wordsParsed.forEach((w, idx) => {
+    const wordWrap = document.createElement("div");
+    wordWrap.className = "word";
+    w.tokens.forEach((t, i) => {
+      const cell = document.createElement("div");
+      cell.innerHTML = svgGlyph(t, { negate: w.opts[i]?.negate === true });
+      wordWrap.appendChild(cell);
     });
-  }
-
-  function quadraToGloss(text){
-    const s = (text || "").trim();
-    if(!s) return "";
-    const words = parseQuadraString(s);
-    const outWords = words.map(w => {
-      const parts = w.tokens.map((t, i) => {
-        const ok = safeToken(t);
-        const neg = w.opts[i]?.negate ? "!" : "";
-        return ok ? (neg + t) : (neg + "<?>");
-      });
-      return parts.join("+");
-    });
-    return outWords.join(" / ");
-  }
-
-  function renderWords(wordsParsed, targetEl){
-    targetEl.innerHTML = "";
-    wordsParsed.forEach((w, idx) => {
-      const wordWrap = document.createElement("div");
-      wordWrap.className = "word";
-      w.tokens.forEach((t, i) => {
-        const cell = document.createElement("div");
-        cell.innerHTML = glyphSVG(t, { negate: w.opts[i]?.negate === true });
-        wordWrap.appendChild(cell);
-      });
-      targetEl.appendChild(wordWrap);
-      if(idx !== wordsParsed.length - 1){
-        const pill = document.createElement("span");
-        pill.className = "pill";
-        pill.textContent = "⟂";
-        targetEl.appendChild(pill);
-      }
-    });
-  }
-
-  /* =========================
-     PARTICLE EFFECT (landing)
-     ========================= */
-  const particlesEl = document.getElementById("particles");
-  const quadraOutput = document.getElementById("quadraOutput");
-  const glossOutput = document.getElementById("glossOutput");
-  const outBox = document.getElementById("outBox");
-
-  function startParticles(){
-    particlesEl.innerHTML = "";
-    particlesEl.classList.add("on");
-    quadraOutput.classList.remove("show");
-
-    const rect = outBox.getBoundingClientRect();
-    const W = rect.width;
-    const H = rect.height;
-    const N = 140; // dense
-
-    for(let i=0;i<N;i++){
-      const d = document.createElement("span");
-      d.className = "pDot";
-      d.style.left = (Math.random()*W) + "px";
-      d.style.top  = (Math.random()*H) + "px";
-      d.style.animationDelay = (Math.random()*0.25) + "s";
-      d.style.opacity = (0.35 + Math.random()*0.55).toFixed(2);
-      particlesEl.appendChild(d);
-    }
-  }
-
-  function settleParticlesThenShow(){
-    // “compatta” verso il centro e poi sparisce
-    const rect = outBox.getBoundingClientRect();
-    const cx = rect.width/2;
-    const cy = rect.height/2;
-
-    const dots = [...particlesEl.querySelectorAll(".pDot")];
-    dots.forEach((d, i) => {
-      const jitter = 22;
-      const tx = cx + (Math.random()*jitter - jitter/2);
-      const ty = cy + (Math.random()*jitter - jitter/2);
-
-      d.animate([
-        { left: d.style.left, top: d.style.top, opacity: Number(d.style.opacity) },
-        { left: tx + "px", top: ty + "px", opacity: 0.0 }
-      ], {
-        duration: 650 + Math.random()*220,
-        easing: "cubic-bezier(.2,.8,.2,1)",
-        fill: "forwards",
-        delay: 250 + Math.random()*120
-      });
-    });
-
-    // show glyphs slightly after settle begins
-    setTimeout(() => {
-      particlesEl.classList.remove("on");
-      particlesEl.innerHTML = "";
-      quadraOutput.classList.add("show");
-    }, 850);
-  }
-
-  /* =========================
-     API
-     ========================= */
-  async function apiHealth(){
-    const dot = document.getElementById("apiDot");
-    const label = document.getElementById("apiLabel");
-    try{
-      const r = await fetch(`${API_BASE}/`, { method:"GET" });
-      const t = await r.text();
-      const ok = r.ok && (t || "").includes("quadra-api ok");
-      dot.className = "dot " + (ok ? "ok" : "bad");
-      label.textContent = ok ? "API: online" : "API: risposta inattesa";
-    }catch(e){
-      dot.className = "dot bad";
-      label.textContent = "API: offline / rete";
-    }
-  }
-
-  async function apiTranslate(text){
-    const r = await fetch(`${API_BASE}/translate`, {
-      method: "POST",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ text, autosave:false })
-    });
-    const data = await r.json().catch(()=> ({}));
-    if(!r.ok) throw new Error(data?.error || "translate_failed");
-    return data;
-  }
-
-  async function apiAddVocab(it, quadra){
-    const r = await fetch(`${API_BASE}/vocab/add`, {
-      method: "POST",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ it, quadra, source:"human", confidence:1 })
-    });
-    const data = await r.json().catch(()=> ({}));
-    if(!r.ok) throw new Error(data?.error || "vocab_add_failed");
-    return data;
-  }
-
-  async function apiGetVocab(it){
-    const r = await fetch(`${API_BASE}/vocab/get?it=${encodeURIComponent(it)}`, { method:"GET" });
-    const data = await r.json().catch(()=> ({}));
-    if(!r.ok) throw new Error(data?.error || "vocab_get_failed");
-    return data;
-  }
-
-  /* =========================
-     LANDING HANDLERS
-     ========================= */
-  const itInput = document.getElementById("itInput");
-  const btnItToQuadra = document.getElementById("btnItToQuadra");
-  const btnClearLanding = document.getElementById("btnClearLanding");
-
-  const quadraInput = document.getElementById("quadraInput");
-  const btnQuadraToGloss = document.getElementById("btnQuadraToGloss");
-  const btnCopyGloss = document.getElementById("btnCopyGloss");
-  const glossOnly = document.getElementById("glossOnly");
-
-  btnItToQuadra.addEventListener("click", async () => {
-    const text = (itInput.value || "").trim();
-    if(!text) return;
-
-    btnItToQuadra.disabled = true;
-    btnItToQuadra.textContent = "…";
-    glossOutput.textContent = "";
-
-    startParticles();
-
-    try{
-      const data = await apiTranslate(text);
-      const quadra = (data.quadra || "").trim();
-
-      const parsed = parseQuadraString(quadra);
-      renderWords(parsed, quadraOutput);
-      glossOutput.textContent = quadraToGloss(quadra);
-
-      // settle + reveal
-      settleParticlesThenShow();
-    }catch(e){
-      particlesEl.classList.remove("on");
-      particlesEl.innerHTML = "";
-      quadraOutput.innerHTML = "";
-      quadraOutput.classList.add("show");
-      glossOutput.textContent = "Errore API: impossibile tradurre.";
-    }finally{
-      btnItToQuadra.disabled = false;
-      btnItToQuadra.textContent = "Traduci";
+    targetEl.appendChild(wordWrap);
+    if(idx !== wordsParsed.length - 1){
+      const pill = document.createElement("span");
+      pill.className = "pill";
+      pill.textContent = "⟂";
+      targetEl.appendChild(pill);
     }
   });
+}
 
-  btnClearLanding.addEventListener("click", () => {
-    itInput.value = "";
-    quadraOutput.innerHTML = "";
-    glossOutput.textContent = "";
+function parseQuadraString(s){
+  const words = (s||"").split("/").map(w => w.trim()).filter(Boolean);
+  return words.map(word => {
+    const rawTokens = word.split("+").map(t => t.trim()).filter(Boolean);
+    const tokens = [];
+    const opts = [];
+    rawTokens.forEach(rt => {
+      let negate = false;
+      let t = rt.toUpperCase();
+      if(t.startsWith("!")){
+        negate = true;
+        t = t.slice(1);
+      }
+      tokens.push(t);
+      opts.push({ negate });
+    });
+    return { tokens, opts };
+  });
+}
+function safeToken(t){ return ALL_TOKENS.includes(t); }
+function quadraToGloss(text){
+  const s = (text||"").trim();
+  if(!s) return "";
+  const words = parseQuadraString(s);
+  const out = words.map(w => w.tokens.map((t,i)=> (w.opts[i]?.negate?"!":"") + (safeToken(t)?t:"<?>")).join("+")).join(" / ");
+  return out;
+}
+
+/* =========================
+   API
+   ========================= */
+async function apiTranslate(text){
+  const r = await fetch(`${API_BASE}/translate`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ text, autosave:false })
+  });
+  const data = await r.json().catch(()=> ({}));
+  if(!r.ok) throw new Error(data?.error || "translate_failed");
+  return data;
+}
+async function apiAddVocab(it, quadra){
+  const r = await fetch(`${API_BASE}/vocab/add`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body: JSON.stringify({ it, quadra, source:"human", confidence:1 })
+  });
+  const data = await r.json().catch(()=> ({}));
+  if(!r.ok) throw new Error(data?.error || "vocab_add_failed");
+  return data;
+}
+async function apiGetVocab(it){
+  const r = await fetch(`${API_BASE}/vocab/get?it=${encodeURIComponent(it)}`);
+  const data = await r.json().catch(()=> ({}));
+  if(!r.ok) throw new Error(data?.error || "vocab_get_failed");
+  return data;
+}
+
+/* =========================
+   LANDING EFFECT
+   ========================= */
+const particlesEl = document.getElementById("particles");
+const outBox = document.getElementById("outBox");
+function startParticles(){
+  particlesEl.innerHTML = "";
+  particlesEl.classList.add("on");
+  document.getElementById("quadraOutput").classList.remove("show");
+
+  const rect = outBox.getBoundingClientRect();
+  const W = rect.width, H = rect.height;
+  const N = 160;
+
+  for(let i=0;i<N;i++){
+    const d = document.createElement("span");
+    d.className = "pDot";
+    d.style.left = (Math.random()*W) + "px";
+    d.style.top  = (Math.random()*H) + "px";
+    d.style.animationDelay = (Math.random()*0.3) + "s";
+    d.style.opacity = (0.35 + Math.random()*0.55).toFixed(2);
+    particlesEl.appendChild(d);
+  }
+}
+function settleParticles(){
+  const rect = outBox.getBoundingClientRect();
+  const cx = rect.width/2, cy = rect.height/2;
+  const dots = [...particlesEl.querySelectorAll(".pDot")];
+
+  dots.forEach(d => {
+    const jitter = 26;
+    const tx = cx + (Math.random()*jitter - jitter/2);
+    const ty = cy + (Math.random()*jitter - jitter/2);
+    d.animate([
+      { left:d.style.left, top:d.style.top, opacity:Number(d.style.opacity) },
+      { left: tx+"px", top: ty+"px", opacity:0 }
+    ], {
+      duration: 700 + Math.random()*220,
+      easing: "cubic-bezier(.2,.8,.2,1)",
+      fill:"forwards",
+      delay: 260 + Math.random()*120
+    });
+  });
+
+  setTimeout(()=>{
     particlesEl.classList.remove("on");
     particlesEl.innerHTML = "";
-  });
+    document.getElementById("quadraOutput").classList.add("show");
+  }, 900);
+}
 
-  btnQuadraToGloss.addEventListener("click", () => {
-    const s = (quadraInput.value || "").trim();
-    glossOnly.value = s ? quadraToGloss(s) : "";
-  });
+/* =========================
+   LANDING UI
+   ========================= */
+const itInput = document.getElementById("itInput");
+const btnTranslate = document.getElementById("btnTranslate");
+const btnClear = document.getElementById("btnClear");
+const quadraOutput = document.getElementById("quadraOutput");
+const glossOutput = document.getElementById("glossOutput");
 
-  btnCopyGloss.addEventListener("click", async () => {
-    const t = glossOnly.value || "";
-    if(!t) return;
-    try{ await navigator.clipboard.writeText(t); }catch(e){}
-  });
+btnTranslate.addEventListener("click", async ()=>{
+  const text = (itInput.value||"").trim();
+  if(!text) return;
 
-  /* =========================
-     PORTAL PASSWORD
-     ========================= */
-  const portalBtn = document.getElementById("portalBtn");
-  const modal = document.getElementById("modal");
-  const passInput = document.getElementById("passInput");
-  const btnEnter = document.getElementById("btnEnter");
-  const btnCancel = document.getElementById("btnCancel");
-  const passMsg = document.getElementById("passMsg");
+  btnTranslate.disabled = true;
+  btnTranslate.textContent = "…";
+  glossOutput.textContent = "";
 
-  const tech = document.getElementById("tech");
-  const landing = document.getElementById("landing");
+  startParticles();
 
-  function openModal(){
-    passMsg.textContent = "";
-    passInput.value = "";
-    modal.classList.add("on");
-    setTimeout(()=>passInput.focus(), 0);
+  try{
+    const data = await apiTranslate(text);
+    const quadra = (data.quadra||"").trim();
+    renderWords(parseQuadraString(quadra), quadraOutput);
+    glossOutput.textContent = quadraToGloss(quadra);
+    settleParticles();
+  }catch(e){
+    particlesEl.classList.remove("on");
+    particlesEl.innerHTML = "";
+    quadraOutput.innerHTML = "";
+    quadraOutput.classList.add("show");
+    glossOutput.textContent = "Errore API: impossibile tradurre.";
+  }finally{
+    btnTranslate.disabled = false;
+    btnTranslate.textContent = "Traduci";
   }
-  function closeModal(){
-    modal.classList.remove("on");
+});
+
+btnClear.addEventListener("click", ()=>{
+  itInput.value = "";
+  quadraOutput.innerHTML = "";
+  glossOutput.textContent = "";
+  particlesEl.classList.remove("on");
+  particlesEl.innerHTML = "";
+});
+
+document.getElementById("btnGloss").addEventListener("click", ()=>{
+  const s = (document.getElementById("quadraInput").value||"").trim();
+  document.getElementById("glossOnly").value = s ? quadraToGloss(s) : "";
+});
+document.getElementById("btnCopyGloss").addEventListener("click", async ()=>{
+  const t = document.getElementById("glossOnly").value || "";
+  if(!t) return;
+  try{ await navigator.clipboard.writeText(t); }catch(e){}
+});
+
+/* =========================
+   TECH PORTAL PASSWORD
+   ========================= */
+const techDot = document.getElementById("techDot");
+const modal = document.getElementById("modal");
+const passInput = document.getElementById("passInput");
+const passMsg = document.getElementById("passMsg");
+
+function openModal(){
+  passInput.value = "";
+  passMsg.textContent = "";
+  modal.classList.add("on");
+  setTimeout(()=>passInput.focus(), 0);
+}
+function closeModal(){ modal.classList.remove("on"); }
+function enterTech(){
+  document.getElementById("landingArea").classList.add("off");
+  document.getElementById("techArea").classList.add("on");
+  closeModal();
+  initTechOnce();
+}
+techDot.addEventListener("click", openModal);
+document.getElementById("btnCancel").addEventListener("click", closeModal);
+modal.addEventListener("click", (e)=>{ if(e.target===modal) closeModal(); });
+passInput.addEventListener("keydown", (e)=>{ if(e.key==="Enter") document.getElementById("btnEnter").click(); });
+
+document.getElementById("btnEnter").addEventListener("click", ()=>{
+  const p = (passInput.value||"").trim().toLowerCase();
+  if(p === "tecnico") enterTech();
+  else passMsg.textContent = "password errata";
+});
+
+/* =========================
+   TECH AREA (cloud vocab + builder)
+   ========================= */
+const CACHE_KEY = "quadra_vocab_cache_v1";
+let CACHE = loadCache();
+function loadCache(){
+  try{
+    const raw = localStorage.getItem(CACHE_KEY);
+    if(!raw) return {};
+    const parsed = JSON.parse(raw);
+    return (parsed && typeof parsed==="object" && !Array.isArray(parsed)) ? parsed : {};
+  }catch(e){ return {}; }
+}
+function saveCache(){ localStorage.setItem(CACHE_KEY, JSON.stringify(CACHE)); }
+function refreshCacheList(){
+  const dictList = document.getElementById("dictList");
+  const keys = Object.keys(CACHE).sort((a,b)=>a.localeCompare(b));
+  if(keys.length===0){
+    dictList.innerHTML = `<div class="r"><div class="k">(cache vuota)</div><div class="v"></div></div>`;
+    return;
   }
-  function enterTech(){
-    // show tech portal, keep landing available above (or hide it)
-    landing.style.display = "none";
-    tech.classList.add("on");
-    closeModal();
-    initTechOnce();
-  }
+  dictList.innerHTML = keys.map(k => `<div class="r"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(CACHE[k])}</div></div>`).join("");
+}
 
-  portalBtn.addEventListener("click", openModal);
-  btnCancel.addEventListener("click", closeModal);
-  modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
-  passInput.addEventListener("keydown", (e)=>{ if(e.key === "Enter") btnEnter.click(); });
+function escapeHtml(s){
+  return String(s)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
 
-  btnEnter.addEventListener("click", () => {
-    const p = (passInput.value || "").trim().toLowerCase();
-    if(p === "tecnico"){
-      enterTech();
-    }else{
-      passMsg.textContent = "password errata";
-    }
-  });
-
-  /* =========================
-     TECH PORTAL (existing features)
-     ========================= */
-  const CACHE_KEY = "quadra_vocab_cache_v1";
-  let CACHE = loadCache();
-
-  function loadCache(){
-    try{
-      const raw = localStorage.getItem(CACHE_KEY);
-      if(!raw) return {};
-      const parsed = JSON.parse(raw);
-      return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
-    }catch(e){ return {}; }
-  }
-  function saveCache(cache){ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }
-
-  function refreshCacheList(){
-    const dictList = document.getElementById("dictList");
-    const keys = Object.keys(CACHE).sort((a,b)=>a.localeCompare(b));
-    if(keys.length === 0){
-      dictList.innerHTML = `<div class="r"><div class="k">(cache vuota)</div><div class="v"></div></div>`;
-      return;
-    }
-    dictList.innerHTML = keys.map(k => {
-      const v = CACHE[k];
-      return `<div class="r"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`;
-    }).join("");
-  }
-
-  function renderLegend(){
-    const legend = document.getElementById("legend");
-    const legendLabels = document.getElementById("legendLabels");
-    const tokens = ALL_TOKENS.slice().sort((a,b)=>a.localeCompare(b));
-    legend.innerHTML = "";
-    tokens.forEach(t => {
-      const w = document.createElement("div");
-      w.className = "word";
-      w.innerHTML = glyphSVG(t);
-      legend.appendChild(w);
-    });
-    legendLabels.textContent = tokens.join(" • ");
-  }
-
-  function populateSlots(){
-    const options = ["", ...ALL_TOKENS, ...ALL_TOKENS.map(t => "!" + t)];
-    const slotEls = ["slot1","slot2","slot3","slot4","slot5","slot6"].map(id => document.getElementById(id));
-    slotEls.forEach(sel => {
-      sel.innerHTML = options.map(o => `<option value="${o}">${o || "(vuoto)"}</option>`).join("");
-    });
-
-    // best-effort defaults (se esistono)
-    const setIf = (i, tok)=>{ if(options.includes(tok)) slotEls[i].value = tok; };
-    setIf(0, "OGGETTO");
-    setIf(1, "PASSIVO");
-    setIf(2, "FERMO");
-    setIf(3, "PRESENTE");
-  }
-
-  let phraseWords = [];
-  function renderPhrase(){
-    const phrase = phraseWords.join(" / ");
-    const parsed = parseQuadraString(phrase);
-    renderWords(parsed, document.getElementById("phrasePreview"));
-    document.getElementById("phraseGloss").textContent = phrase ? quadraToGloss(phrase) : "";
-  }
-  function buildWordFromSlots(){
-    const slotEls = ["slot1","slot2","slot3","slot4","slot5","slot6"].map(id => document.getElementById(id));
-    const values = slotEls.map(s => s.value).filter(v => v && v.trim().length>0);
-    return values.length ? values.join("+") : "";
+function renderAISuggestions(suggestions){
+  const box = document.getElementById("suggestionsTech");
+  box.innerHTML = "";
+  if(!suggestions || suggestions.length===0){
+    box.innerHTML = `<div class="hint">(nessuna proposta: tutto già noto)</div>`;
+    return;
   }
 
-  function renderAISuggestions(suggestions){
-    const suggestionsEl = document.getElementById("suggestionsTech");
-    suggestionsEl.innerHTML = "";
-    if(!suggestions || suggestions.length === 0){
-      suggestionsEl.innerHTML = `<div class="muted">(nessuna proposta: tutto già noto)</div>`;
-      return;
-    }
+  // group by it
+  const groups = new Map();
+  for(const s of suggestions){
+    const k = (s.it||"").toLowerCase().trim();
+    if(!k) continue;
+    if(!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(s);
+  }
 
-    const groups = new Map();
-    for(const s of suggestions){
-      const k = (s.it || "").toLowerCase().trim();
-      if(!k) continue;
-      if(!groups.has(k)) groups.set(k, []);
-      groups.get(k).push(s);
-    }
+  for(const [tok, arr] of groups.entries()){
+    const wrap = document.createElement("div");
+    wrap.style.border = "1px solid #efefef";
+    wrap.style.borderRadius = "12px";
+    wrap.style.padding = "10px";
+    wrap.style.marginBottom = "10px";
 
-    for(const [tok, arr] of groups.entries()){
-      const wrap = document.createElement("div");
-      wrap.className = "suggest";
+    const head = document.createElement("div");
+    head.style.display = "flex";
+    head.style.justifyContent = "space-between";
+    head.style.alignItems = "center";
+    head.innerHTML = `<div style="font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;">${escapeHtml(tok)}</div><span class="pill">AI</span>`;
+    wrap.appendChild(head);
 
-      const head = document.createElement("div");
-      head.className = "head";
-      head.innerHTML = `<div class="title">${escapeHtml(tok)}</div><div class="pill">AI</div>`;
-      wrap.appendChild(head);
+    arr.sort((a,b)=>Number(b.confidence??0)-Number(a.confidence??0));
 
-      arr.sort((a,b)=>Number(b.confidence??0) - Number(a.confidence??0));
+    arr.forEach((s, idx)=>{
+      const quadra = (s.quadra||"").toUpperCase().trim();
+      const conf = Number(s.confidence ?? 0);
+      const rationale = String(s.rationale||"");
 
-      arr.forEach((s, idx) => {
-        const quadra = (s.quadra || "").toUpperCase().trim();
-        const conf = Number(s.confidence ?? 0);
-        const rationale = s.rationale || "";
+      const cand = document.createElement("div");
+      cand.style.marginTop = "10px";
+      cand.style.border = "1px solid #f2f2f2";
+      cand.style.borderRadius = "12px";
+      cand.style.padding = "10px";
 
-        const cand = document.createElement("div");
-        cand.style.border = "1px solid #f0f0f0";
-        cand.style.borderRadius = "12px";
-        cand.style.padding = "10px";
-        cand.style.display = "flex";
-        cand.style.flexDirection = "column";
-        cand.style.gap = "10px";
+      const line = document.createElement("div");
+      line.className = "quadra-line show";
+      renderWords(parseQuadraString(quadra), line);
 
-        const parsed = parseQuadraString(quadra);
-        const line = document.createElement("div");
-        line.className = "quadra-line show";
-        renderWords(parsed, line);
+      const why = document.createElement("div");
+      why.className = "label";
+      why.textContent = `proposta ${idx+1} • conf ${(conf*100).toFixed(0)}% • ${rationale}`;
 
-        const why = document.createElement("div");
-        why.className = "why";
-        why.textContent = `proposta ${idx+1} • conf ${(conf*100).toFixed(0)}% • ${rationale}`;
+      const actions = document.createElement("div");
+      actions.className = "row";
 
-        const actions = document.createElement("div");
-        actions.className = "actions";
+      const btnA = document.createElement("button");
+      btnA.className = "btn-primary";
+      btnA.textContent = "Accetta & salva";
+      btnA.addEventListener("click", async ()=>{
+        btnA.disabled = true;
+        try{
+          await apiAddVocab(tok, quadra);
+          CACHE[tok] = quadra;
+          saveCache();
+          refreshCacheList();
 
-        const btnAccept = document.createElement("button");
-        btnAccept.className = "btn-primary";
-        btnAccept.textContent = "Accetta & salva";
-        btnAccept.addEventListener("click", async () => {
-          btnAccept.disabled = true;
-          try{
-            await apiAddVocab(tok, quadra);
-            CACHE[tok] = quadra;
-            saveCache(CACHE);
-            refreshCacheList();
-
-            document.getElementById("dictKey").value = tok;
-            document.getElementById("dictVal").value = quadra;
-
-            // re-run translate for feedback
-            document.getElementById("btnTranslateTech").click();
-          }catch(e){
-            alert("Salvataggio fallito (cloud).");
-          }finally{
-            btnAccept.disabled = false;
-          }
-        });
-
-        const btnEdit = document.createElement("button");
-        btnEdit.textContent = "Precompila";
-        btnEdit.addEventListener("click", () => {
           document.getElementById("dictKey").value = tok;
           document.getElementById("dictVal").value = quadra;
-        });
 
-        actions.appendChild(btnAccept);
-        actions.appendChild(btnEdit);
-
-        cand.appendChild(line);
-        cand.appendChild(why);
-        cand.appendChild(actions);
-
-        wrap.appendChild(cand);
+          await doTranslateTech();
+        }catch(e){
+          alert("Salvataggio fallito.");
+        }finally{
+          btnA.disabled = false;
+        }
       });
 
-      suggestionsEl.appendChild(wrap);
-    }
-  }
-
-  async function doTranslateTech(){
-    const it = document.getElementById("itInputTech");
-    const btn = document.getElementById("btnTranslateTech");
-    const out = document.getElementById("quadraOutputTech");
-    const gloss = document.getElementById("glossOutputTech");
-
-    const text = (it.value || "").trim();
-    if(!text) return;
-
-    btn.disabled = true;
-    btn.textContent = "…";
-    try{
-      const data = await apiTranslate(text);
-      const quadra = (data.quadra || "").trim();
-
-      renderWords(parseQuadraString(quadra), out);
-      gloss.textContent = quadraToGloss(quadra);
-      renderAISuggestions(data.suggestions || []);
-    }catch(e){
-      out.innerHTML = "";
-      gloss.textContent = "Errore API.";
-      document.getElementById("suggestionsTech").innerHTML = `<div class="muted">Errore API: impossibile tradurre.</div>`;
-    }finally{
-      btn.disabled = false;
-      btn.textContent = "Italiano → Quadra (AI)";
-    }
-  }
-
-  let techInited = false;
-  function initTechOnce(){
-    if(techInited) return;
-    techInited = true;
-
-    // legend + builder + cache list
-    renderLegend();
-    populateSlots();
-    refreshCacheList();
-    renderPhrase();
-
-    // wire buttons
-    document.getElementById("btnTranslateTech").addEventListener("click", doTranslateTech);
-    document.getElementById("btnClearTech").addEventListener("click", () => {
-      document.getElementById("itInputTech").value = "";
-      document.getElementById("quadraOutputTech").innerHTML = "";
-      document.getElementById("glossOutputTech").textContent = "";
-      document.getElementById("suggestionsTech").innerHTML = "";
-    });
-
-    document.getElementById("btnSaveEntry").addEventListener("click", async () => {
-      const k = (document.getElementById("dictKey").value || "").trim().toLowerCase();
-      const v = (document.getElementById("dictVal").value || "").trim().toUpperCase();
-      if(!k || !v) return;
-
-      // basic token validation
-      const words = parseQuadraString(v);
-      for(const w of words){
-        for(const t of w.tokens){
-          if(!safeToken(t)) { alert("Token non valido: " + t); return; }
-        }
-      }
-
-      try{
-        await apiAddVocab(k, v);
-        CACHE[k] = v;
-        saveCache(CACHE);
-        refreshCacheList();
-        alert("Salvato su cloud (D1).");
-      }catch(e){
-        alert("Salvataggio su cloud fallito.");
-      }
-    });
-
-    document.getElementById("btnFetchEntry").addEventListener("click", async () => {
-      const k = (document.getElementById("dictKey").value || "").trim().toLowerCase();
-      if(!k) return;
-
-      try{
-        const res = await apiGetVocab(k);
-        if(!res.found){
-          alert("Non trovata sul cloud.");
-          return;
-        }
-        const quadra = (res.row?.quadra || "").toUpperCase().trim();
+      const btnB = document.createElement("button");
+      btnB.textContent = "Precompila";
+      btnB.addEventListener("click", ()=>{
+        document.getElementById("dictKey").value = tok;
         document.getElementById("dictVal").value = quadra;
-        CACHE[k] = quadra;
-        saveCache(CACHE);
-        refreshCacheList();
-        alert("Trovata sul cloud.");
-      }catch(e){
-        alert("Lookup fallito (cloud).");
-      }
+      });
+
+      actions.appendChild(btnA);
+      actions.appendChild(btnB);
+
+      cand.appendChild(line);
+      cand.appendChild(why);
+      cand.appendChild(actions);
+
+      wrap.appendChild(cand);
     });
 
-    document.getElementById("btnResetLocalCache").addEventListener("click", () => {
-      CACHE = {};
-      saveCache(CACHE);
-      refreshCacheList();
-    });
-
-    document.getElementById("btnAddWord").addEventListener("click", () => {
-      const w = buildWordFromSlots();
-      if(!w) return;
-      phraseWords.push(w);
-      renderPhrase();
-    });
-
-    document.getElementById("btnClearPhrase").addEventListener("click", () => {
-      phraseWords = [];
-      renderPhrase();
-    });
-
-    document.getElementById("btnUsePhraseAsOutput").addEventListener("click", () => {
-      const phrase = phraseWords.join(" / ");
-      const out = document.getElementById("quadraOutputTech");
-      const gloss = document.getElementById("glossOutputTech");
-      renderWords(parseQuadraString(phrase), out);
-      gloss.textContent = quadraToGloss(phrase);
-    });
+    box.appendChild(wrap);
   }
+}
 
-  /* init */
-  apiHealth();
+async function doTranslateTech(){
+  const text = (document.getElementById("itInputTech").value||"").trim();
+  if(!text) return;
 
-  // tiny demo
-  itInput.value = "ciao bottiglia luogo abbandonato non presente";
+  const btn = document.getElementById("btnTranslateTech");
+  btn.disabled = true;
+  btn.textContent = "…";
+
+  try{
+    const data = await apiTranslate(text);
+    const quadra = (data.quadra||"").trim();
+    renderWords(parseQuadraString(quadra), document.getElementById("quadraOutputTech"));
+    document.getElementById("glossOutputTech").textContent = quadraToGloss(quadra);
+    renderAISuggestions(data.suggestions || []);
+  }catch(e){
+    document.getElementById("quadraOutputTech").innerHTML = "";
+    document.getElementById("glossOutputTech").textContent = "Errore API.";
+    document.getElementById("suggestionsTech").innerHTML = `<div class="hint">Errore API: impossibile tradurre.</div>`;
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Italiano → Quadra (AI)";
+  }
+}
+
+/* Builder */
+const slotIds = ["slot1","slot2","slot3","slot4","slot5","slot6"];
+function populateSlots(){
+  const opts = ["", ...ALL_TOKENS, ...ALL_TOKENS.map(t=>"!"+t)];
+  slotIds.forEach(id=>{
+    const sel = document.getElementById(id);
+    sel.innerHTML = opts.map(o=>`<option value="${o}">${o||"(vuoto)"}</option>`).join("");
+  });
+  document.getElementById("slot1").value = "OGGETTO";
+  document.getElementById("slot2").value = "PASSIVO";
+  document.getElementById("slot3").value = "FERMO";
+  document.getElementById("slot4").value = "PRESENTE";
+}
+let phraseWords = [];
+function buildWordFromSlots(){
+  const vals = slotIds.map(id=>document.getElementById(id).value).filter(v=>v && v.trim());
+  return vals.length ? vals.join("+") : "";
+}
+function renderPhrase(){
+  const phrase = phraseWords.join(" / ");
+  renderWords(parseQuadraString(phrase), document.getElementById("phrasePreview"));
+  document.getElementById("phraseGloss").textContent = phrase ? quadraToGloss(phrase) : "";
+}
+
+let techInited = false;
+function initTechOnce(){
+  if(techInited) return;
+  techInited = true;
+
+  populateSlots();
+  refreshCacheList();
+  renderPhrase();
+
+  document.getElementById("btnTranslateTech").addEventListener("click", doTranslateTech);
+  document.getElementById("btnClearTech").addEventListener("click", ()=>{
+    document.getElementById("itInputTech").value = "";
+    document.getElementById("quadraOutputTech").innerHTML = "";
+    document.getElementById("glossOutputTech").textContent = "";
+    document.getElementById("suggestionsTech").innerHTML = "";
+  });
+
+  document.getElementById("btnSaveEntry").addEventListener("click", async ()=>{
+    const k = (document.getElementById("dictKey").value||"").trim().toLowerCase();
+    const v = (document.getElementById("dictVal").value||"").trim().toUpperCase();
+    if(!k || !v) return;
+
+    // validate tokens
+    const words = parseQuadraString(v);
+    for(const w of words){
+      for(const t of w.tokens){
+        if(!safeToken(t)){ alert("Token non valido: "+t); return; }
+      }
+    }
+
+    try{
+      await apiAddVocab(k, v);
+      CACHE[k] = v;
+      saveCache();
+      refreshCacheList();
+      alert("Salvato su cloud.");
+    }catch(e){
+      alert("Salvataggio fallito.");
+    }
+  });
+
+  document.getElementById("btnFetchEntry").addEventListener("click", async ()=>{
+    const k = (document.getElementById("dictKey").value||"").trim().toLowerCase();
+    if(!k) return;
+    try{
+      const res = await apiGetVocab(k);
+      if(!res.found){ alert("Non trovata."); return; }
+      const quadra = (res.row?.quadra || "").toUpperCase().trim();
+      document.getElementById("dictVal").value = quadra;
+      CACHE[k] = quadra;
+      saveCache();
+      refreshCacheList();
+      alert("Trovata sul cloud.");
+    }catch(e){
+      alert("Lookup fallito.");
+    }
+  });
+
+  document.getElementById("btnResetLocalCache").addEventListener("click", ()=>{
+    CACHE = {};
+    saveCache();
+    refreshCacheList();
+  });
+
+  document.getElementById("btnAddWord").addEventListener("click", ()=>{
+    const w = buildWordFromSlots();
+    if(!w) return;
+    phraseWords.push(w);
+    renderPhrase();
+  });
+  document.getElementById("btnClearPhrase").addEventListener("click", ()=>{
+    phraseWords = [];
+    renderPhrase();
+  });
+  document.getElementById("btnUsePhraseAsOutput").addEventListener("click", ()=>{
+    const phrase = phraseWords.join(" / ");
+    renderWords(parseQuadraString(phrase), document.getElementById("quadraOutputTech"));
+    document.getElementById("glossOutputTech").textContent = quadraToGloss(phrase);
+  });
+}
+
+/* init: small demo */
+itInput.value = "ciao bottiglia luogo abbandonato non presente";
 </script>
 </body>
 </html>
