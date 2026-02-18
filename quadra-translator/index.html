@@ -3,25 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Quadra Translator</title>
 
-  <!-- Glyph library -->
-  <script src="./quadra-glyphs.js"></script>
+  <title>Quadra Translator</title>
 
   <style>
     :root{
       --bg:#ffffff;
-      --ink:#8FA3AE;
-      --ink-2:#A7B7C0;
-      --hair: rgba(143,163,174,.28);
-      --soft: rgba(143,163,174,.08);
-
-      --sans: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, Segoe UI, Roboto;
+      --ink:#8fa3ad;         /* azzurro pastello (testo) */
+      --ink-strong:#7f96a1;  /* azzurro più pieno */
+      --line:#c9d6dc;        /* linee soft */
+      --muted:#a6b7bf;
+      --pad:28px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-
-      --maxw: 1400px;
+      --sans: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
-
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
@@ -29,555 +24,554 @@
       background:var(--bg);
       color:var(--ink);
       font-family:var(--sans);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: geometricPrecision;
-      overflow-x:hidden;
+      letter-spacing:0.02em;
     }
 
+    /* top bar */
     header{
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: var(--bg);
-      border-bottom: 1px solid var(--hair);
-    }
-    .topbar{
-      max-width: var(--maxw);
-      margin: 0 auto;
-      padding: 14px 28px 12px 28px;
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 18px;
-    }
-    @media (max-width: 980px){
-      .topbar{ padding: 14px 18px 12px 18px; }
-    }
-    .brand{
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      color: var(--ink);
-      line-height: 1.1;
-    }
-    .status{
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--ink-2);
+      position:sticky; top:0;
+      background:rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom:1px solid #eef2f4;
+      padding:18px var(--pad);
       display:flex;
       align-items:center;
-      gap: 10px;
-      white-space: nowrap;
+      justify-content:space-between;
+      gap:16px;
+      z-index:20;
     }
-    .dot{
-      width:8px; height:8px;
-      border-radius: 999px;
-      border: 1px solid var(--hair);
-      background: transparent;
+    .brand{
+      display:flex; flex-direction:column; gap:4px;
     }
-    .dot.ok{ background: var(--ink); border-color: var(--ink); }
-    .dot.bad{ background: transparent; border-color: var(--ink); }
+    .brand h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:var(--ink-strong);
+    }
+    .brand .sub{
+      font-size:12px;
+      font-family:var(--mono);
+      color:var(--muted);
+    }
 
-    /* progress */
-    .progressWrap{
-      max-width: var(--maxw);
-      margin: 0 auto;
-      padding: 0 28px 10px 28px;
+    /* technical square */
+    .tech-btn{
+      width:18px; height:18px;
+      border:1.5px solid var(--ink);
+      background:transparent;
+      cursor:pointer;
     }
-    @media (max-width: 980px){
-      .progressWrap{ padding: 0 18px 10px 18px; }
-    }
-    .progress{
-      height: 2px;
-      background: rgba(143,163,174,.18);
-      overflow:hidden;
-      position: relative;
-    }
-    .bar{
-      height: 100%;
-      width: 0%;
-      background: var(--ink);
-      transform-origin: left;
-      transition: width 120ms linear;
-    }
-    .progress[aria-hidden="true"]{ visibility:hidden; }
+    .tech-btn:active{ transform: translateY(1px); }
 
-    /* main grid */
-    .wrap{
-      max-width: var(--maxw);
-      margin: 0 auto;
-      padding: 22px 28px 50px 28px;
+    /* layout */
+    main{
+      padding: var(--pad);
       display:grid;
-      grid-template-columns: 300px 1fr;
-      gap: 36px;
+      grid-template-columns: 260px 1fr;
+      gap:28px;
       align-items:start;
     }
-    @media (max-width: 980px){
-      .wrap{
-        padding: 18px 18px 40px 18px;
-        grid-template-columns: 1fr;
-        gap: 22px;
-      }
+    @media (max-width: 960px){
+      main{ grid-template-columns: 1fr; }
+      .legend{ order:2; }
     }
 
     /* legend */
-    aside{
-      padding-top: 6px;
-      border-right: 1px solid var(--hair);
-      padding-right: 18px;
-    }
-    @media (max-width: 980px){
-      aside{
-        border-right:none;
-        padding-right:0;
-        border-bottom: 1px solid var(--hair);
-        padding-bottom: 14px;
-      }
-    }
-    .legendTitle{
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      color: var(--ink);
-      margin-bottom: 12px;
-    }
     .legend{
+      border-left:1px solid #f0f3f5;
+      padding-left:16px;
+      min-height: 60vh;
+    }
+    .legend h2{
+      margin:0 0 12px 0;
+      font-size:12px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:var(--ink-strong);
+    }
+    .legend-list{
       display:flex;
       flex-direction:column;
-      gap: 12px;
+      gap:10px;
     }
-    .legendItem{
-      display:flex;
+    .legend-item{
+      display:grid;
+      grid-template-columns: 68px 1fr;
+      gap:12px;
       align-items:center;
-      gap: 12px;
+      padding:8px 0;
+      border-bottom:1px solid #f5f7f8;
     }
-    .legendItem svg{
-      width: 44px;
-      height: 44px;
-      color: var(--ink);
-    }
-    .legendName{
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      color: var(--ink);
-      line-height: 1.2;
-      font-weight: 700;
-    }
-    .legendDesc{
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--ink-2);
-      line-height: 1.35;
-      margin-top: 3px;
+    .legend-item:last-child{ border-bottom:none; }
+    .legend-item .name{
+      font-family:var(--mono);
+      font-size:11px;
+      color:var(--muted);
+      line-height:1.35;
     }
 
-    /* main */
-    main{
-      padding-top: 6px;
+    /* translator */
+    .panel{
       display:flex;
       flex-direction:column;
-      align-items:flex-start; /* fix centering */
-      gap: 16px;
-    }
-
-    .title{
-      margin:0;
-      font-size: clamp(44px, 6vw, 92px);
-      font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: var(--ink);
-      line-height: .98;
+      gap:14px;
+      min-height: 60vh;
     }
     .desc{
-      margin:0;
       max-width: 760px;
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.6;
-      color: var(--ink-2);
+      font-size:12px;
+      line-height:1.55;
+      font-family:var(--mono);
+      color:var(--muted);
     }
 
-    .inputBlock{
-      width: min(860px, 100%);
-      display:flex;
-      flex-direction:column;
-      gap: 14px;
-      margin-top: 10px;
-    }
     textarea{
       width:100%;
-      min-height: 120px;
-      resize: vertical;
-      border: 1px solid var(--hair);
-      border-radius: 0;
-      outline: none;
-      padding: 16px;
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--ink);
-      background: transparent;
+      min-height:120px;
+      border:1px solid #e6ecef;
+      border-radius:12px;
+      padding:14px 16px;
+      font-family:var(--sans);
+      font-size:16px;
+      color:var(--ink-strong);
+      outline:none;
+      resize:vertical;
     }
-    textarea::placeholder{ color: rgba(143,163,174,.55); }
+    textarea::placeholder{ color:#b6c5cc; }
 
-    button{
-      width: min(540px, 100%);
-      padding: 18px 18px;
-      border: 1px solid var(--ink);
-      background: transparent;
-      color: var(--ink);
-      font-family: var(--sans);
-      font-size: 18px;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      font-weight: 600;
-      cursor:pointer;
-      transition: transform .04s ease, opacity .15s ease;
+    .actions{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
     }
-    button:active{ transform: translateY(1px); }
-    button:disabled{ opacity:.45; cursor:not-allowed; }
+    .btn{
+      border:1.5px solid var(--ink);
+      background:transparent;
+      padding:14px 18px;
+      border-radius:14px;
+      font-family:var(--sans);
+      font-weight:700;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:var(--ink-strong);
+      cursor:pointer;
+      min-width:220px;
+    }
+    .btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    /* progress bar */
+    .bar-wrap{
+      width:100%;
+      height:8px;
+      border-radius:999px;
+      border:1px solid #e6ecef;
+      overflow:hidden;
+      background:#fff;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: var(--ink);
+      transition: width .18s ease;
+    }
 
     /* output */
     .out{
-      margin-top: 18px;
-      width: 100%;
-      border-top: 1px solid var(--hair);
-      padding-top: 14px;
-    }
-    .outLabel{
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-      color: var(--ink);
-      margin-bottom: 10px;
+      margin-top:10px;
+      border-top:1px solid #eef2f4;
+      padding-top:18px;
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 12px;
+      flex-direction:column;
+      gap:10px;
     }
-    .err{
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--ink-2);
-      margin-top: 10px;
-      white-space: pre-wrap;
+    .out h2{
+      margin:0;
+      font-size:12px;
+      letter-spacing:0.14em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:var(--ink-strong);
     }
-
-    .quadraLine{
+    .quadra-line{
       display:flex;
       flex-wrap:wrap;
-      gap: 12px;
+      gap:10px;
       align-items:center;
-      min-height: 84px;
-      padding: 6px 0 2px 0;
+      min-height:76px;
     }
     .word{
       display:flex;
-      gap: 12px;
+      gap:10px;
       align-items:center;
+      padding:8px 10px;
+      border:1px solid #eef2f4;
+      border-radius:14px;
+      background:#fff;
     }
-    .sep{
-      font-family: var(--mono);
-      color: rgba(143,163,174,.55);
-      letter-spacing:.08em;
-      user-select:none;
+    .pill{
+      font-family:var(--mono);
+      font-size:11px;
+      color:var(--muted);
+      padding:4px 8px;
+      border:1px solid #eef2f4;
+      border-radius:999px;
+    }
+    .error{
+      font-family:var(--mono);
+      font-size:12px;
+      color:#a66;
     }
 
-    .fadeIn{ animation: fadeIn .22s ease-out; }
-    @keyframes fadeIn{
-      from{ opacity:0; transform: translateY(2px); }
-      to{ opacity:1; transform: translateY(0); }
+    /* NOISE GATE overlay */
+    .noise{
+      position:fixed;
+      inset:0;
+      background:#fff;
+      z-index:9999;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:40px;
+    }
+    .noise.on{ display:flex; }
+    .noise-inner{
+      width:min(860px, 100%);
+      text-align:center;
+    }
+    .noise-title{
+      font-size:76px;
+      line-height:0.95;
+      letter-spacing:0.06em;
+      font-weight:800;
+      text-transform:uppercase;
+      color:var(--ink-strong);
+      margin:0 0 18px 0;
+    }
+    .noise-sub{
+      font-family:var(--mono);
+      font-size:14px;
+      line-height:1.6;
+      color:var(--muted);
+      margin:0 0 28px 0;
+      white-space:pre-line;
+    }
+    .noise-actions{
+      display:flex;
+      justify-content:center;
+    }
+    .noise-close{
+      border:1.5px solid var(--ink);
+      background:transparent;
+      padding:12px 16px;
+      border-radius:14px;
+      font-family:var(--sans);
+      font-weight:700;
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      color:var(--ink-strong);
+      cursor:pointer;
+      min-width:220px;
     }
 
-    /* try to force svg ink if glyphs use currentColor */
-    svg{ color: var(--ink); }
+    /* svg color match */
+    svg *{ stroke: #000 !important; fill: #000 !important; }
   </style>
 </head>
 
 <body>
-<header>
-  <div class="topbar">
-    <div class="brand">Quadra Translator</div>
-    <div class="status">
-      <span class="dot" id="apiDot"></span>
-      <span id="apiLabel">API: …</span>
-    </div>
-  </div>
-  <div class="progressWrap">
-    <div class="progress" id="progress" aria-hidden="true">
-      <div class="bar" id="bar"></div>
-    </div>
-  </div>
-</header>
 
-<div class="wrap">
-  <aside>
-    <div class="legendTitle">Legend</div>
-    <div class="legend" id="legend"></div>
-    <div class="err" id="glyphErr" style="display:none;"></div>
-  </aside>
+  <header>
+    <div class="brand">
+      <h1>quadra translator</h1>
+      <div class="sub">italiano → quadra • concetti, non rumore</div>
+    </div>
+
+    <button class="tech-btn" id="btnTech" aria-label="area tecnica"></button>
+  </header>
+
+  <!-- Noise gate -->
+  <div class="noise" id="noiseGate" aria-hidden="true">
+    <div class="noise-inner">
+      <h2 class="noise-title">NO.</h2>
+      <p class="noise-sub">this language is for concepts, not noise.
+come back with a thought.</p>
+      <div class="noise-actions">
+        <button class="noise-close" id="noiseClose">ok</button>
+      </div>
+    </div>
+  </div>
 
   <main>
-    <h1 class="title">Quadra Translator</h1>
-    <p class="desc">
-      Quadra non traduce suoni: riduce frasi a intenzioni. Ogni parola diventa una composizione di concetti —
-      entità, agenzia, stato, tempo — come una grammatica geometrica che descrive relazioni invece che fonemi.
-    </p>
+    <!-- Legend (left) -->
+    <aside class="legend">
+      <h2>Legenda</h2>
+      <div class="legend-list" id="legendList"></div>
+    </aside>
 
-    <div class="inputBlock">
-      <textarea id="itInput" placeholder="Scrivi una frase… (es. 'bottiglia piena vicino al luogo')"></textarea>
-      <button id="btnTranslate">Translate</button>
-    </div>
-
-    <section class="out">
-      <div class="outLabel">
-        <span>Output Quadra</span>
-        <span id="outMeta" style="font-family:var(--mono); font-size:11px; color:var(--ink-2); text-transform:none; letter-spacing:.02em;"></span>
+    <!-- Translator (right) -->
+    <section class="panel">
+      <div class="desc">
+        Quadra riduce la frase a una composizione di stati, agenzie e relazioni.
+        Non descrive “oggetti”: descrive il modo in cui una cosa esiste, agisce, cambia.
       </div>
-      <div class="quadraLine" id="quadraOutput"></div>
-      <div class="err" id="err"></div>
+
+      <textarea id="itInput" placeholder="Scrivi una frase (concettuale)"></textarea>
+
+      <div class="actions">
+        <button class="btn" id="btnTranslate">TRADUCI</button>
+      </div>
+
+      <div class="bar-wrap" aria-hidden="true">
+        <div class="bar" id="progressBar"></div>
+      </div>
+
+      <div class="out">
+        <h2>Output</h2>
+        <div class="quadra-line" id="quadraOutput"></div>
+        <div class="error" id="err"></div>
+      </div>
     </section>
   </main>
-</div>
 
-<script>
-  const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
+  <!-- glyph lib -->
+  <script src="./quadra-glyphs.js"></script>
 
-  /* -------------------------
-     Robust glyph-lib discovery
-     ------------------------- */
-  function getGlyphLib(){
-    // preferred
-    if (window.QUADRA) return window.QUADRA;
-    if (window.QuadraGlyphs) return window.QuadraGlyphs;
+  <script>
+    const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
 
-    // fallback: try to assemble minimal interface if globals exist
-    const defs = window.GLYPH_DEFS || window.GLYPH || null;
-    const svgGlyph = window.svgGlyph || null;
-    const parseQuadraString = window.parseQuadraString || null;
+    const itInput = document.getElementById("itInput");
+    const btnTranslate = document.getElementById("btnTranslate");
+    const quadraOutput = document.getElementById("quadraOutput");
+    const errEl = document.getElementById("err");
+    const progressBar = document.getElementById("progressBar");
 
-    if(defs && svgGlyph && parseQuadraString){
-      return { GLYPH_DEFS: defs, svgGlyph, parseQuadraString };
+    const noiseGate = document.getElementById("noiseGate");
+    const noiseClose = document.getElementById("noiseClose");
+
+    const btnTech = document.getElementById("btnTech");
+
+    // ----- NOISE FILTER -----
+    const PROFANITY = [
+      // IT (base)
+      "cazzo","cazzi","cazz*","merda","stronzo","stronzi","troia","puttana","puttane","vaffanculo","porco",
+      // EN (base)
+      "fuck","fucking","shit","bitch","asshole","cunt","dick","pussy","wtf","stfu"
+    ];
+
+    function normalize(s){
+      return (s||"")
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g,"")  // remove accents
+        .replace(/[’']/g,"'")
+        .trim();
     }
 
-    return null;
-  }
-
-  const Q = getGlyphLib();
-
-  const itInput = document.getElementById("itInput");
-  const btnTranslate = document.getElementById("btnTranslate");
-  const quadraOutput = document.getElementById("quadraOutput");
-  const legendEl = document.getElementById("legend");
-  const errEl = document.getElementById("err");
-  const glyphErr = document.getElementById("glyphErr");
-  const apiDot = document.getElementById("apiDot");
-  const apiLabel = document.getElementById("apiLabel");
-  const outMeta = document.getElementById("outMeta");
-
-  const progress = document.getElementById("progress");
-  const bar = document.getElementById("bar");
-
-  function showGlyphError(msg){
-    glyphErr.style.display = "block";
-    glyphErr.textContent = msg + "\nControlla quadra-glyphs.js: deve esporre window.QUADRA oppure window.QuadraGlyphs con svgGlyph() e GLYPH_DEFS.";
-  }
-
-  /* -------------------------
-     Progress bar
-     ------------------------- */
-  let progTimer = null;
-  let progVal = 0;
-
-  function startProgress(){
-    stopProgress();
-    progVal = 0;
-    bar.style.width = "0%";
-    progress.setAttribute("aria-hidden","false");
-    // grow to 90% while waiting
-    progTimer = setInterval(() => {
-      progVal = Math.min(90, progVal + (progVal < 60 ? 6 : 2));
-      bar.style.width = progVal + "%";
-    }, 120);
-  }
-
-  function finishProgress(){
-    if(progTimer) clearInterval(progTimer);
-    progTimer = null;
-    bar.style.width = "100%";
-    setTimeout(() => {
-      progress.setAttribute("aria-hidden","true");
-      bar.style.width = "0%";
-    }, 220);
-  }
-
-  function stopProgress(){
-    if(progTimer) clearInterval(progTimer);
-    progTimer = null;
-    progress.setAttribute("aria-hidden","true");
-    bar.style.width = "0%";
-  }
-
-  /* -------------------------
-     API
-     ------------------------- */
-  async function apiHealth(){
-    try{
-      const r = await fetch(`${API_BASE}/`, { method:"GET" });
-      const t = await r.text();
-      const ok = r.ok && (t || "").includes("quadra-api ok");
-      apiDot.className = "dot " + (ok ? "ok" : "bad");
-      apiLabel.textContent = ok ? "API: online" : "API: risposta inattesa";
-    }catch(e){
-      apiDot.className = "dot bad";
-      apiLabel.textContent = "API: offline";
+    function containsProfanity(text){
+      const t = normalize(text);
+      // parola intera o dentro token
+      return PROFANITY.some(w => t.includes(w.replace("*","")));
     }
-  }
 
-  async function apiTranslate(text){
-    const r = await fetch(`${API_BASE}/translate`, {
-      method: "POST",
-      headers: { "Content-Type":"application/json" },
-      body: JSON.stringify({ text, autosave:false })
-    });
-    const data = await r.json().catch(()=> ({}));
-    if(!r.ok) throw new Error(data?.error || "translate_failed");
-    return data;
-  }
-
-  /* -------------------------
-     Rendering
-     ------------------------- */
-  function legendMeaning(token){
-    const map = {
-      OGGETTO:"entità oggettuale",
-      PERSONA:"agente / persona",
-      LUOGO:"spazio / luogo",
-      ATTIVO:"agenzia attiva",
-      PASSIVO:"agenzia passiva",
-      FERMO:"stato stabile",
-      MOVIMENTO:"stato dinamico",
-      PRESENTE:"presenza / tempo",
-      ASSENTE:"assenza (negazione interna)",
-      RELAZIONE:"relazione",
-      INIZIO:"inizio",
-      FINE:"fine",
-      CONTENITORE:"contenitore",
-      APERTO:"aperto",
-      CHIUSO:"chiuso",
-      PIENO:"pieno",
-      VUOTO:"vuoto",
-      DENTRO:"dentro",
-      FUORI:"fuori",
-      VICINO:"vicino",
-      LONTANO:"lontano",
-      TRASFORMAZIONE:"trasformazione",
-      CAUSA:"causa",
-      SCOPO:"scopo",
-      POSSESSO:"possesso",
-      POSSIBILE:"possibile",
-      DOVERE:"dovere"
-    };
-    return map[token] || "concetto";
-  }
-
-  function renderLegend(){
-    legendEl.innerHTML = "";
-    if(!Q || !Q.GLYPH_DEFS || typeof Q.svgGlyph !== "function"){
-      showGlyphError("ERRORE: libreria glifi non rilevata.");
-      return;
+    function gibberishToken(tok){
+      const t = normalize(tok).replace(/[^a-z]/g,"");
+      if(!t) return true;
+      if(t.length >= 4 && !/[aeiou]/.test(t)) return true;       // senza vocali
+      if(/(.)\1\1/.test(t)) return true;                         // ripetizioni aaa
+      if(t.length >= 10 && new Set(t.split("")).size <= 3) return true; // pochissimi caratteri diversi
+      return false;
     }
-    const tokens = Object.keys(Q.GLYPH_DEFS);
-    tokens.forEach(t => {
-      const item = document.createElement("div");
-      item.className = "legendItem";
-      item.innerHTML = `
-        <div>${Q.svgGlyph(t)}</div>
-        <div>
-          <div class="legendName">${t}</div>
-          <div class="legendDesc">${legendMeaning(t)}</div>
-        </div>
-      `;
-      legendEl.appendChild(item);
-    });
-  }
 
-  function renderWords(parsed){
-    quadraOutput.innerHTML = "";
-    quadraOutput.classList.remove("fadeIn");
+    function isNoise(text){
+      const raw = normalize(text);
+      if(!raw) return false;
 
-    parsed.forEach((w, idx) => {
-      const word = document.createElement("div");
-      word.className = "word";
-      w.tokens.forEach((t, i) => {
-        const cell = document.createElement("div");
-        cell.innerHTML = Q.svgGlyph(t, { negate: w.opts?.[i]?.negate === true });
-        word.appendChild(cell);
+      if(containsProfanity(raw)) return true;
+
+      // se contiene troppi caratteri strani
+      const nonLetters = raw.replace(/[a-z\s]/g,"").length;
+      const total = raw.length;
+      if(total >= 8 && (nonLetters/total) > 0.35) return true;
+
+      const toks = raw.split(/\s+/).filter(Boolean);
+      if(toks.length === 0) return false;
+
+      const gib = toks.filter(gibberishToken).length;
+      // blocca se la maggioranza è nonsense (evita falsi positivi)
+      if(toks.length >= 2 && (gib / toks.length) >= 0.6) return true;
+
+      return false;
+    }
+
+    function showNoiseGate(){
+      noiseGate.classList.add("on");
+      noiseGate.setAttribute("aria-hidden","false");
+    }
+    function hideNoiseGate(){
+      noiseGate.classList.remove("on");
+      noiseGate.setAttribute("aria-hidden","true");
+    }
+    noiseClose.addEventListener("click", hideNoiseGate);
+    noiseGate.addEventListener("click", (e) => { if(e.target === noiseGate) hideNoiseGate(); });
+
+    // ----- Render helpers (from quadra-glyphs.js) -----
+    function renderWords(wordsParsed, targetEl){
+      targetEl.innerHTML = "";
+      wordsParsed.forEach((w, idx) => {
+        const wordWrap = document.createElement("div");
+        wordWrap.className = "word";
+        w.tokens.forEach((t, i) => {
+          const cell = document.createElement("div");
+          cell.innerHTML = window.QUADRA.svgGlyph(t, { negate: w.opts[i]?.negate === true });
+          wordWrap.appendChild(cell);
+        });
+        targetEl.appendChild(wordWrap);
+        if(idx !== wordsParsed.length - 1){
+          const pill = document.createElement("span");
+          pill.className = "pill";
+          pill.textContent = "⟂";
+          targetEl.appendChild(pill);
+        }
       });
-      quadraOutput.appendChild(word);
+    }
 
-      if(idx !== parsed.length - 1){
-        const sep = document.createElement("div");
-        sep.className = "sep";
-        sep.textContent = "⟂";
-        quadraOutput.appendChild(sep);
+    // ----- Legend -----
+    const legendList = document.getElementById("legendList");
+    const LEGEND_ORDER = [
+      ["OGGETTO","entità: oggetto"],
+      ["PERSONA","entità: persona"],
+      ["LUOGO","entità: luogo"],
+      ["CONTENITORE","entità: contenitore"],
+
+      ["ATTIVO","agenzia: attivo"],
+      ["PASSIVO","agenzia: passivo"],
+
+      ["FERMO","stato: fermo"],
+      ["MOVIMENTO","stato: movimento"],
+      ["APERTO","stato: aperto"],
+      ["CHIUSO","stato: chiuso"],
+      ["PIENO","stato: pieno"],
+      ["VUOTO","stato: vuoto"],
+      ["TRASFORMAZIONE","stato: trasformazione"],
+
+      ["DENTRO","spazio: dentro"],
+      ["FUORI","spazio: fuori"],
+      ["VICINO","spazio: vicino"],
+      ["LONTANO","spazio: lontano"],
+
+      ["PRESENTE","tempo: presente"],
+      ["ASSENTE","tempo: assente"],
+      ["INIZIO","tempo: inizio"],
+      ["FINE","tempo: fine"],
+
+      ["RELAZIONE","relazione"],
+      ["CAUSA","logica: causa"],
+      ["SCOPO","logica: scopo"],
+      ["POSSESSO","logica: possesso"],
+      ["POSSIBILE","logica: possibile"],
+      ["DOVERE","logica: dovere"]
+    ];
+
+    function renderLegend(){
+      legendList.innerHTML = "";
+      for(const [tok, label] of LEGEND_ORDER){
+        const row = document.createElement("div");
+        row.className = "legend-item";
+        const g = document.createElement("div");
+        g.innerHTML = window.QUADRA.svgGlyph(tok);
+        const t = document.createElement("div");
+        t.className = "name";
+        t.textContent = label;
+        row.appendChild(g);
+        row.appendChild(t);
+        legendList.appendChild(row);
       }
+    }
+
+    // ----- Progress bar (fake but useful) -----
+    let progTimer = null;
+    function startProgress(){
+      progressBar.style.width = "8%";
+      let p = 8;
+      progTimer = setInterval(() => {
+        // cresce lentamente fino al 88% finché non arriva risposta
+        p = Math.min(88, p + Math.random()*6);
+        progressBar.style.width = p.toFixed(0) + "%";
+      }, 120);
+    }
+    function endProgress(ok=true){
+      if(progTimer) clearInterval(progTimer);
+      progTimer = null;
+      progressBar.style.width = ok ? "100%" : "0%";
+      setTimeout(() => { progressBar.style.width = "0%"; }, ok ? 500 : 150);
+    }
+
+    // ----- API call -----
+    async function apiTranslate(text){
+      const r = await fetch(`${API_BASE}/translate`, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify({ text, autosave:false })
+      });
+      const data = await r.json().catch(()=> ({}));
+      if(!r.ok) throw new Error(data?.error || "translate_failed");
+      return data;
+    }
+
+    async function doTranslate(){
+      errEl.textContent = "";
+      quadraOutput.innerHTML = "";
+
+      const text = itInput.value || "";
+      if(isNoise(text)){
+        showNoiseGate();
+        return;
+      }
+
+      btnTranslate.disabled = true;
+      startProgress();
+      try{
+        const data = await apiTranslate(text);
+        const quadra = String(data.quadra || "").trim();
+        const parsed = window.QUADRA.parseQuadraString(quadra);
+        renderWords(parsed, quadraOutput);
+        endProgress(true);
+      }catch(e){
+        endProgress(false);
+        errEl.textContent = "Errore API: impossibile tradurre.";
+      }finally{
+        btnTranslate.disabled = false;
+      }
+    }
+
+    btnTranslate.addEventListener("click", doTranslate);
+    itInput.addEventListener("keydown", (e) => {
+      if((e.metaKey || e.ctrlKey) && e.key === "Enter") doTranslate();
     });
 
-    quadraOutput.classList.add("fadeIn");
-  }
+    // ----- Tech area (password) -----
+    btnTech.addEventListener("click", () => {
+      const pw = prompt("Password area tecnica:");
+      if(pw !== "tecnico"){
+        // se sbaglia: silenzio svizzero
+        return;
+      }
+      // Porta alla pagina tecnica (che già hai nel repo: index tecnico o sezione)
+      // Se tu hai la pagina tecnica separata, metti qui il path corretto:
+      // location.href = "./technical.html";
+      // Per ora: rimani qui e apri la vecchia interfaccia (se esiste) via hash
+      location.href = "./index-tech.html";
+    });
 
-  /* -------------------------
-     Translate
-     ------------------------- */
-  async function doTranslate(){
-    errEl.textContent = "";
-    outMeta.textContent = "";
-    quadraOutput.innerHTML = "";
-
-    if(!Q || typeof Q.parseQuadraString !== "function" || typeof Q.svgGlyph !== "function"){
-      showGlyphError("ERRORE: quadra-glyphs.js non espone le funzioni richieste.");
-      return;
-    }
-
-    const text = (itInput.value || "").trim();
-    if(!text) return;
-
-    btnTranslate.disabled = true;
-    startProgress();
-
-    try{
-      const data = await apiTranslate(text);
-      const quadra = (data.quadra || "").trim();
-
-      outMeta.textContent = (data.from ? `source: ${data.from}` : "");
-      const parsed = Q.parseQuadraString(quadra);
-      renderWords(parsed);
-      finishProgress();
-    }catch(e){
-      stopProgress();
-      errEl.textContent = "Errore traduzione. Controlla API / rete.";
-    }finally{
-      btnTranslate.disabled = false;
-    }
-  }
-
-  btnTranslate.addEventListener("click", doTranslate);
-  itInput.addEventListener("keydown", (e) => {
-    if((e.metaKey || e.ctrlKey) && e.key === "Enter") doTranslate();
-  });
-
-  /* init */
-  apiHealth();
-  renderLegend();
-
-  // demo
-  itInput.value = "bottiglia piena vicino al luogo";
-</script>
+    // init
+    renderLegend();
+  </script>
 </body>
 </html>
