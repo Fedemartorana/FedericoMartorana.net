@@ -1,206 +1,211 @@
-// quadra-glyphs.js
-// Versione "semplice": no export / no module. Espone window.QUADRA
-// Sistema definitivo: solo OGGETTO mantiene il quadrato di contorno.
-// Negazione: overlay di 4 puntini interni (assenza-interna).
+// quadra-glyphs.js (Versione A — “quadrato”)
+// 16 token definitivi. OGGETTO mantiene frame pieno. Tutti gli altri: frame assente.
+// Negazione: overlay di “assenza interna” (4 micro-quadrati).
 
 (function () {
   "use strict";
 
-  // ----------------- BASE SVG -----------------
-  function baseSVG(content, size = 64) {
+  const SIZE = 64;
+  const PAD = 7;
+  const LINE = 2.5;
+  const STROKE = "#000";
+  const FILL = "#000";
+
+  function svgWrap(inner, aria) {
     return `
-      <svg viewBox="0 0 100 100" width="${size}" height="${size}" aria-hidden="true">
-        ${content}
+      <svg width="${SIZE}" height="${SIZE}" viewBox="0 0 64 64" role="img" aria-label="${aria}">
+        ${inner}
       </svg>
     `;
   }
 
-  // OGGETTO: unico con frame
-  function drawFrame() {
-    return baseSVG(`
-      <rect x="10" y="10" width="80" height="80"
-        fill="none" stroke="black" stroke-width="4"/>
-    `);
+  function rect(x, y, w, h, fill, stroke, sw) {
+    const f = fill ? `fill="${fill}"` : `fill="none"`;
+    const s = stroke ? `stroke="${stroke}" stroke-width="${sw || LINE}" stroke-linecap="square"` : "";
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" ${f} ${s}/>`;
   }
 
-  // --- CORE FORMS (no frame) ---
-  function drawCore() {
-    return baseSVG(`<circle cx="50" cy="50" r="12" fill="black"/>`);
-  }
-  function drawBaseLine() {
-    return baseSVG(`<line x1="20" y1="80" x2="80" y2="80" stroke="black" stroke-width="4"/>`);
-  }
-  function drawInnerSquare() {
-    return baseSVG(`<rect x="35" y="35" width="30" height="30" fill="none" stroke="black" stroke-width="4"/>`);
+  function line(x1, y1, x2, y2, sw) {
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${STROKE}" stroke-width="${sw || LINE}" stroke-linecap="square"/>`;
   }
 
-  // --- AGENCY ---
-  function drawTopDot() {
-    return baseSVG(`<circle cx="50" cy="25" r="6" fill="black"/>`);
-  }
-  function drawBottomDot() {
-    return baseSVG(`<circle cx="50" cy="75" r="6" fill="black"/>`);
+  function circle(cx, cy, r) {
+    return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${FILL}"/>`;
   }
 
-  // --- STATE ---
-  function drawCenterDot() {
-    return baseSVG(`<circle cx="50" cy="50" r="6" fill="black"/>`);
-  }
-  function drawHorizontalBar() {
-    return baseSVG(`<rect x="25" y="45" width="50" height="10" fill="black"/>`);
-  }
-  function drawOpenTop() {
-    return baseSVG(`<line x1="20" y1="20" x2="80" y2="20" stroke="black" stroke-width="4"/>`);
-  }
-  function drawClosedBar() {
-    return baseSVG(`<rect x="20" y="15" width="60" height="15" fill="black"/>`);
-  }
-  function drawSolidCore() {
-    return baseSVG(`<circle cx="50" cy="50" r="18" fill="black"/>`);
-  }
-  function drawHollowCore() {
-    return baseSVG(`<circle cx="50" cy="50" r="18" fill="none" stroke="black" stroke-width="4"/>`);
-  }
-  function drawDiagonal() {
-    return baseSVG(`<line x1="25" y1="75" x2="75" y2="25" stroke="black" stroke-width="4"/>`);
+  // Frame helper (solo OGGETTO)
+  function frameClosed() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return rect(x0, y0, w, h, null, STROKE, LINE);
   }
 
-  // --- SPACE ---
-  function drawInnerPoint() {
-    return baseSVG(`<circle cx="50" cy="50" r="4" fill="black"/>`);
-  }
-  function drawOuterPoint() {
-    return baseSVG(`<circle cx="90" cy="50" r="4" fill="black"/>`);
-  }
-  function drawLeftPoint() {
-    return baseSVG(`<circle cx="20" cy="50" r="4" fill="black"/>`);
-  }
-  function drawRightPoint() {
-    return baseSVG(`<circle cx="80" cy="50" r="4" fill="black"/>`);
-  }
-
-  // --- TIME ---
-  function drawCornerCuts() {
-    return baseSVG(`
-      <rect x="10" y="10" width="15" height="15" fill="black"/>
-      <rect x="75" y="10" width="15" height="15" fill="black"/>
-      <rect x="10" y="75" width="15" height="15" fill="black"/>
-      <rect x="75" y="75" width="15" height="15" fill="black"/>
-    `);
-  }
-  function drawCrossPoints() {
-    return baseSVG(`
-      <circle cx="30" cy="30" r="4" fill="black"/>
-      <circle cx="70" cy="30" r="4" fill="black"/>
-      <circle cx="30" cy="70" r="4" fill="black"/>
-      <circle cx="70" cy="70" r="4" fill="black"/>
-    `);
-  }
-  function drawTopStroke() {
-    return baseSVG(`<line x1="20" y1="20" x2="80" y2="20" stroke="black" stroke-width="6"/>`);
-  }
-  function drawBottomStroke() {
-    return baseSVG(`<line x1="20" y1="80" x2="80" y2="80" stroke="black" stroke-width="6"/>`);
+  // “Corner cuts” (PRESENTE) — solo linee, senza frame esterno
+  function brokenCorners() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    const x1 = x0, y1 = y0, x2 = x0 + w, y2 = y0 + h;
+    const c = 10;
+    return [
+      line(x1 + c, y1, x2 - c, y1),
+      line(x2, y1 + c, x2, y2 - c),
+      line(x2 - c, y2, x1 + c, y2),
+      line(x1, y2 - c, x1, y1 + c)
+    ].join("");
   }
 
-  // --- LOGIC ---
-  function drawVerticalBar() {
-    return baseSVG(`<rect x="45" y="20" width="10" height="60" fill="black"/>`);
-  }
-  function drawArrowRight() {
-    return baseSVG(`
-      <line x1="20" y1="50" x2="70" y2="50" stroke="black" stroke-width="4"/>
-      <polygon points="70,40 85,50 70,60" fill="black"/>
-    `);
-  }
-  function drawArrowUp() {
-    return baseSVG(`
-      <line x1="50" y1="70" x2="50" y2="30" stroke="black" stroke-width="4"/>
-      <polygon points="40,30 50,15 60,30" fill="black"/>
-    `);
-  }
-  function drawDoubleCore() {
-    return baseSVG(`
-      <circle cx="40" cy="50" r="8" fill="black"/>
-      <circle cx="60" cy="50" r="8" fill="black"/>
-    `);
-  }
-  function drawDashedCore() {
-    return baseSVG(`
-      <circle cx="50" cy="50" r="18"
-        fill="none" stroke="black" stroke-width="4"
-        stroke-dasharray="6 4"/>
-    `);
-  }
-  function drawHeavyBottom() {
-    return baseSVG(`<rect x="20" y="70" width="60" height="12" fill="black"/>`);
+  // “Assenza interna” (overlay) per negazione
+  function negOverlay() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    const pts = [
+      [x0 + w * 0.38, y0 + h * 0.38],
+      [x0 + w * 0.62, y0 + h * 0.38],
+      [x0 + w * 0.38, y0 + h * 0.62],
+      [x0 + w * 0.62, y0 + h * 0.62]
+    ];
+    return pts.map(([cx, cy]) => rect(cx - 2.2, cy - 2.2, 4.4, 4.4, FILL)).join("");
   }
 
-  // --- NEGATION overlay (assenza interna) ---
-  function negOverlaySVG() {
-    return `
-      <circle cx="42" cy="42" r="3.5" fill="black"/>
-      <circle cx="58" cy="42" r="3.5" fill="black"/>
-      <circle cx="42" cy="58" r="3.5" fill="black"/>
-      <circle cx="58" cy="58" r="3.5" fill="black"/>
+  // Nucleo (PERSONA) / banda (MOVIMENTO) / diagonale (TRASFORMAZIONE)
+  function nucleus() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return rect(x0 + w * 0.38, y0 + h * 0.38, w * 0.24, h * 0.24, FILL);
+  }
+
+  function band() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return rect(x0 + w * 0.18, y0 + h * 0.44, w * 0.64, h * 0.12, FILL);
+  }
+
+  function diagonal() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return line(x0 + w * 0.20, y0 + h * 0.80, x0 + w * 0.80, y0 + h * 0.20);
+  }
+
+  // LUOGO: base line
+  function baseLine() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return line(x0 + w * 0.15, y0 + h * 0.85, x0 + w * 0.85, y0 + h * 0.85, 3);
+  }
+
+  // ATTIVO/PASSIVO: dot top/bottom
+  function dotTop() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return circle(x0 + w / 2, y0 + h * 0.22, 3.2);
+  }
+  function dotBottom() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return circle(x0 + w / 2, y0 + h * 0.78, 3.2);
+  }
+
+  // APERTO/CHIUSO: apertura/chiusura top
+  function openTop() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD;
+    // due segmenti con gap centrale
+    const gap = 12;
+    const leftEnd = x0 + (w - gap) / 2;
+    const rightStart = x0 + (w + gap) / 2;
+    return [
+      line(x0, y0, leftEnd, y0),
+      line(rightStart, y0, x0 + w, y0)
+    ].join("");
+  }
+  function closedTop() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD;
+    return rect(x0, y0 - 1, w, 8, FILL); // barra spessa in alto
+  }
+
+  // INIZIO/FINE: stroke top/bottom
+  function strokeTop() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD;
+    return line(x0, y0, x0 + w, y0, 4);
+  }
+  function strokeBottom() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return line(x0, y0 + h, x0 + w, y0 + h, 4);
+  }
+
+  // RELAZIONE: barra verticale
+  function verticalBar() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    return rect(x0 + w * 0.46, y0 + h * 0.15, w * 0.08, h * 0.70, FILL);
+  }
+
+  // CAUSA/SCOPO: frecce minimali
+  function arrowRight() {
+    // linea + punta
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    const y = y0 + h * 0.5;
+    const x1 = x0 + w * 0.2;
+    const x2 = x0 + w * 0.75;
+    const head = `
+      <polygon points="${x2},${y-6} ${x2+10},${y} ${x2},${y+6}" fill="${FILL}"/>
     `;
+    return line(x1, y, x2, y) + head;
   }
 
-  // ----------------- GLYPH MAP -----------------
-  const GLYPHS = {
-    // ENTITÀ
-    OGGETTO: drawFrame,
-    PERSONA: drawCore,
-    LUOGO: drawBaseLine,
-    CONTENITORE: drawInnerSquare,
+  function arrowUp() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    const x = x0 + w * 0.5;
+    const y1 = y0 + h * 0.75;
+    const y2 = y0 + h * 0.25;
+    const head = `
+      <polygon points="${x-6},${y2} ${x},${y2-10} ${x+6},${y2}" fill="${FILL}"/>
+    `;
+    return line(x, y1, x, y2) + head;
+  }
 
-    // AGENZIA
-    ATTIVO: drawTopDot,
-    PASSIVO: drawBottomDot,
+  // ASSENTE: 5 micro-quadrati “cross”
+  function absenceCross() {
+    const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
+    const pts = [
+      [x0 + w * 0.30, y0 + h * 0.30],
+      [x0 + w * 0.70, y0 + h * 0.30],
+      [x0 + w * 0.30, y0 + h * 0.70],
+      [x0 + w * 0.70, y0 + h * 0.70],
+      [x0 + w * 0.50, y0 + h * 0.50]
+    ];
+    return pts.map(([cx, cy]) => rect(cx - 2.6, cy - 2.6, 5.2, 5.2, FILL)).join("");
+  }
 
-    // STATI
-    FERMO: drawCenterDot,
-    MOVIMENTO: drawHorizontalBar,
-    APERTO: drawOpenTop,
-    CHIUSO: drawClosedBar,
-    PIENO: drawSolidCore,
-    VUOTO: drawHollowCore,
-    TRASFORMAZIONE: drawDiagonal,
+  // ----------------- TOKEN SET (16) -----------------
+  const GLYPH_DEFS = {
+    OGGETTO:        () => frameClosed(),
+    PERSONA:        () => nucleus(),
+    LUOGO:          () => baseLine(),
 
-    // SPAZIO
-    DENTRO: drawInnerPoint,
-    FUORI: drawOuterPoint,
-    VICINO: drawLeftPoint,
-    LONTANO: drawRightPoint,
+    ATTIVO:         () => dotTop(),
+    PASSIVO:        () => dotBottom(),
 
-    // TEMPO
-    PRESENTE: drawCornerCuts,
-    ASSENTE: drawCrossPoints,
-    INIZIO: drawTopStroke,
-    FINE: drawBottomStroke,
+    PRESENTE:       () => brokenCorners(),
+    ASSENTE:        () => absenceCross(),
 
-    // RELAZIONE / LOGICA
-    RELAZIONE: drawVerticalBar,
-    CAUSA: drawArrowRight,
-    SCOPO: drawArrowUp,
-    POSSESSO: drawDoubleCore,
-    POSSIBILE: drawDashedCore,
-    DOVERE: drawHeavyBottom
+    MOVIMENTO:      () => band(),
+    TRASFORMAZIONE: () => diagonal(),
+
+    APERTO:         () => openTop(),
+    CHIUSO:         () => closedTop(),
+
+    INIZIO:         () => strokeTop(),
+    FINE:           () => strokeBottom(),
+
+    RELAZIONE:      () => verticalBar(),
+    CAUSA:          () => arrowRight(),
+    SCOPO:          () => arrowUp()
   };
 
-  const TOKENS = Object.keys(GLYPHS);
+  const TOKENS = Object.keys(GLYPH_DEFS);
 
-  // ----------------- PARSER -----------------
-  // Quadra string: WORD / WORD ; tokens inside word: A+B+!C
+  // ----------------- PARSE -----------------
   function parseQuadraString(s) {
-    const str = String(s || "").trim();
-    if (!str) return [];
-    const words = str.split("/").map(w => w.trim()).filter(Boolean);
+    const words = String(s || "")
+      .split("/")
+      .map(w => w.trim())
+      .filter(Boolean);
+
     return words.map(word => {
-      const raw = word.split("+").map(t => t.trim()).filter(Boolean);
+      const rawTokens = word.split("+").map(t => t.trim()).filter(Boolean);
       const tokens = [];
       const opts = [];
-      raw.forEach(rt => {
+      rawTokens.forEach(rt => {
         let negate = false;
         let t = rt.toUpperCase();
         if (t.startsWith("!")) { negate = true; t = t.slice(1); }
@@ -211,47 +216,37 @@
     });
   }
 
-  // ----------------- RENDER -----------------
   function svgGlyph(token, options = {}) {
     const t = String(token || "").toUpperCase();
-    const fn = GLYPHS[t];
-    if (!fn) return baseSVG(`<text x="10" y="55" font-size="14" font-family="monospace">?</text>`, 64);
-
-    // render base glyph at 100x100 coordinates then (optional) overlay negation
-    const base = fn();
-    if (!options || options.negate !== true) return base;
-
-    // inject overlay by re-wrapping into single SVG to avoid string surgery headaches
-    // We re-render base content by extracting inside <svg>...</svg>.
-    const inner = base.replace(/^.*?<svg[^>]*>/s, "").replace(/<\/svg>\s*$/s, "");
-    return baseSVG(inner + negOverlaySVG(), 64);
+    const draw = GLYPH_DEFS[t];
+    const base = draw ? draw() : `<text x="10" y="38" font-size="14" font-family="monospace">?</text>`;
+    const neg = options.negate === true ? negOverlay() : "";
+    return svgWrap(base + neg, t);
   }
 
   function renderWords(wordsParsed, targetEl) {
-    const el = targetEl;
-    el.innerHTML = "";
+    targetEl.innerHTML = "";
     wordsParsed.forEach((w, idx) => {
-      const wrap = document.createElement("div");
-      wrap.className = "word";
-      w.tokens.forEach((tok, i) => {
+      const wordWrap = document.createElement("div");
+      wordWrap.className = "word";
+      w.tokens.forEach((t, i) => {
         const cell = document.createElement("div");
-        cell.innerHTML = svgGlyph(tok, { negate: w.opts[i]?.negate === true });
-        wrap.appendChild(cell);
+        cell.innerHTML = svgGlyph(t, { negate: w.opts[i]?.negate === true });
+        wordWrap.appendChild(cell);
       });
-      el.appendChild(wrap);
+      targetEl.appendChild(wordWrap);
       if (idx !== wordsParsed.length - 1) {
         const sep = document.createElement("span");
         sep.className = "pill";
         sep.textContent = "⟂";
-        el.appendChild(sep);
+        targetEl.appendChild(sep);
       }
     });
   }
 
-  // ----------------- EXPOSE GLOBAL -----------------
+  // expose global
   window.QUADRA = {
     TOKENS,
-    GLYPHS,
     parseQuadraString,
     svgGlyph,
     renderWords
