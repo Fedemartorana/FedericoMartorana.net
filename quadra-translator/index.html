@@ -11,11 +11,10 @@
   <style>
     :root{
       --bg:#ffffff;
-
-      /* from your screenshots: desaturated pastel blue/grey */
-      --ink:#8FA3AE;          /* primary text/UI */
-      --ink-2:#A7B7C0;        /* secondary */
+      --ink:#8FA3AE;
+      --ink-2:#A7B7C0;
       --hair: rgba(143,163,174,.28);
+      --soft: rgba(143,163,174,.08);
 
       --sans: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, Segoe UI, Roboto;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -35,63 +34,140 @@
       overflow-x:hidden;
     }
 
-    /* page */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--hair);
+    }
+    .topbar{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 14px 28px 12px 28px;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 18px;
+    }
+    @media (max-width: 980px){
+      .topbar{ padding: 14px 18px 12px 18px; }
+    }
+    .brand{
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      line-height: 1.1;
+    }
+    .status{
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink-2);
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      white-space: nowrap;
+    }
+    .dot{
+      width:8px; height:8px;
+      border-radius: 999px;
+      border: 1px solid var(--hair);
+      background: transparent;
+    }
+    .dot.ok{ background: var(--ink); border-color: var(--ink); }
+    .dot.bad{ background: transparent; border-color: var(--ink); }
+
+    /* progress */
+    .progressWrap{
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 0 28px 10px 28px;
+    }
+    @media (max-width: 980px){
+      .progressWrap{ padding: 0 18px 10px 18px; }
+    }
+    .progress{
+      height: 2px;
+      background: rgba(143,163,174,.18);
+      overflow:hidden;
+      position: relative;
+    }
+    .bar{
+      height: 100%;
+      width: 0%;
+      background: var(--ink);
+      transform-origin: left;
+      transition: width 120ms linear;
+    }
+    .progress[aria-hidden="true"]{ visibility:hidden; }
+
+    /* main grid */
     .wrap{
       max-width: var(--maxw);
       margin: 0 auto;
-      padding: 0 28px;
-      min-height: 100vh;
+      padding: 22px 28px 50px 28px;
       display:grid;
-      grid-template-columns: 260px 1fr;
-      grid-template-rows: 1fr auto;
-      column-gap: 36px;
+      grid-template-columns: 300px 1fr;
+      gap: 36px;
+      align-items:start;
     }
-
     @media (max-width: 980px){
       .wrap{
+        padding: 18px 18px 40px 18px;
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        padding: 0 18px;
-        row-gap: 24px;
+        gap: 22px;
       }
     }
 
-    /* left legend */
+    /* legend */
     aside{
-      padding-top: 34px;
+      padding-top: 6px;
+      border-right: 1px solid var(--hair);
+      padding-right: 18px;
     }
-    .legend-title{
+    @media (max-width: 980px){
+      aside{
+        border-right:none;
+        padding-right:0;
+        border-bottom: 1px solid var(--hair);
+        padding-bottom: 14px;
+      }
+    }
+    .legendTitle{
       font-family: var(--mono);
       font-size: 11px;
       letter-spacing: .10em;
       text-transform: uppercase;
       color: var(--ink);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .legend{
       display:flex;
       flex-direction:column;
-      gap: 14px;
+      gap: 12px;
     }
-    .legend-item{
+    .legendItem{
       display:flex;
       align-items:center;
       gap: 12px;
     }
-    .legend-item svg{
-      width: 42px;
-      height: 42px;
-      opacity: .95;
+    .legendItem svg{
+      width: 44px;
+      height: 44px;
+      color: var(--ink);
     }
-    .legend-name{
+    .legendName{
       font-family: var(--mono);
       font-size: 11px;
       letter-spacing: .08em;
       text-transform: uppercase;
       color: var(--ink);
       line-height: 1.2;
+      font-weight: 700;
     }
-    .legend-desc{
+    .legendDesc{
       font-family: var(--mono);
       font-size: 11px;
       color: var(--ink-2);
@@ -101,44 +177,38 @@
 
     /* main */
     main{
-      padding-top: 34px;
+      padding-top: 6px;
       display:flex;
       flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      gap: 18px;
-      min-height: 72vh;
+      align-items:flex-start; /* fix centering */
+      gap: 16px;
     }
 
     .title{
       margin:0;
-      font-size: clamp(44px, 6.2vw, 96px);
+      font-size: clamp(44px, 6vw, 92px);
       font-weight: 700;
       letter-spacing: .06em;
       text-transform: uppercase;
       color: var(--ink);
-      text-align:center;
-      line-height: 0.98;
+      line-height: .98;
     }
-
     .desc{
+      margin:0;
       max-width: 760px;
-      text-align:center;
       font-family: var(--mono);
       font-size: 12px;
       line-height: 1.6;
       color: var(--ink-2);
-      margin: 0;
     }
 
     .inputBlock{
-      width: min(820px, 92%);
+      width: min(860px, 100%);
       display:flex;
       flex-direction:column;
-      gap: 16px;
+      gap: 14px;
       margin-top: 10px;
     }
-
     textarea{
       width:100%;
       min-height: 120px;
@@ -146,7 +216,7 @@
       border: 1px solid var(--hair);
       border-radius: 0;
       outline: none;
-      padding: 16px 16px;
+      padding: 16px;
       font-family: var(--mono);
       font-size: 13px;
       color: var(--ink);
@@ -154,13 +224,8 @@
     }
     textarea::placeholder{ color: rgba(143,163,174,.55); }
 
-    .btnRow{
-      display:flex;
-      justify-content:center;
-    }
-
     button{
-      width: min(520px, 92%);
+      width: min(540px, 100%);
       padding: 18px 18px;
       border: 1px solid var(--ink);
       background: transparent;
@@ -176,38 +241,31 @@
     button:active{ transform: translateY(1px); }
     button:disabled{ opacity:.45; cursor:not-allowed; }
 
-    /* bottom output */
-    .bottom{
-      grid-column: 1 / span 2;
-      padding: 16px 0 18px 0;
+    /* output */
+    .out{
+      margin-top: 18px;
+      width: 100%;
       border-top: 1px solid var(--hair);
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-      min-height: 160px;
+      padding-top: 14px;
     }
-    @media (max-width: 980px){
-      .bottom{ grid-column: 1; }
-    }
-
     .outLabel{
       font-family: var(--mono);
       font-size: 11px;
       letter-spacing: .10em;
       text-transform: uppercase;
       color: var(--ink);
+      margin-bottom: 10px;
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       gap: 12px;
     }
-
-    .outLabel .api{
+    .err{
       font-family: var(--mono);
       font-size: 11px;
       color: var(--ink-2);
-      letter-spacing: .02em;
-      text-transform:none;
+      margin-top: 10px;
+      white-space: pre-wrap;
     }
 
     .quadraLine{
@@ -215,8 +273,8 @@
       flex-wrap:wrap;
       gap: 12px;
       align-items:center;
-      padding: 10px 0;
       min-height: 84px;
+      padding: 6px 0 2px 0;
     }
     .word{
       display:flex;
@@ -230,101 +288,153 @@
       user-select:none;
     }
 
-    /* subtle reveal */
-    .fadeIn{
-      animation: fadeIn .22s ease-out;
-    }
+    .fadeIn{ animation: fadeIn .22s ease-out; }
     @keyframes fadeIn{
       from{ opacity:0; transform: translateY(2px); }
       to{ opacity:1; transform: translateY(0); }
     }
 
-    /* make glyph strokes pastel too if glyph lib uses black strokes */
-    .quadraLine svg line,
-    .quadraLine svg rect,
-    .quadraLine svg circle,
-    .quadraLine svg path{
-      stroke: var(--ink) !important;
-      fill: currentColor;
-    }
-    /* but if svg is built with explicit fill="#000", we can't override reliably;
-       in that case, update quadra-glyphs.js to use currentColor/stroke currentColor. */
-    .quadraLine svg{ color: var(--ink); }
-    aside svg{ color: var(--ink); }
+    /* try to force svg ink if glyphs use currentColor */
+    svg{ color: var(--ink); }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <!-- LEFT: legend -->
-    <aside>
-      <div class="legend-title">Legend</div>
-      <div class="legend" id="legend"></div>
-    </aside>
+<header>
+  <div class="topbar">
+    <div class="brand">Quadra Translator</div>
+    <div class="status">
+      <span class="dot" id="apiDot"></span>
+      <span id="apiLabel">API: …</span>
+    </div>
+  </div>
+  <div class="progressWrap">
+    <div class="progress" id="progress" aria-hidden="true">
+      <div class="bar" id="bar"></div>
+    </div>
+  </div>
+</header>
 
-    <!-- CENTER: translator -->
-    <main>
-      <h1 class="title">Quadra Translator</h1>
-      <p class="desc">
-        Quadra non “traduce” parole: riduce il linguaggio a unità di intenzione.
-        Ogni frase diventa una composizione di concetti — entità, agenzia, stato, tempo —
-        come una grammatica geometrica che descrive relazioni invece che suoni.
-      </p>
+<div class="wrap">
+  <aside>
+    <div class="legendTitle">Legend</div>
+    <div class="legend" id="legend"></div>
+    <div class="err" id="glyphErr" style="display:none;"></div>
+  </aside>
 
-      <div class="inputBlock">
-        <textarea id="itInput" placeholder="Scrivi una frase… (es. 'bottiglia piena vicino al luogo')"></textarea>
-        <div class="btnRow">
-          <button id="btnTranslate">Translate</button>
-        </div>
-      </div>
-    </main>
+  <main>
+    <h1 class="title">Quadra Translator</h1>
+    <p class="desc">
+      Quadra non traduce suoni: riduce frasi a intenzioni. Ogni parola diventa una composizione di concetti —
+      entità, agenzia, stato, tempo — come una grammatica geometrica che descrive relazioni invece che fonemi.
+    </p>
 
-    <!-- BOTTOM: output -->
-    <section class="bottom">
+    <div class="inputBlock">
+      <textarea id="itInput" placeholder="Scrivi una frase… (es. 'bottiglia piena vicino al luogo')"></textarea>
+      <button id="btnTranslate">Translate</button>
+    </div>
+
+    <section class="out">
       <div class="outLabel">
         <span>Output Quadra</span>
-        <span class="api" id="apiLabel">API: …</span>
+        <span id="outMeta" style="font-family:var(--mono); font-size:11px; color:var(--ink-2); text-transform:none; letter-spacing:.02em;"></span>
       </div>
       <div class="quadraLine" id="quadraOutput"></div>
+      <div class="err" id="err"></div>
     </section>
-  </div>
+  </main>
+</div>
 
 <script>
-  /* =========================
-     CONFIG
-     ========================= */
   const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
 
-  /* =========================
-     GLYPH LIB BRIDGE
-     ========================= */
-  const Q = window.QUADRA || window.QuadraGlyphs || null;
+  /* -------------------------
+     Robust glyph-lib discovery
+     ------------------------- */
+  function getGlyphLib(){
+    // preferred
+    if (window.QUADRA) return window.QUADRA;
+    if (window.QuadraGlyphs) return window.QuadraGlyphs;
 
-  function assertGlyphLib(){
-    if(!Q) throw new Error("quadra-glyphs.js non caricato (QUADRA/QuadraGlyphs mancante).");
-    if(typeof Q.svgGlyph !== "function") throw new Error("svgGlyph() mancante.");
-    if(typeof Q.parseQuadraString !== "function") throw new Error("parseQuadraString() mancante.");
+    // fallback: try to assemble minimal interface if globals exist
+    const defs = window.GLYPH_DEFS || window.GLYPH || null;
+    const svgGlyph = window.svgGlyph || null;
+    const parseQuadraString = window.parseQuadraString || null;
+
+    if(defs && svgGlyph && parseQuadraString){
+      return { GLYPH_DEFS: defs, svgGlyph, parseQuadraString };
+    }
+
+    return null;
   }
 
-  /* =========================
-     DOM
-     ========================= */
+  const Q = getGlyphLib();
+
   const itInput = document.getElementById("itInput");
   const btnTranslate = document.getElementById("btnTranslate");
   const quadraOutput = document.getElementById("quadraOutput");
   const legendEl = document.getElementById("legend");
+  const errEl = document.getElementById("err");
+  const glyphErr = document.getElementById("glyphErr");
+  const apiDot = document.getElementById("apiDot");
   const apiLabel = document.getElementById("apiLabel");
+  const outMeta = document.getElementById("outMeta");
 
-  /* =========================
+  const progress = document.getElementById("progress");
+  const bar = document.getElementById("bar");
+
+  function showGlyphError(msg){
+    glyphErr.style.display = "block";
+    glyphErr.textContent = msg + "\nControlla quadra-glyphs.js: deve esporre window.QUADRA oppure window.QuadraGlyphs con svgGlyph() e GLYPH_DEFS.";
+  }
+
+  /* -------------------------
+     Progress bar
+     ------------------------- */
+  let progTimer = null;
+  let progVal = 0;
+
+  function startProgress(){
+    stopProgress();
+    progVal = 0;
+    bar.style.width = "0%";
+    progress.setAttribute("aria-hidden","false");
+    // grow to 90% while waiting
+    progTimer = setInterval(() => {
+      progVal = Math.min(90, progVal + (progVal < 60 ? 6 : 2));
+      bar.style.width = progVal + "%";
+    }, 120);
+  }
+
+  function finishProgress(){
+    if(progTimer) clearInterval(progTimer);
+    progTimer = null;
+    bar.style.width = "100%";
+    setTimeout(() => {
+      progress.setAttribute("aria-hidden","true");
+      bar.style.width = "0%";
+    }, 220);
+  }
+
+  function stopProgress(){
+    if(progTimer) clearInterval(progTimer);
+    progTimer = null;
+    progress.setAttribute("aria-hidden","true");
+    bar.style.width = "0%";
+  }
+
+  /* -------------------------
      API
-     ========================= */
+     ------------------------- */
   async function apiHealth(){
     try{
       const r = await fetch(`${API_BASE}/`, { method:"GET" });
       const t = await r.text();
       const ok = r.ok && (t || "").includes("quadra-api ok");
+      apiDot.className = "dot " + (ok ? "ok" : "bad");
       apiLabel.textContent = ok ? "API: online" : "API: risposta inattesa";
     }catch(e){
+      apiDot.className = "dot bad";
       apiLabel.textContent = "API: offline";
     }
   }
@@ -340,33 +450,9 @@
     return data;
   }
 
-  /* =========================
-     RENDER
-     ========================= */
-  function renderWords(parsed){
-    quadraOutput.innerHTML = "";
-    quadraOutput.classList.remove("fadeIn");
-    // word separation: the parser returns array of words with tokens
-    parsed.forEach((w, idx) => {
-      const word = document.createElement("div");
-      word.className = "word";
-      w.tokens.forEach((t, i) => {
-        const cell = document.createElement("div");
-        cell.innerHTML = Q.svgGlyph(t, { negate: w.opts?.[i]?.negate === true });
-        word.appendChild(cell);
-      });
-      quadraOutput.appendChild(word);
-
-      if(idx !== parsed.length - 1){
-        const sep = document.createElement("div");
-        sep.className = "sep";
-        sep.textContent = "⟂";
-        quadraOutput.appendChild(sep);
-      }
-    });
-    quadraOutput.classList.add("fadeIn");
-  }
-
+  /* -------------------------
+     Rendering
+     ------------------------- */
   function legendMeaning(token){
     const map = {
       OGGETTO:"entità oggettuale",
@@ -401,49 +487,83 @@
   }
 
   function renderLegend(){
-    const defs = Q.GLYPH_DEFS || {};
-    const tokens = Object.keys(defs);
-
     legendEl.innerHTML = "";
+    if(!Q || !Q.GLYPH_DEFS || typeof Q.svgGlyph !== "function"){
+      showGlyphError("ERRORE: libreria glifi non rilevata.");
+      return;
+    }
+    const tokens = Object.keys(Q.GLYPH_DEFS);
     tokens.forEach(t => {
       const item = document.createElement("div");
-      item.className = "legend-item";
+      item.className = "legendItem";
       item.innerHTML = `
         <div>${Q.svgGlyph(t)}</div>
         <div>
-          <div class="legend-name">${t}</div>
-          <div class="legend-desc">${legendMeaning(t)}</div>
+          <div class="legendName">${t}</div>
+          <div class="legendDesc">${legendMeaning(t)}</div>
         </div>
       `;
       legendEl.appendChild(item);
     });
   }
 
-  /* =========================
-     ACTIONS
-     ========================= */
+  function renderWords(parsed){
+    quadraOutput.innerHTML = "";
+    quadraOutput.classList.remove("fadeIn");
+
+    parsed.forEach((w, idx) => {
+      const word = document.createElement("div");
+      word.className = "word";
+      w.tokens.forEach((t, i) => {
+        const cell = document.createElement("div");
+        cell.innerHTML = Q.svgGlyph(t, { negate: w.opts?.[i]?.negate === true });
+        word.appendChild(cell);
+      });
+      quadraOutput.appendChild(word);
+
+      if(idx !== parsed.length - 1){
+        const sep = document.createElement("div");
+        sep.className = "sep";
+        sep.textContent = "⟂";
+        quadraOutput.appendChild(sep);
+      }
+    });
+
+    quadraOutput.classList.add("fadeIn");
+  }
+
+  /* -------------------------
+     Translate
+     ------------------------- */
   async function doTranslate(){
-    assertGlyphLib();
-    const text = (itInput.value || "").trim();
-    if(!text){
-      quadraOutput.innerHTML = "";
+    errEl.textContent = "";
+    outMeta.textContent = "";
+    quadraOutput.innerHTML = "";
+
+    if(!Q || typeof Q.parseQuadraString !== "function" || typeof Q.svgGlyph !== "function"){
+      showGlyphError("ERRORE: quadra-glyphs.js non espone le funzioni richieste.");
       return;
     }
 
+    const text = (itInput.value || "").trim();
+    if(!text) return;
+
     btnTranslate.disabled = true;
-    btnTranslate.textContent = "…";
+    startProgress();
 
     try{
       const data = await apiTranslate(text);
       const quadra = (data.quadra || "").trim();
+
+      outMeta.textContent = (data.from ? `source: ${data.from}` : "");
       const parsed = Q.parseQuadraString(quadra);
       renderWords(parsed);
+      finishProgress();
     }catch(e){
-      quadraOutput.innerHTML = "";
-      apiLabel.textContent = "API: errore";
+      stopProgress();
+      errEl.textContent = "Errore traduzione. Controlla API / rete.";
     }finally{
       btnTranslate.disabled = false;
-      btnTranslate.textContent = "Translate";
     }
   }
 
@@ -455,6 +575,9 @@
   /* init */
   apiHealth();
   renderLegend();
+
+  // demo
+  itInput.value = "bottiglia piena vicino al luogo";
 </script>
 </body>
 </html>
