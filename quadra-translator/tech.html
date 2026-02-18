@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Quadra — Area Tecnica</title>
+  <style>
+    :root{
+      --bg:#ffffff;
+      --fg:#000000;
+      --muted:#6b6b6b;
+      --line:2.25px;
+      --cell:64px;
+      --gap:10px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: "Helvetica Neue", Helvetica, Arial, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      --pad:18px;
+    }
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:var(--bg); color:var(--fg); font-family:var(--sans); }
+    header{
+      position:sticky; top:0; background:var(--bg);
+      border-bottom:1px solid #e9e9e9;
+      padding:16px 18px;
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      z-index:10;
+    }
+    header h1{ margin:0; font-size:14px; letter-spacing:0.14em; text-transform:uppercase; }
+    header .sub{ font-family:var(--mono); font-size:12px; color:var(--muted); }
+    a{ color:#000; text-decoration:none; border-bottom:1px solid #e9e9e9; }
+    a:hover{ border-bottom-color:#000; }
+
+    main{ padding:18px; display:grid; grid-template-columns: 1.3fr 1fr; gap:18px; }
+    @media (max-width: 980px){ main{ grid-template-columns: 1fr; } }
+
+    .card{ border:1px solid #e9e9e9; border-radius:10px; padding:14px; }
+    .card h2{
+      margin:0 0 10px 0; font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-family:var(--mono);
+    }
+    .row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .row > *{ flex:1; min-width: 180px; }
+    textarea, input, select{
+      width:100%; border:1px solid #dcdcdc; border-radius:10px; padding:10px 12px;
+      font-family:var(--mono); font-size:13px; outline:none; background:#fff;
+    }
+    textarea{ min-height:140px; resize:vertical; }
+    button{
+      border:1px solid #dcdcdc; background:#fff; padding:10px 12px; border-radius:10px;
+      font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+      cursor:pointer; transition: transform .04s ease;
+    }
+    button:disabled{ opacity:.45; cursor:not-allowed; }
+    button:active{ transform: translateY(1px); }
+    .btn-primary{ border-color:#000; }
+    .btn-danger{ border-color:#000; background:#000; color:#fff; }
+    .muted{ color:var(--muted); font-size:12px; font-family:var(--mono); }
+    .tiny{ font-size:11px; font-family:var(--mono); color:var(--muted); line-height:1.4; }
+    .hr{ height:1px; background:#e9e9e9; margin:14px 0; }
+    .quadra-line{
+      display:flex; flex-wrap:wrap; gap: var(--gap); align-items:center;
+      padding:10px; border:1px dashed #e1e1e1; border-radius:10px;
+      min-height: calc(var(--cell) + 24px);
+    }
+    .word{ display:flex; gap: var(--gap); align-items:center; padding:8px; border:1px solid #efefef; border-radius:10px; }
+    .label{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-top:6px; word-break:break-word; }
+    .pill{
+      display:inline-block; font-family:var(--mono); font-size:11px;
+      border:1px solid #e9e9e9; border-radius:999px; padding:4px 8px; color:#000; background:#fff;
+    }
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+    @media (max-width: 980px){ .grid2{ grid-template-columns:1fr; } }
+
+    .suggest{
+      border:1px solid #efefef; border-radius:10px; padding:10px; background:#fff;
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .suggest .head{ display:flex; justify-content:space-between; gap:8px; align-items:center; }
+    .suggest .title{ font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase; }
+    .suggest .why{ font-family:var(--mono); font-size:11px; color:var(--muted); }
+    .suggest .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    .table-like{ border:1px solid #efefef; border-radius:10px; overflow:hidden; }
+    .table-like .r{ display:grid; grid-template-columns: 1fr 1.4fr; gap:10px; padding:10px; border-bottom:1px solid #f0f0f0; }
+    .table-like .r:last-child{ border-bottom:none; }
+    .table-like .k{ font-family:var(--mono); font-size:12px; }
+    .table-like .v{ font-family:var(--mono); font-size:11px; color:var(--muted); word-break:break-word; }
+
+    .statusbar{
+      display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;
+      font-family:var(--mono); font-size:12px; color:var(--muted);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px; background:#bbb; display:inline-block;
+      border:1px solid #e9e9e9;
+    }
+    .dot.ok{ background:#000; }
+    .dot.bad{ background:#fff; border-color:#000; }
+
+    /* password gate */
+    .gate{
+      position:fixed; inset:0; background:#fff; z-index:999;
+      display:flex; align-items:center; justify-content:center; padding:24px;
+      border-top:1px solid #fff;
+    }
+    .gatebox{
+      width:min(520px, 100%);
+      border:1px solid #e9e9e9; border-radius:12px; padding:16px;
+    }
+    .gatebox h2{ margin:0 0 10px 0; font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; }
+    .gateerr{ margin-top:8px; font-family:var(--mono); font-size:12px; color:#a66; min-height:16px; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div>
+    <h1>Quadra — Area Tecnica</h1>
+    <div class="sub">vocabolario (D1) • suggerimenti AI • builder • <a href="./index.html">back</a></div>
+  </div>
+  <div class="statusbar">
+    <span class="dot" id="apiDot"></span>
+    <span id="apiLabel">API: check…</span>
+  </div>
+</header>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <h2>Password</h2>
+    <input id="pw" type="password" placeholder="tecnico" autocomplete="off" />
+    <button class="btn-primary" id="pwBtn" style="margin-top:10px;">Entra</button>
+    <div class="gateerr" id="pwErr"></div>
+  </div>
+</div>
+
+<main>
+  <!-- LEFT -->
+  <section class="card">
+    <h2>Traduzione & Builder</h2>
+
+    <div class="grid2">
+      <div>
+        <div class="muted">Italiano (parole / frasi)</div>
+        <textarea id="itInput" placeholder="Esempi: ciao&#10;bottiglia&#10;luogo abbandonato&#10;persona attiva presente"></textarea>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn-primary" id="btnItToQuadra">Italiano → Quadra (AI)</button>
+          <button id="btnClear">Pulisci</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Proposte AI (se parola non trovata nel vocabolario)</h2>
+        <div class="tiny">
+          Se una parola non esiste ancora, l’API genera proposte. <b>Accetta & salva</b> aggiorna il vocabolario in Cloudflare D1.
+        </div>
+        <div id="suggestions"></div>
+      </div>
+
+      <div>
+        <div class="muted">Quadra (glifi + gloss)</div>
+        <div class="quadra-line" id="quadraOutput"></div>
+        <div class="label" id="glossOutput"></div>
+
+        <div class="row" style="margin-top:10px;">
+          <button class="btn-primary" id="btnCopyGloss">Copia gloss</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <h2>Builder frase (composizione manuale)</h2>
+        <div class="tiny">
+          Ogni parola: token con <b>+</b>. Parole separate da <b>/</b>. Negazione con <b>!TOKEN</b>.
+        </div>
+
+        <div class="row" style="margin-top:10px;">
+          <select id="slot1"></select>
+          <select id="slot2"></select>
+          <select id="slot3"></select>
+          <select id="slot4"></select>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <select id="slot5"></select>
+          <select id="slot6"></select>
+          <button class="btn-primary" id="btnAddWord">Aggiungi parola</button>
+        </div>
+
+        <div class="quadra-line" id="phrasePreview" style="margin-top:10px;"></div>
+        <div class="label" id="phraseGloss"></div>
+
+        <div class="row" style="margin-top:10px;">
+          <button id="btnClearPhrase">Pulisci frase</button>
+          <button class="btn-primary" id="btnUsePhraseAsOutput">Usa frase come output</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Vocabolario (Italiano → Quadra) • Cloud + cache locale</h2>
+    <div class="tiny">
+      <b>Salva voce</b> scrive su Cloudflare D1. La lista sotto è cache locale di questo browser.
+    </div>
+
+    <div class="row" style="margin-top:10px;">
+      <input id="dictKey" placeholder="parola italiana (es. bottiglia)" />
+      <input id="dictVal" placeholder="sequenza (es. OGGETTO+PASSIVO+FERMO+PRESENTE)" />
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn-primary" id="btnSaveEntry">Salva voce (cloud)</button>
+      <button id="btnFetchEntry">Cerca voce (cloud)</button>
+      <button id="btnResetLocalCache" class="btn-danger">Reset cache locale</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <h2>Voci in cache locale (browser)</h2>
+    <div id="dictList" class="table-like"></div>
+  </section>
+
+  <!-- RIGHT -->
+  <section class="card">
+    <h2>Legenda glifi</h2>
+    <div class="tiny">
+      Mostra i token disponibili. Se qui non vedi nulla, il problema è quasi certamente <b>quadra-glyphs.js</b> (export vs window).
+    </div>
+    <div class="hr"></div>
+    <div id="legend" class="quadra-line"></div>
+    <div class="label" id="legendLabels"></div>
+  </section>
+</main>
+
+<!-- IMPORTANT: questo deve esporre window.QUADRA.svgGlyph e parseQuadraString -->
+<script src="./quadra-glyphs.js"></script>
+
+<script>
+/* =========================
+   CONFIG
+   ========================= */
+const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
+
+/* =========================
+   LOCAL CACHE (UI convenience)
+   ========================= */
+const CACHE_KEY = "quadra_vocab_cache_v1";
+function loadCache(){
+  try{
+    const raw = localStorage.getItem(CACHE_KEY);
+    if(!raw) return {};
+    const parsed = JSON.parse(raw);
+    return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
+  }catch(e){ return {}; }
+}
+function saveCache(cache){
+  localStorage.setItem(CACHE_KEY, JSON.stringify(cache));
+}
+let CACHE = loadCache();
+
+/* =========================
+   QUADRA helpers from glyph lib
+   ========================= */
+function parseQuadraString(s){
+  return window.QUADRA.parseQuadraString(s);
+}
+function svgGlyph(token, opts){
+  return window.QUADRA.svgGlyph(token, opts);
+}
+function quadraToGloss(text){
+  const s = (text || "").trim();
+  if(!s) return "";
+  const words = parseQuadraString(s);
+  const outWords = words.map(w => {
+    const parts = w.tokens.map((t, i) => {
+      const neg = w.opts[i]?.negate ? "!" : "";
+      return neg + t;
+    });
+    return parts.join("+");
+  });
+  return outWords.join(" / ");
+}
+
+/* =========================
+   API
+   ========================= */
+async function apiHealth(){
+  const dot = document.getElementById("apiDot");
+  const label = document.getElementById("apiLabel");
+  try{
+    const r = await fetch(`${API_BASE}/`, { method:"GET" });
+    const t = await r.text();
+    const ok = r.ok && (t || "").includes("quadra-api ok");
+    dot.className = "dot " + (ok ? "ok" : "bad");
+    label.textContent = ok ? "API: online (Cloudflare)" : "API: risposta inattesa";
+  }catch(e){
+    dot.className = "dot bad";
+    label.textContent = "API: offline / CORS / rete";
+  }
+}
+async function apiTranslate(text){
+  const r = await fetch(`${API_BASE}/translate`, {
+    method: "POST",
+    headers: { "Content-Type":"application/json" },
+    body: JSON.stringify({ text, autosave:false })
+  });
+  const data = await r.json().catch(()=> ({}));
+  if(!r.ok) throw new Error(data?.error || "translate_failed");
+  return data;
+}
+async function apiAddVocab(it, quadra){
+  const r = await fetch(`${API_BASE}/vocab/add`, {
+    method: "POST",
+    headers: { "Content-Type":"application/json" },
+    body: JSON.stringify({ it, quadra, source:"human", confidence:1 })
+  });
+  const data = await r.json().catch(()=> ({}));
+  if(!r.ok) throw new Error(data?.error || "vocab_add_failed");
+  return data;
+}
+async function apiGetVocab(it){
+  const r = await fetch(`${API_BASE}/vocab/get?it=${encodeURIComponent(it)}`, { method:"GET" });
+  const data = await r.json().catch(()=> ({}));
+  if(!r.ok) throw new Error(data?.error || "vocab_get_failed");
+  return data;
+}
+
+/* =========================
+   UI
+   ========================= */
+const itInput = document.getElementById("itInput");
+const quadraOutput = document.getElementById("quadraOutput");
+const glossOutput = document.getElementById("glossOutput");
+const btnItToQuadra = document.getElementById("btnItToQuadra");
+const btnClear = document.getElementById("btnClear");
+const btnCopyGloss = document.getElementById("btnCopyGloss");
+const suggestionsEl = document.getElementById("suggestions");
+
+const dictKey = document.getElementById("dictKey");
+const dictVal = document.getElementById("dictVal");
+const btnSaveEntry = document.getElementById("btnSaveEntry");
+const btnFetchEntry = document.getElementById("btnFetchEntry");
+const btnResetLocalCache = document.getElementById("btnResetLocalCache");
+const dictList = document.getElementById("dictList");
+
+const slotEls = ["slot1","slot2","slot3","slot4","slot5","slot6"].map(id => document.getElementById(id));
+const btnAddWord = document.getElementById("btnAddWord");
+const phrasePreview = document.getElementById("phrasePreview");
+const phraseGloss = document.getElementById("phraseGloss");
+const btnClearPhrase = document.getElementById("btnClearPhrase");
+const btnUsePhraseAsOutput = document.getElementById("btnUsePhraseAsOutput");
+
+function escapeHtml(s){
+  return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+function renderWords(wordsParsed, targetEl){
+  targetEl.innerHTML = "";
+  wordsParsed.forEach((w, idx) => {
+    const wordWrap = document.createElement("div");
+    wordWrap.className = "word";
+    w.tokens.forEach((t, i) => {
+      const cell = document.createElement("div");
+      cell.innerHTML = svgGlyph(t, { negate: w.opts[i]?.negate === true });
+      wordWrap.appendChild(cell);
+    });
+    targetEl.appendChild(wordWrap);
+    if(idx !== wordsParsed.length - 1){
+      const pill = document.createElement("span");
+      pill.className = "pill";
+      pill.textContent = "⟂";
+      targetEl.appendChild(pill);
+    }
+  });
+}
+
+function refreshCacheList(){
+  const keys = Object.keys(CACHE).sort((a,b)=>a.localeCompare(b));
+  if(keys.length === 0){
+    dictList.innerHTML = `<div class="r"><div class="k">(cache vuota)</div><div class="v"></div></div>`;
+    return;
+  }
+  dictList.innerHTML = keys.map(k => {
+    const v = CACHE[k];
+    return `<div class="r"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`;
+  }).join("");
+}
+
+function renderLegend(){
+  const legend = document.getElementById("legend");
+  const legendLabels = document.getElementById("legendLabels");
+  const tokens = (window.QUADRA && window.QUADRA.TOKENS) ? window.QUADRA.TOKENS : [];
+  legend.innerHTML = "";
+  tokens.forEach(t => {
+    const w = document.createElement("div");
+    w.className = "word";
+    w.innerHTML = svgGlyph(t);
+    legend.appendChild(w);
+  });
+  legendLabels.textContent = tokens.join(" • ");
+}
+
+function populateSlots(){
+  const tokens = (window.QUADRA && window.QUADRA.TOKENS) ? window.QUADRA.TOKENS : [];
+  const options = ["", ...tokens, ...tokens.map(t => "!" + t)];
+  slotEls.forEach(sel => {
+    sel.innerHTML = options.map(o => `<option value="${o}">${o || "(vuoto)"}</option>`).join("");
+  });
+  slotEls[0].value = "OGGETTO";
+  slotEls[1].value = "PASSIVO";
+  slotEls[2].value = "FERMO";
+  slotEls[3].value = "PRESENTE";
+  slotEls[4].value = "";
+  slotEls[5].value = "";
+}
+
+let phraseWords = [];
+function renderPhrase(){
+  const phrase = phraseWords.join(" / ");
+  const parsed = parseQuadraString(phrase);
+  renderWords(parsed, phrasePreview);
+  phraseGloss.textContent = phrase ? quadraToGloss(phrase) : "";
+}
+function buildWordFromSlots(){
+  const values = slotEls.map(s => s.value).filter(v => v && v.trim().length>0);
+  if(values.length === 0) return "";
+  return values.join("+");
+}
+
+/* Suggestions */
+function renderAISuggestions(suggestions){
+  suggestionsEl.innerHTML = "";
+  if(!suggestions || suggestions.length === 0){
+    suggestionsEl.innerHTML = `<div class="tiny">(nessuna proposta: tutto già noto nel vocabolario)</div>`;
+    return;
+  }
+
+  const groups = new Map();
+  for(const s of suggestions){
+    const k = (s.it || "").toLowerCase().trim();
+    if(!k) continue;
+    if(!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(s);
+  }
+
+  for(const [tok, arr] of groups.entries()){
+    const wrap = document.createElement("div");
+    wrap.className = "suggest";
+
+    const head = document.createElement("div");
+    head.className = "head";
+    head.innerHTML = `<div class="title">${escapeHtml(tok)}</div><div class="pill">AI</div>`;
+    wrap.appendChild(head);
+
+    arr.sort((a,b) => Number(b.confidence??0) - Number(a.confidence??0));
+
+    arr.forEach((s, idx) => {
+      const quadra = (s.quadra || "").toUpperCase().trim();
+      const conf = Number(s.confidence ?? 0);
+      const rationale = s.rationale || "";
+
+      const cand = document.createElement("div");
+      cand.style.border = "1px solid #f0f0f0";
+      cand.style.borderRadius = "10px";
+      cand.style.padding = "10px";
+      cand.style.display = "flex";
+      cand.style.flexDirection = "column";
+      cand.style.gap = "8px";
+
+      const parsed = parseQuadraString(quadra);
+      const line = document.createElement("div");
+      line.className = "quadra-line";
+      renderWords(parsed, line);
+
+      const why = document.createElement("div");
+      why.className = "why";
+      why.textContent = `proposta ${idx+1} • conf ${(conf*100).toFixed(0)}% • ${rationale} • gloss: ${quadraToGloss(quadra)}`;
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      const btnAccept = document.createElement("button");
+      btnAccept.className = "btn-primary";
+      btnAccept.textContent = "Accetta & salva (cloud)";
+      btnAccept.addEventListener("click", async () => {
+        btnAccept.disabled = true;
+        try{
+          await apiAddVocab(tok, quadra);
+          CACHE[tok] = quadra;
+          saveCache(CACHE);
+          refreshCacheList();
+          dictKey.value = tok;
+          dictVal.value = quadra;
+          await doTranslate();
+        }catch(e){
+          alert("Salvataggio fallito (cloud).");
+        }finally{
+          btnAccept.disabled = false;
+        }
+      });
+
+      const btnEdit = document.createElement("button");
+      btnEdit.textContent = "Modifica (precompila)";
+      btnEdit.addEventListener("click", () => {
+        dictKey.value = tok;
+        dictVal.value = quadra;
+      });
+
+      actions.appendChild(btnAccept);
+      actions.appendChild(btnEdit);
+
+      cand.appendChild(line);
+      cand.appendChild(why);
+      cand.appendChild(actions);
+
+      wrap.appendChild(cand);
+    });
+
+    suggestionsEl.appendChild(wrap);
+  }
+}
+
+/* Translate */
+async function doTranslate(){
+  const text = itInput.value || "";
+  btnItToQuadra.disabled = true;
+  btnItToQuadra.textContent = "Traduzione…";
+  try{
+    const data = await apiTranslate(text);
+    const quadra = (data.quadra || "").trim();
+    glossOutput.textContent = quadraToGloss(quadra);
+    renderWords(parseQuadraString(quadra), quadraOutput);
+    renderAISuggestions(data.suggestions || []);
+  }catch(e){
+    quadraOutput.innerHTML = "";
+    glossOutput.textContent = "";
+    suggestionsEl.innerHTML = `<div class="tiny">Errore API: impossibile tradurre.</div>`;
+  }finally{
+    btnItToQuadra.disabled = false;
+    btnItToQuadra.textContent = "Italiano → Quadra (AI)";
+  }
+}
+
+/* Buttons */
+btnItToQuadra.addEventListener("click", doTranslate);
+btnClear.addEventListener("click", () => {
+  itInput.value = "";
+  quadraOutput.innerHTML = "";
+  glossOutput.textContent = "";
+  suggestionsEl.innerHTML = "";
+});
+btnCopyGloss.addEventListener("click", async () => {
+  const t = glossOutput.textContent || "";
+  if(!t) return;
+  try{ await navigator.clipboard.writeText(t); }catch(e){}
+});
+
+btnSaveEntry.addEventListener("click", async () => {
+  const k = (dictKey.value || "").trim().toLowerCase();
+  const v = (dictVal.value || "").trim().toUpperCase();
+  if(!k || !v) return;
+  btnSaveEntry.disabled = true;
+  try{
+    await apiAddVocab(k, v);
+    CACHE[k] = v;
+    saveCache(CACHE);
+    refreshCacheList();
+    alert("Salvato su cloud (D1).");
+  }catch(e){
+    alert("Salvataggio su cloud fallito.");
+  }finally{
+    btnSaveEntry.disabled = false;
+  }
+});
+btnFetchEntry.addEventListener("click", async () => {
+  const k = (dictKey.value || "").trim().toLowerCase();
+  if(!k) return;
+  btnFetchEntry.disabled = true;
+  try{
+    const res = await apiGetVocab(k);
+    if(!res.found){ alert("Non trovata sul cloud."); return; }
+    const quadra = (res.row?.quadra || "").toUpperCase().trim();
+    dictVal.value = quadra;
+    CACHE[k] = quadra;
+    saveCache(CACHE);
+    refreshCacheList();
+    alert("Trovata sul cloud e aggiornata cache locale.");
+  }catch(e){
+    alert("Lookup fallito (cloud).");
+  }finally{
+    btnFetchEntry.disabled = false;
+  }
+});
+btnResetLocalCache.addEventListener("click", () => {
+  CACHE = {};
+  saveCache(CACHE);
+  refreshCacheList();
+});
+
+/* Phrase builder */
+btnAddWord.addEventListener("click", () => {
+  const w = buildWordFromSlots();
+  if(!w) return;
+  phraseWords.push(w);
+  renderPhrase();
+});
+btnClearPhrase.addEventListener("click", () => {
+  phraseWords = [];
+  renderPhrase();
+});
+btnUsePhraseAsOutput.addEventListener("click", () => {
+  glossOutput.textContent = phraseGloss.textContent || "";
+  const parsed = parseQuadraString(glossOutput.textContent);
+  renderWords(parsed, quadraOutput);
+});
+
+/* init */
+apiHealth();
+refreshCacheList();
+renderPhrase();
+
+/* password gate */
+const gate = document.getElementById("gate");
+const pw = document.getElementById("pw");
+const pwBtn = document.getElementById("pwBtn");
+const pwErr = document.getElementById("pwErr");
+function unlock(){
+  if(pw.value === "tecnico"){
+    gate.style.display = "none";
+    sessionStorage.setItem("quadra_tech_ok","1");
+  }else{
+    pwErr.textContent = "no.";
+  }
+}
+pwBtn.addEventListener("click", unlock);
+pw.addEventListener("keydown", (e)=>{ if(e.key==="Enter") unlock(); });
+
+if(sessionStorage.getItem("quadra_tech_ok")==="1"){
+  gate.style.display = "none";
+}
+
+/* glyph lib init check */
+if(!window.QUADRA || !window.QUADRA.svgGlyph){
+  alert("quadra-glyphs.js non espone window.QUADRA. I glifi non appariranno finché non lo sistemiamo.");
+}else{
+  populateSlots();
+  renderLegend();
+}
+</script>
+</body>
+</html>
