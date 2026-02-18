@@ -9,7 +9,6 @@
       --bg:#ffffff;
       --fg:#000000;
       --muted:#6b6b6b;
-      --line:2.25px;
       --cell:64px;
       --gap:10px;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -27,6 +26,10 @@
     }
     header h1{ margin:0; font-size:16px; letter-spacing:0.08em; text-transform:uppercase; }
     header .sub{ font-family:var(--mono); font-size:12px; color:var(--muted); }
+    .kbd{
+      font-family:var(--mono); border:1px solid #e9e9e9; border-radius:6px;
+      padding:2px 6px; font-size:11px; background:#fafafa;
+    }
 
     .statusbar{
       display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;
@@ -86,11 +89,6 @@
     .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
     @media (max-width: 980px){ .grid2{ grid-template-columns:1fr; } }
 
-    .kbd{
-      font-family:var(--mono); border:1px solid #e9e9e9; border-radius:6px;
-      padding:2px 6px; font-size:11px; background:#fafafa;
-    }
-
     .suggest{
       border:1px solid #efefef; border-radius:10px; padding:10px; background:#fff;
       display:flex; flex-direction:column; gap:8px;
@@ -106,13 +104,13 @@
     .table-like .k{ font-family:var(--mono); font-size:12px; }
     .table-like .v{ font-family:var(--mono); font-size:11px; color:var(--muted); word-break:break-word; }
 
-    /* “Area tecnica” gate */
     .top-actions{ display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap; }
     .linkbtn{
       border:1px solid #e9e9e9; padding:8px 10px; border-radius:999px;
       font-family:var(--mono); font-size:12px; background:#fff; cursor:pointer;
       letter-spacing:.04em; text-transform:uppercase;
     }
+
     .overlay{
       position:fixed; inset:0; background:rgba(255,255,255,.96);
       display:none; align-items:center; justify-content:center; z-index:999;
@@ -130,11 +128,11 @@
 <header>
   <div>
     <h1>Quadra Translator</h1>
-    <div class="sub">Italiano ⇄ Quadra • lingua concettuale • token definitivi (16) • negazione: assenza interna con <span class="kbd">!TOKEN</span></div>
+    <div class="sub">Italiano ⇄ Quadra • token definitivi (16) • negazione: <span class="kbd">!TOKEN</span> (assenza interna)</div>
   </div>
 
   <div class="top-actions">
-    <div class="statusbar" title="Stato backend">
+    <div class="statusbar">
       <span class="dot" id="apiDot"></span>
       <span id="apiLabel">API: check…</span>
     </div>
@@ -142,11 +140,10 @@
   </div>
 </header>
 
-<!-- Password overlay -->
 <div class="overlay" id="techOverlay">
   <div class="modal">
     <div class="t">Accesso area tecnica</div>
-    <div class="tiny">Password solo lato client (non è sicurezza “vera”). Serve a evitare tocchi accidentali.</div>
+    <div class="tiny">Gate lato client (non è sicurezza reale). Serve per evitare modifiche involontarie.</div>
     <div class="row" style="margin-top:10px;">
       <input id="techPass" type="password" placeholder="Password" />
       <button class="btn-primary" id="btnTechEnter">Entra</button>
@@ -159,14 +156,13 @@
 </div>
 
 <main>
-  <!-- LEFT -->
   <section class="card">
     <h2>Traduzione (AI + vocabolario)</h2>
 
     <div class="grid2">
       <div>
-        <div class="muted">Italiano (parole / frasi)</div>
-        <textarea id="itInput" placeholder="Esempi:&#10;ciao&#10;bottiglia città&#10;identità sistema&#10;luogo assente&#10;persona attivo movimento presente"></textarea>
+        <div class="muted">Italiano</div>
+        <textarea id="itInput" placeholder="Esempi:&#10;identità sistema flusso&#10;luogo assente&#10;persona attivo movimento presente"></textarea>
 
         <div class="row" style="margin-top:10px;">
           <button class="btn-primary" id="btnItToQuadra">Italiano → Quadra (AI)</button>
@@ -175,10 +171,8 @@
 
         <div class="hr"></div>
 
-        <h2>Proposte AI (solo se parola non trovata)</h2>
-        <div class="tiny">
-          L’API propone traduzioni solo con i 16 token ammessi. <b>Accetta & salva</b> scrive su Cloudflare D1.
-        </div>
+        <h2>Proposte AI (se mancante)</h2>
+        <div class="tiny">Solo token ammessi. <b>Accetta & salva</b> scrive in D1.</div>
         <div id="suggestions"></div>
       </div>
 
@@ -193,10 +187,9 @@
 
         <div class="hr"></div>
 
-        <h2>Builder frase (manuale)</h2>
+        <h2>Builder</h2>
         <div class="tiny">
-          Ogni parola = token separati da <span class="kbd">+</span>. Parole separate da <span class="kbd">/</span>.
-          Negazione: <span class="kbd">!TOKEN</span> (inserisce assenza interna nel glifo).
+          <span class="kbd">+</span> dentro parola, <span class="kbd">/</span> tra parole. Negazione: <span class="kbd">!TOKEN</span>.
         </div>
 
         <div class="row" style="margin-top:10px;">
@@ -224,13 +217,11 @@
     <div class="hr"></div>
 
     <h2>Vocabolario (Cloudflare D1)</h2>
-    <div class="tiny">
-      <b>Salva</b> scrive su backend. <b>Cerca</b> legge da backend. La lista sotto è solo cache locale UI.
-    </div>
+    <div class="tiny">Salva/cerca su backend. La lista sotto è cache locale UI.</div>
 
     <div class="row" style="margin-top:10px;">
-      <input id="dictKey" placeholder="parola italiana (es. bottiglia)" />
-      <input id="dictVal" placeholder="Quadra (es. OGGETTO+PASSIVO+FERMO+PRESENTE)" />
+      <input id="dictKey" placeholder="parola italiana" />
+      <input id="dictVal" placeholder="Quadra (TOKEN+TOKEN+...)" />
     </div>
     <div class="row" style="margin-top:10px;">
       <button class="btn-primary" id="btnSaveEntry">Salva (cloud)</button>
@@ -244,11 +235,10 @@
     <div id="dictList" class="table-like"></div>
   </section>
 
-  <!-- RIGHT -->
   <section class="card">
-    <h2>Legenda (16 token definitivi)</h2>
+    <h2>Legenda</h2>
     <div class="tiny">
-      Tutti i glifi hanno frame chiuso. La lingua cresce aggiungendo voci (DB), non nuovi segni.
+      Nota: <b>solo OGGETTO</b> mantiene il contorno quadrato esterno. Gli altri glifi sono “segni interni”.
     </div>
     <div class="hr"></div>
     <div id="legend" class="quadra-line"></div>
@@ -257,19 +247,12 @@
     <div class="hr"></div>
 
     <h2>Area tecnica</h2>
-    <div class="tiny">
-      Sblocca per mostrare controlli avanzati (autogrow / debug). È un gate lato client.
-    </div>
-
+    <div class="tiny">Sblocca per controlli avanzati (placeholder).</div>
     <div id="techPanel" style="display:none; margin-top:12px;">
       <div class="table-like">
         <div class="r">
           <div class="k">Autogrow</div>
-          <div class="v">Qui compariranno i controlli quando avrai gli endpoint backend (/autogrow/*).</div>
-        </div>
-        <div class="r">
-          <div class="k">Suggerimento</div>
-          <div class="v">Implementa start/stop/status nel Worker per gestire autogrow in modo affidabile.</div>
+          <div class="v">Da integrare nel Worker con endpoint /autogrow/* (non incluso qui).</div>
         </div>
       </div>
     </div>
@@ -279,15 +262,9 @@
 <script type="module">
   import { TOKENS, glyphSVG } from "./quadra-glyphs.js";
 
-  /* =========================
-     CONFIG
-  ========================= */
   const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
 
-  /* =========================
-     LOCAL CACHE (UI convenience)
-  ========================= */
-  const CACHE_KEY = "quadra_vocab_cache_v2";
+  const CACHE_KEY = "quadra_vocab_cache_v3";
   function loadCache(){
     try{
       const raw = localStorage.getItem(CACHE_KEY);
@@ -299,9 +276,6 @@
   function saveCache(cache){ localStorage.setItem(CACHE_KEY, JSON.stringify(cache)); }
   let CACHE = loadCache();
 
-  /* =========================
-     RENDER HELPERS
-  ========================= */
   function escapeHtml(s){
     return String(s)
       .replaceAll("&","&amp;")
@@ -310,7 +284,6 @@
       .replaceAll('"',"&quot;")
       .replaceAll("'","&#039;");
   }
-
   function safeToken(t){ return TOKENS.includes(t); }
 
   function parseQuadraString(s){
@@ -365,9 +338,6 @@
     });
   }
 
-  /* =========================
-     API
-  ========================= */
   async function apiHealth(){
     const dot = document.getElementById("apiDot");
     const label = document.getElementById("apiLabel");
@@ -412,9 +382,6 @@
     return data;
   }
 
-  /* =========================
-     UI ELEMENTS
-  ========================= */
   const itInput = document.getElementById("itInput");
   const quadraOutput = document.getElementById("quadraOutput");
   const glossOutput = document.getElementById("glossOutput");
@@ -422,7 +389,6 @@
   const btnItToQuadra = document.getElementById("btnItToQuadra");
   const btnClear = document.getElementById("btnClear");
   const btnCopyGloss = document.getElementById("btnCopyGloss");
-
   const suggestionsEl = document.getElementById("suggestions");
 
   const dictKey = document.getElementById("dictKey");
@@ -439,9 +405,6 @@
   const btnClearPhrase = document.getElementById("btnClearPhrase");
   const btnUsePhraseAsOutput = document.getElementById("btnUsePhraseAsOutput");
 
-  /* =========================
-     Cache list
-  ========================= */
   function refreshCacheList(){
     const keys = Object.keys(CACHE).sort((a,b)=>a.localeCompare(b));
     if(keys.length === 0){
@@ -450,16 +413,10 @@
     }
     dictList.innerHTML = keys.map(k => {
       const v = CACHE[k];
-      return `<div class="r">
-        <div class="k">${escapeHtml(k)}</div>
-        <div class="v">${escapeHtml(v)}</div>
-      </div>`;
+      return `<div class="r"><div class="k">${escapeHtml(k)}</div><div class="v">${escapeHtml(v)}</div></div>`;
     }).join("");
   }
 
-  /* =========================
-     Legend
-  ========================= */
   function renderLegend(){
     const legend = document.getElementById("legend");
     const legendLabels = document.getElementById("legendLabels");
@@ -473,16 +430,11 @@
     legendLabels.textContent = TOKENS.join(" • ");
   }
 
-  /* =========================
-     Builder slots
-  ========================= */
   function populateSlots(){
     const options = ["", ...TOKENS, ...TOKENS.map(t => "!" + t)];
     slotEls.forEach(sel => {
       sel.innerHTML = options.map(o => `<option value="${o}">${o || "(vuoto)"}</option>`).join("");
     });
-
-    // suggested defaults: ENTITÀ → AGENZIA → STATO → TEMPO
     slotEls[0].value = "OGGETTO";
     slotEls[1].value = "PASSIVO";
     slotEls[2].value = "FERMO";
@@ -503,9 +455,6 @@
     return values.join("+");
   }
 
-  /* =========================
-     AI Suggestions renderer
-  ========================= */
   function renderAISuggestions(suggestions){
     suggestionsEl.innerHTML = "";
     if(!suggestions || suggestions.length === 0){
@@ -564,14 +513,11 @@
           btnAccept.disabled = true;
           try{
             await apiAddVocab(tok, quadra);
-
             CACHE[tok] = quadra;
             saveCache(CACHE);
             refreshCacheList();
-
             dictKey.value = tok;
             dictVal.value = quadra;
-
             await doTranslate();
           }catch(e){
             alert("Salvataggio fallito (cloud).");
@@ -593,7 +539,6 @@
         cand.appendChild(line);
         cand.appendChild(why);
         cand.appendChild(actions);
-
         wrap.appendChild(cand);
       });
 
@@ -601,9 +546,6 @@
     }
   }
 
-  /* =========================
-     Main translate
-  ========================= */
   async function doTranslate(){
     const text = itInput.value || "";
     btnItToQuadra.disabled = true;
@@ -611,7 +553,6 @@
     try{
       const data = await apiTranslate(text);
       const quadra = (data.quadra || "").trim();
-
       glossOutput.textContent = quadraToGloss(quadra);
       renderWords(parseQuadraString(quadra), quadraOutput);
       renderAISuggestions(data.suggestions || []);
@@ -625,9 +566,6 @@
     }
   }
 
-  /* =========================
-     Buttons
-  ========================= */
   btnItToQuadra.addEventListener("click", doTranslate);
 
   btnClear.addEventListener("click", () => {
@@ -648,7 +586,6 @@
     const v = (dictVal.value || "").trim().toUpperCase();
     if(!k || !v) return;
 
-    // validate tokens on client
     const words = parseQuadraString(v);
     for(const w of words){
       for(const t of w.tokens){
@@ -717,11 +654,9 @@
     renderWords(parseQuadraString(glossOutput.textContent), quadraOutput);
   });
 
-  /* =========================
-     “Area tecnica” gate
-  ========================= */
+  // Area tecnica gate
   const TECH_HASH_KEY = "quadra_tech_gate_v1";
-  const TECH_PASSWORD = "quadra"; // cambia qui, oppure rimuovi il gate
+  const TECH_PASSWORD = "quadra"; // cambia qui
 
   const btnTech = document.getElementById("btnTech");
   const techOverlay = document.getElementById("techOverlay");
@@ -731,24 +666,16 @@
   const techMsg = document.getElementById("techMsg");
   const techPanel = document.getElementById("techPanel");
 
+  function isTechUnlocked(){ return localStorage.getItem(TECH_HASH_KEY) === "1"; }
+  function setTechUnlocked(){ localStorage.setItem(TECH_HASH_KEY, "1"); }
+  function refreshTechUI(){ techPanel.style.display = isTechUnlocked() ? "block" : "none"; }
   function openTechOverlay(){
     techMsg.textContent = "";
     techPass.value = "";
     techOverlay.classList.add("on");
     setTimeout(()=> techPass.focus(), 50);
   }
-  function closeTechOverlay(){
-    techOverlay.classList.remove("on");
-  }
-  function isTechUnlocked(){
-    return localStorage.getItem(TECH_HASH_KEY) === "1";
-  }
-  function setTechUnlocked(){
-    localStorage.setItem(TECH_HASH_KEY, "1");
-  }
-  function refreshTechUI(){
-    techPanel.style.display = isTechUnlocked() ? "block" : "none";
-  }
+  function closeTechOverlay(){ techOverlay.classList.remove("on"); }
 
   btnTech.addEventListener("click", () => {
     if(isTechUnlocked()){
@@ -757,9 +684,7 @@
     }
     openTechOverlay();
   });
-
   btnTechCancel.addEventListener("click", closeTechOverlay);
-
   btnTechEnter.addEventListener("click", () => {
     const p = (techPass.value || "").trim();
     if(p === TECH_PASSWORD){
@@ -770,15 +695,12 @@
       techMsg.textContent = "Password errata.";
     }
   });
-
   techPass.addEventListener("keydown", (e) => {
     if(e.key === "Enter") btnTechEnter.click();
     if(e.key === "Escape") closeTechOverlay();
   });
 
-  /* =========================
-     Init
-  ========================= */
+  // init
   renderLegend();
   populateSlots();
   refreshCacheList();
@@ -786,7 +708,6 @@
   refreshTechUI();
   apiHealth();
 
-  // demo
   itInput.value = "identità sistema flusso luogo assente";
   doTranslate();
 </script>
