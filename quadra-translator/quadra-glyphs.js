@@ -1,6 +1,8 @@
 // quadra-glyphs.js
-// Definitive 16-glyph system: every glyph has a CLOSED outer square frame.
-// Rendering is grid-based (1..7) in a 64x64 viewBox, Swiss-clean black & white.
+// 16-token system.
+// Change requested: NO outer square frame for every glyph EXCEPT OGGETTO,
+// which keeps the closed square frame.
+// Rendering is grid-based (1..7) in a 64x64 viewBox, black & white.
 
 export const TOKENS = [
   // ENTITÀ (4)
@@ -30,73 +32,65 @@ export const TOKENS = [
   "DIFFERENZA",
 ];
 
-// Primitive ops for each token.
-// Coordinate system: a 8x8 grid; we draw inside 1..7 with padding.
+// Ops vocabulary:
+// - frame: only used for OGGETTO now (closed square).
+// - inner: still allowed (SISTEMA) but it's an inner frame without outer frame.
+// - primitives are placed on an 8x8 grid inside a padded 64x64 canvas.
 export const GLYPHS = {
   // ENTITÀ
-  OGGETTO:   [{ t:"frame", mode:"closed" }],
+  OGGETTO: [
+    { t:"frame", mode:"closed" } // ONLY glyph that keeps outer contour
+  ],
 
-  PERSONA:   [
-    { t:"frame", mode:"closed" },
+  PERSONA: [
     { t:"rect", x:2, y:2, w:4, h:4, fill:true }
   ],
 
-  LUOGO:     [
-    { t:"frame", mode:"closed" },
+  LUOGO: [
     { t:"line", x1:2, y1:6, x2:6, y2:6 } // internal base
   ],
 
-  SISTEMA:   [
-    { t:"frame", mode:"closed" },
-    { t:"frame", mode:"inner" } // inner frame
+  SISTEMA: [
+    { t:"frame", mode:"inner" } // inner frame only (no outer frame)
   ],
 
   // AGENZIA / RELAZIONE
-  ATTIVO:    [
-    { t:"frame", mode:"closed" },
+  ATTIVO: [
     { t:"dot", x:4, y:2 }
   ],
 
-  PASSIVO:   [
-    { t:"frame", mode:"closed" },
+  PASSIVO: [
     { t:"dot", x:4, y:6 }
   ],
 
   RELAZIONE: [
-    { t:"frame", mode:"closed" },
     { t:"line", x1:2, y1:4, x2:6, y2:4 }
   ],
 
   // STATO / DINAMICA
   FERMO: [
-    { t:"frame", mode:"closed" },
     { t:"rect", x:3, y:3, w:2, h:2, fill:true }
   ],
 
   MOVIMENTO: [
-    { t:"frame", mode:"closed" },
     { t:"line", x1:2, y1:2, x2:6, y2:6 }
   ],
 
   TRASFORMAZIONE: [
-    { t:"frame", mode:"closed" },
     { t:"line", x1:4, y1:2, x2:4, y2:6 },
     { t:"line", x1:2, y1:4, x2:6, y2:4 }
   ],
 
   FLUSSO: [
-    { t:"frame", mode:"closed" },
     { t:"poly", pts:[[2,3],[3,2],[4,3],[5,2],[6,3]] }
   ],
 
   // CONDIZIONE / TEMPO
   PRESENTE: [
-    { t:"frame", mode:"closed" },
-    { t:"cornermarks" } // internal L marks
+    { t:"cornermarks" } // internal L marks (no outer frame)
   ],
 
   ASSENTE: [
-    { t:"frame", mode:"closed" },
     { t:"dot", x:2, y:2 },
     { t:"dot", x:6, y:2 },
     { t:"dot", x:4, y:4 },
@@ -105,13 +99,11 @@ export const GLYPHS = {
   ],
 
   LIMITE: [
-    { t:"frame", mode:"closed" },
     { t:"line", x1:4, y1:2, x2:4, y2:6 }
   ],
 
   // ASTRAZIONE
   IDENTITA: [
-    { t:"frame", mode:"closed" },
     { t:"dot", x:3, y:3 },
     { t:"dot", x:5, y:3 },
     { t:"dot", x:3, y:5 },
@@ -119,71 +111,70 @@ export const GLYPHS = {
   ],
 
   DIFFERENZA: [
-    { t:"frame", mode:"closed" },
     { t:"dot", x:2, y:2 },
     { t:"dot", x:6, y:6 }
   ],
 };
 
 // SVG renderer
-// options.negate = true -> add "absence internal" small squares as overlay
+// options.negate = true -> add "assenza interna" small squares as overlay
 export function glyphSVG(token, options = {}){
   const ops = GLYPHS[token];
   if(!ops) return "";
 
   const size = 64;
-  const pad = 7; // outer padding
+  const pad = 7;
   const stroke = 2.5;
 
-  // Grid: 0..8 (we use 1..7). cell is 1/8 of inner size.
   const inner = size - pad*2;
   const cell = inner / 8;
 
-  const x = (gx) => pad + gx * cell;
-  const y = (gy) => pad + gy * cell;
+  const X = (gx) => pad + gx * cell;
+  const Y = (gy) => pad + gy * cell;
 
   const parts = [];
 
   function lineOp(x1,y1,x2,y2){
     parts.push(
-      `<line x1="${x(x1)}" y1="${y(y1)}" x2="${x(x2)}" y2="${y(y2)}"
+      `<line x1="${X(x1)}" y1="${Y(y1)}" x2="${X(x2)}" y2="${Y(y2)}"
         stroke="#000" stroke-width="${stroke}" stroke-linecap="square"/>`
     );
   }
 
   function rectOp(rx,ry,rw,rh,fill){
     parts.push(
-      `<rect x="${x(rx)}" y="${y(ry)}" width="${rw*cell}" height="${rh*cell}"
+      `<rect x="${X(rx)}" y="${Y(ry)}" width="${rw*cell}" height="${rh*cell}"
         fill="${fill ? "#000" : "none"}" />`
     );
   }
 
   function dotOp(dx,dy){
     parts.push(
-      `<circle cx="${x(dx)}" cy="${y(dy)}" r="${cell*0.32}" fill="#000" />`
+      `<circle cx="${X(dx)}" cy="${Y(dy)}" r="${cell*0.32}" fill="#000" />`
     );
   }
 
   function polyOp(pts){
-    const d = pts.map(([px,py], i) => `${i===0?"M":"L"} ${x(px)} ${y(py)}`).join(" ");
+    const d = pts.map(([px,py], i) => `${i===0?"M":"L"} ${X(px)} ${Y(py)}`).join(" ");
     parts.push(
-      `<path d="${d}" fill="none" stroke="#000" stroke-width="${stroke}" stroke-linecap="square" stroke-linejoin="miter" />`
+      `<path d="${d}" fill="none" stroke="#000" stroke-width="${stroke}"
+        stroke-linecap="square" stroke-linejoin="miter" />`
     );
   }
 
   function frame(mode){
-    // closed outer frame: square aligned to grid 1..7
     if(mode === "closed"){
+      // outer frame aligned to grid 1..7
       parts.push(
-        `<rect x="${x(1)}" y="${y(1)}" width="${cell*6}" height="${cell*6}"
+        `<rect x="${X(1)}" y="${Y(1)}" width="${cell*6}" height="${cell*6}"
           fill="none" stroke="#000" stroke-width="${stroke}" shape-rendering="crispEdges" />`
       );
       return;
     }
-    // inner frame: inset inside 1..7 by 1 cell -> 2..6
     if(mode === "inner"){
+      // inner frame only (2..6)
       parts.push(
-        `<rect x="${x(2)}" y="${y(2)}" width="${cell*4}" height="${cell*4}"
+        `<rect x="${X(2)}" y="${Y(2)}" width="${cell*4}" height="${cell*4}"
           fill="none" stroke="#000" stroke-width="${stroke}" shape-rendering="crispEdges" />`
       );
       return;
@@ -191,8 +182,8 @@ export function glyphSVG(token, options = {}){
   }
 
   function cornermarks(){
-    // 4 internal L marks near corners (not touching the frame)
-    const x0 = x(1), y0 = y(1), w = cell*6, h = cell*6;
+    // 4 internal L marks in an implied square (no outer frame)
+    const x0 = X(1), y0 = Y(1), w = cell*6, h = cell*6;
     const c = cell*1.1;
     const inset = cell*0.7;
 
@@ -225,7 +216,8 @@ export function glyphSVG(token, options = {}){
     const s = cell*0.55;
     for(const [gx,gy] of centers){
       parts.push(
-        `<rect x="${pad + gx*cell - s/2}" y="${pad + gy*cell - s/2}" width="${s}" height="${s}" fill="#000" />`
+        `<rect x="${pad + gx*cell - s/2}" y="${pad + gy*cell - s/2}"
+          width="${s}" height="${s}" fill="#000" />`
       );
     }
   }
