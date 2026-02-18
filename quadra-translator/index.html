@@ -70,7 +70,7 @@
     }
     @media (max-width: 960px){
       main{ grid-template-columns: 1fr; }
-      .legend{ order:2; }
+      .legend{ order:2; border-left:none; padding-left:0; }
     }
 
     .legend{
@@ -291,8 +291,8 @@ come back with a thought.</p>
 
     <section class="panel">
       <div class="desc">
-        Quadra riduce la frase a una composizione di stati, agenzie e relazioni.
-        Non descrive “oggetti”: descrive il modo in cui una cosa esiste, agisce, cambia.
+        Quadra riduce la frase a una composizione di entità, agenzie e relazioni.
+        Non descrive “cose”: descrive come una cosa esiste, agisce, cambia.
       </div>
 
       <textarea id="itInput" placeholder="Scrivi una frase (concettuale)"></textarea>
@@ -313,10 +313,36 @@ come back with a thought.</p>
     </section>
   </main>
 
+  <!-- IMPORTANT:
+       quadra-glyphs.js MUST define either:
+       - window.QUADRA.svgGlyph + window.QUADRA.parseQuadraString
+       OR
+       - window.GLYPHS (map token -> function returning SVG)
+  -->
   <script src="./quadra-glyphs.js"></script>
 
   <script>
     const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
+
+    // 16 definitive tokens (must match worker)
+    const TOKENS_16 = [
+      ["OGGETTO","entità: oggetto"],
+      ["PERSONA","entità: persona"],
+      ["LUOGO","entità: luogo"],
+      ["ATTIVO","agenzia: attivo"],
+      ["PASSIVO","agenzia: passivo"],
+      ["MOVIMENTO","dinamica: movimento"],
+      ["TRASFORMAZIONE","dinamica: trasformazione"],
+      ["APERTO","stato: aperto"],
+      ["CHIUSO","stato: chiuso"],
+      ["PRESENTE","tempo: presente"],
+      ["ASSENTE","tempo: assente"],
+      ["INIZIO","tempo: inizio"],
+      ["FINE","tempo: fine"],
+      ["RELAZIONE","relazione"],
+      ["CAUSA","logica: causa"],
+      ["SCOPO","logica: scopo"]
+    ];
 
     const itInput = document.getElementById("itInput");
     const btnTranslate = document.getElementById("btnTranslate");
@@ -380,6 +406,46 @@ come back with a thought.</p>
     noiseClose.addEventListener("click", hideNoiseGate);
     noiseGate.addEventListener("click", (e) => { if(e.target === noiseGate) hideNoiseGate(); });
 
+    /* ======================
+       GLYPH ADAPTER LAYER
+       - prefers window.QUADRA if available
+       - otherwise uses window.GLYPHS mapping
+    ====================== */
+    function hasQuadraAPI(){
+      return !!(window.QUADRA && typeof window.QUADRA.svgGlyph === "function" && typeof window.QUADRA.parseQuadraString === "function");
+    }
+
+    function svgGlyph(token, opts){
+      if(hasQuadraAPI()) return window.QUADRA.svgGlyph(token, opts || {});
+      // fallback: GLYPHS map (token -> function returning svg string)
+      const fn = window.GLYPHS ? window.GLYPHS[token] : null;
+      if(typeof fn === "function") return fn();
+      return `<svg viewBox="0 0 100 100" width="64" height="64"><text x="10" y="60" font-size="18">?</text></svg>`;
+    }
+
+    function parseQuadraString(s){
+      if(hasQuadraAPI()) return window.QUADRA.parseQuadraString(s);
+
+      // minimal parser: words "/" and tokens "+" with optional "!TOKEN"
+      const words = String(s||"").split("/").map(w => w.trim()).filter(Boolean);
+      return words.map(word => {
+        const rawTokens = word.split("+").map(t => t.trim()).filter(Boolean);
+        const tokens = [];
+        const opts = [];
+        for(const rt of rawTokens){
+          let negate = false;
+          let t = rt.toUpperCase();
+          if(t.startsWith("!")){
+            negate = true;
+            t = t.slice(1);
+          }
+          tokens.push(t);
+          opts.push({ negate });
+        }
+        return { tokens, opts };
+      });
+    }
+
     function renderWords(wordsParsed, targetEl){
       targetEl.innerHTML = "";
       wordsParsed.forEach((w, idx) => {
@@ -387,7 +453,7 @@ come back with a thought.</p>
         wordWrap.className = "word";
         w.tokens.forEach((t, i) => {
           const cell = document.createElement("div");
-          cell.innerHTML = window.QUADRA.svgGlyph(t, { negate: w.opts[i]?.negate === true });
+          cell.innerHTML = svgGlyph(t, { negate: w.opts?.[i]?.negate === true });
           wordWrap.appendChild(cell);
         });
         targetEl.appendChild(wordWrap);
@@ -402,42 +468,13 @@ come back with a thought.</p>
 
     // Legend
     const legendList = document.getElementById("legendList");
-    const LEGEND_ORDER = [
-      ["OGGETTO","entità: oggetto"],
-      ["PERSONA","entità: persona"],
-      ["LUOGO","entità: luogo"],
-      ["CONTENITORE","entità: contenitore"],
-      ["ATTIVO","agenzia: attivo"],
-      ["PASSIVO","agenzia: passivo"],
-      ["FERMO","stato: fermo"],
-      ["MOVIMENTO","stato: movimento"],
-      ["APERTO","stato: aperto"],
-      ["CHIUSO","stato: chiuso"],
-      ["PIENO","stato: pieno"],
-      ["VUOTO","stato: vuoto"],
-      ["TRASFORMAZIONE","stato: trasformazione"],
-      ["DENTRO","spazio: dentro"],
-      ["FUORI","spazio: fuori"],
-      ["VICINO","spazio: vicino"],
-      ["LONTANO","spazio: lontano"],
-      ["PRESENTE","tempo: presente"],
-      ["ASSENTE","tempo: assente"],
-      ["INIZIO","tempo: inizio"],
-      ["FINE","tempo: fine"],
-      ["RELAZIONE","relazione"],
-      ["CAUSA","logica: causa"],
-      ["SCOPO","logica: scopo"],
-      ["POSSESSO","logica: possesso"],
-      ["POSSIBILE","logica: possibile"],
-      ["DOVERE","logica: dovere"]
-    ];
     function renderLegend(){
       legendList.innerHTML = "";
-      for(const [tok, label] of LEGEND_ORDER){
+      for(const [tok, label] of TOKENS_16){
         const row = document.createElement("div");
         row.className = "legend-item";
         const g = document.createElement("div");
-        g.innerHTML = window.QUADRA.svgGlyph(tok);
+        g.innerHTML = svgGlyph(tok);
         const t = document.createElement("div");
         t.className = "name";
         t.textContent = label;
@@ -490,16 +527,12 @@ come back with a thought.</p>
       try{
         const data = await apiTranslate(text);
         const quadra = String(data.quadra || "").trim();
-        const parsed = window.QUADRA.parseQuadraString(quadra);
+        const parsed = parseQuadraString(quadra);
         renderWords(parsed, quadraOutput);
         endProgress(true);
       }catch(e){
         endProgress(false);
-        if(String(e.message || "").includes("noise_blocked")){
-          showNoiseGate();
-        }else{
-          errEl.textContent = "Errore API: impossibile tradurre.";
-        }
+        errEl.textContent = "Errore API: impossibile tradurre.";
       }finally{
         btnTranslate.disabled = false;
       }
@@ -510,11 +543,12 @@ come back with a thought.</p>
       if((e.metaKey || e.ctrlKey) && e.key === "Enter") doTranslate();
     });
 
-    // Tech area → tech.html (password gate lì dentro)
+    // Tech area
     btnTech.addEventListener("click", () => {
       location.href = "./tech.html";
     });
 
+    // Init
     renderLegend();
   </script>
 </body>
