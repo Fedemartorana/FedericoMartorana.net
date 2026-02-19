@@ -1,5 +1,7 @@
 // quadra-glyphs.js (Versione A — “quadrato”)
-// 16 token definitivi. OGGETTO mantiene frame pieno. Tutti gli altri: frame assente.
+// 16 token definitivi.
+// OGGETTO mantiene frame nero forte.
+// Tutti i glifi hanno anche un QUADRATO LEGGERO esterno (guide frame).
 // Negazione: overlay di “assenza interna” (4 micro-quadrati).
 
 (function () {
@@ -8,12 +10,20 @@
   const SIZE = 64;
   const PAD = 7;
   const LINE = 2.5;
+
   const STROKE = "#000";
   const FILL = "#000";
 
+  // frame leggero (visivo/guida)
+  const LIGHT_STROKE = "#c9d6dc";
+  const LIGHT_W = 1.35;
+
   function svgWrap(inner, aria) {
+    // quadrato leggero sempre presente (sotto ai segni)
+    const light = `<rect x="6.5" y="6.5" width="51" height="51" fill="none" stroke="${LIGHT_STROKE}" stroke-width="${LIGHT_W}"/>`;
     return `
       <svg width="${SIZE}" height="${SIZE}" viewBox="0 0 64 64" role="img" aria-label="${aria}">
+        ${light}
         ${inner}
       </svg>
     `;
@@ -33,13 +43,13 @@
     return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${FILL}"/>`;
   }
 
-  // Frame helper (solo OGGETTO)
-  function frameClosed() {
+  // Frame helper (solo OGGETTO) — frame nero forte
+  function frameClosedStrong() {
     const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
     return rect(x0, y0, w, h, null, STROKE, LINE);
   }
 
-  // “Corner cuts” (PRESENTE) — solo linee, senza frame esterno
+  // “Corner cuts” (PRESENTE) — solo linee
   function brokenCorners() {
     const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
     const x1 = x0, y1 = y0, x2 = x0 + w, y2 = y0 + h;
@@ -99,7 +109,6 @@
   // APERTO/CHIUSO: apertura/chiusura top
   function openTop() {
     const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD;
-    // due segmenti con gap centrale
     const gap = 12;
     const leftEnd = x0 + (w - gap) / 2;
     const rightStart = x0 + (w + gap) / 2;
@@ -110,7 +119,7 @@
   }
   function closedTop() {
     const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD;
-    return rect(x0, y0 - 1, w, 8, FILL); // barra spessa in alto
+    return rect(x0, y0 - 1, w, 8, FILL);
   }
 
   // INIZIO/FINE: stroke top/bottom
@@ -131,14 +140,11 @@
 
   // CAUSA/SCOPO: frecce minimali
   function arrowRight() {
-    // linea + punta
     const x0 = PAD, y0 = PAD, w = 64 - 2 * PAD, h = 64 - 2 * PAD;
     const y = y0 + h * 0.5;
     const x1 = x0 + w * 0.2;
     const x2 = x0 + w * 0.75;
-    const head = `
-      <polygon points="${x2},${y-6} ${x2+10},${y} ${x2},${y+6}" fill="${FILL}"/>
-    `;
+    const head = `<polygon points="${x2},${y-6} ${x2+10},${y} ${x2},${y+6}" fill="${FILL}"/>`;
     return line(x1, y, x2, y) + head;
   }
 
@@ -147,9 +153,7 @@
     const x = x0 + w * 0.5;
     const y1 = y0 + h * 0.75;
     const y2 = y0 + h * 0.25;
-    const head = `
-      <polygon points="${x-6},${y2} ${x},${y2-10} ${x+6},${y2}" fill="${FILL}"/>
-    `;
+    const head = `<polygon points="${x-6},${y2} ${x},${y2-10} ${x+6},${y2}" fill="${FILL}"/>`;
     return line(x, y1, x, y2) + head;
   }
 
@@ -168,7 +172,7 @@
 
   // ----------------- TOKEN SET (16) -----------------
   const GLYPH_DEFS = {
-    OGGETTO:        () => frameClosed(),
+    OGGETTO:        () => frameClosedStrong(),
     PERSONA:        () => nucleus(),
     LUOGO:          () => baseLine(),
 
@@ -194,7 +198,6 @@
 
   const TOKENS = Object.keys(GLYPH_DEFS);
 
-  // ----------------- PARSE -----------------
   function parseQuadraString(s) {
     const words = String(s || "")
       .split("/")
@@ -219,7 +222,7 @@
   function svgGlyph(token, options = {}) {
     const t = String(token || "").toUpperCase();
     const draw = GLYPH_DEFS[t];
-    const base = draw ? draw() : `<text x="10" y="38" font-size="14" font-family="monospace">?</text>`;
+    const base = draw ? draw() : `<text x="14" y="40" font-size="18" font-family="ui-monospace, Menlo, monospace" fill="#000">?</text>`;
     const neg = options.negate === true ? negOverlay() : "";
     return svgWrap(base + neg, t);
   }
@@ -244,7 +247,6 @@
     });
   }
 
-  // expose global
   window.QUADRA = {
     TOKENS,
     parseQuadraString,

@@ -8,7 +8,7 @@
   <style>
     :root{
       --bg:#ffffff;
-      --ink:#8fa3ad;
+      --ink:#8fa3ad;          /* pastel azzurro testo */
       --ink-strong:#7f96a1;
       --line:#c9d6dc;
       --muted:#a6b7bf;
@@ -70,7 +70,7 @@
     }
     @media (max-width: 960px){
       main{ grid-template-columns: 1fr; }
-      .legend{ order:2; border-left:none; padding-left:0; }
+      .legend{ order:2; }
     }
 
     .legend{
@@ -258,8 +258,8 @@
       min-width:220px;
     }
 
-    /* keep glyphs black for clarity */
-    svg *{ stroke:#000 !important; fill:#000 !important; }
+    /* IMPORTANT: non forzare stroke/fill a nero via CSS,
+       altrimenti rompiamo il quadrato leggero dei glifi */
   </style>
 </head>
 
@@ -291,8 +291,8 @@ come back with a thought.</p>
 
     <section class="panel">
       <div class="desc">
-        Quadra riduce la frase a una composizione di entità, agenzie e relazioni.
-        Non descrive “cose”: descrive come una cosa esiste, agisce, cambia.
+        Quadra riduce la frase a una composizione di stati, agenzie e relazioni.
+        Non descrive “oggetti”: descrive il modo in cui una cosa esiste, agisce, cambia.
       </div>
 
       <textarea id="itInput" placeholder="Scrivi una frase (concettuale)"></textarea>
@@ -313,36 +313,11 @@ come back with a thought.</p>
     </section>
   </main>
 
-  <!-- IMPORTANT:
-       quadra-glyphs.js MUST define either:
-       - window.QUADRA.svgGlyph + window.QUADRA.parseQuadraString
-       OR
-       - window.GLYPHS (map token -> function returning SVG)
-  -->
-  <script src="./quadra-glyphs.js"></script>
+  <!-- cache-busting: cambia il suffisso quando aggiorni i glifi -->
+  <script src="./quadra-glyphs.js?v=20260219a"></script>
 
   <script>
     const API_BASE = "https://quadra-api.quadra-fm.workers.dev";
-
-    // 16 definitive tokens (must match worker)
-    const TOKENS_16 = [
-      ["OGGETTO","entità: oggetto"],
-      ["PERSONA","entità: persona"],
-      ["LUOGO","entità: luogo"],
-      ["ATTIVO","agenzia: attivo"],
-      ["PASSIVO","agenzia: passivo"],
-      ["MOVIMENTO","dinamica: movimento"],
-      ["TRASFORMAZIONE","dinamica: trasformazione"],
-      ["APERTO","stato: aperto"],
-      ["CHIUSO","stato: chiuso"],
-      ["PRESENTE","tempo: presente"],
-      ["ASSENTE","tempo: assente"],
-      ["INIZIO","tempo: inizio"],
-      ["FINE","tempo: fine"],
-      ["RELAZIONE","relazione"],
-      ["CAUSA","logica: causa"],
-      ["SCOPO","logica: scopo"]
-    ];
 
     const itInput = document.getElementById("itInput");
     const btnTranslate = document.getElementById("btnTranslate");
@@ -406,46 +381,6 @@ come back with a thought.</p>
     noiseClose.addEventListener("click", hideNoiseGate);
     noiseGate.addEventListener("click", (e) => { if(e.target === noiseGate) hideNoiseGate(); });
 
-    /* ======================
-       GLYPH ADAPTER LAYER
-       - prefers window.QUADRA if available
-       - otherwise uses window.GLYPHS mapping
-    ====================== */
-    function hasQuadraAPI(){
-      return !!(window.QUADRA && typeof window.QUADRA.svgGlyph === "function" && typeof window.QUADRA.parseQuadraString === "function");
-    }
-
-    function svgGlyph(token, opts){
-      if(hasQuadraAPI()) return window.QUADRA.svgGlyph(token, opts || {});
-      // fallback: GLYPHS map (token -> function returning svg string)
-      const fn = window.GLYPHS ? window.GLYPHS[token] : null;
-      if(typeof fn === "function") return fn();
-      return `<svg viewBox="0 0 100 100" width="64" height="64"><text x="10" y="60" font-size="18">?</text></svg>`;
-    }
-
-    function parseQuadraString(s){
-      if(hasQuadraAPI()) return window.QUADRA.parseQuadraString(s);
-
-      // minimal parser: words "/" and tokens "+" with optional "!TOKEN"
-      const words = String(s||"").split("/").map(w => w.trim()).filter(Boolean);
-      return words.map(word => {
-        const rawTokens = word.split("+").map(t => t.trim()).filter(Boolean);
-        const tokens = [];
-        const opts = [];
-        for(const rt of rawTokens){
-          let negate = false;
-          let t = rt.toUpperCase();
-          if(t.startsWith("!")){
-            negate = true;
-            t = t.slice(1);
-          }
-          tokens.push(t);
-          opts.push({ negate });
-        }
-        return { tokens, opts };
-      });
-    }
-
     function renderWords(wordsParsed, targetEl){
       targetEl.innerHTML = "";
       wordsParsed.forEach((w, idx) => {
@@ -453,7 +388,7 @@ come back with a thought.</p>
         wordWrap.className = "word";
         w.tokens.forEach((t, i) => {
           const cell = document.createElement("div");
-          cell.innerHTML = svgGlyph(t, { negate: w.opts?.[i]?.negate === true });
+          cell.innerHTML = window.QUADRA.svgGlyph(t, { negate: w.opts[i]?.negate === true });
           wordWrap.appendChild(cell);
         });
         targetEl.appendChild(wordWrap);
@@ -466,18 +401,44 @@ come back with a thought.</p>
       });
     }
 
-    // Legend
+    // Legend — SOLO 16 token definitivi
     const legendList = document.getElementById("legendList");
+    const LEGEND_ORDER = [
+      ["OGGETTO","entità: oggetto"],
+      ["PERSONA","entità: persona"],
+      ["LUOGO","entità: luogo"],
+
+      ["ATTIVO","agenzia: attivo"],
+      ["PASSIVO","agenzia: passivo"],
+
+      ["MOVIMENTO","stato: movimento"],
+      ["TRASFORMAZIONE","stato: trasformazione"],
+      ["APERTO","stato: aperto"],
+      ["CHIUSO","stato: chiuso"],
+
+      ["PRESENTE","tempo: presente"],
+      ["ASSENTE","tempo: assente"],
+      ["INIZIO","tempo: inizio"],
+      ["FINE","tempo: fine"],
+
+      ["RELAZIONE","relazione"],
+      ["CAUSA","logica: causa"],
+      ["SCOPO","logica: scopo"]
+    ];
+
     function renderLegend(){
       legendList.innerHTML = "";
-      for(const [tok, label] of TOKENS_16){
+      for(const [tok, label] of LEGEND_ORDER){
         const row = document.createElement("div");
         row.className = "legend-item";
+
         const g = document.createElement("div");
-        g.innerHTML = svgGlyph(tok);
+        g.innerHTML = window.QUADRA.svgGlyph(tok);
+
         const t = document.createElement("div");
         t.className = "name";
         t.textContent = label;
+
         row.appendChild(g);
         row.appendChild(t);
         legendList.appendChild(row);
@@ -512,6 +473,17 @@ come back with a thought.</p>
       return data;
     }
 
+    function listUnknownTokens(quadraStr){
+      const parsed = window.QUADRA.parseQuadraString(quadraStr);
+      const all = [];
+      for(const w of parsed){
+        for(const t of w.tokens) all.push(String(t||"").toUpperCase());
+      }
+      const known = new Set(window.QUADRA.TOKENS || []);
+      const unknown = [...new Set(all.filter(t => !known.has(t)))];
+      return unknown;
+    }
+
     async function doTranslate(){
       errEl.textContent = "";
       quadraOutput.innerHTML = "";
@@ -524,15 +496,27 @@ come back with a thought.</p>
 
       btnTranslate.disabled = true;
       startProgress();
+
       try{
         const data = await apiTranslate(text);
         const quadra = String(data.quadra || "").trim();
-        const parsed = parseQuadraString(quadra);
+
+        const unknown = listUnknownTokens(quadra);
+        if(unknown.length){
+          // warning utile per debug (token vecchi nel DB o mismatch col worker)
+          errEl.textContent = `Token non riconosciuti: ${unknown.join(", ")} (controlla DB/worker).`;
+        }
+
+        const parsed = window.QUADRA.parseQuadraString(quadra);
         renderWords(parsed, quadraOutput);
         endProgress(true);
       }catch(e){
         endProgress(false);
-        errEl.textContent = "Errore API: impossibile tradurre.";
+        if(String(e.message || "").includes("noise_blocked")){
+          showNoiseGate();
+        }else{
+          errEl.textContent = "Errore API: impossibile tradurre.";
+        }
       }finally{
         btnTranslate.disabled = false;
       }
@@ -543,12 +527,10 @@ come back with a thought.</p>
       if((e.metaKey || e.ctrlKey) && e.key === "Enter") doTranslate();
     });
 
-    // Tech area
     btnTech.addEventListener("click", () => {
       location.href = "./tech.html";
     });
 
-    // Init
     renderLegend();
   </script>
 </body>
