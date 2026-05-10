@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Miesian House</title>
   <link rel="stylesheet" href="miesianhouse.css" />
+  <link rel="stylesheet" href="../../assets/fm-archive.css" />
 </head>
 <body>
   <div class="project-container">
@@ -27,80 +28,21 @@ No wall ever touches the two windows that face the two internal gardens, thus en
 The plan follows orthogonal lines between them, is clear, simple and rational.
     </p>
     
-    <!-- Sezione immagini in griglia -->
     <div class="additional-images">
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/miesianhouse/miesianhouse01.jpg" alt="Logo" />
-        </div>
-        <figcaption>Logo</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/miesianhouse/miesianhouse02.jpg" alt="Plan" />
-        </div>
-        <figcaption>Plan</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/miesianhouse/miesianhouse03.jpg" alt="View" />
-        </div>
-        <figcaption>View</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/miesianhouse/miesianhouse04.jpg" alt="View" />
-        </div>
-        <figcaption>View</figcaption>
-      </figure>
-
-
-      <!-- ... continua fino a miesianhouse26 con lo stesso schema -->
+      <figure class="additional-image"><div class="image-frame"><img src="/img/miesianhouse/miesianhouse01.jpg" alt="Logo" /></div><figcaption>Logo</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/miesianhouse/miesianhouse02.jpg" alt="Plan" /></div><figcaption>Plan</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/miesianhouse/miesianhouse03.jpg" alt="View" /></div><figcaption>View</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/miesianhouse/miesianhouse04.jpg" alt="View" /></div><figcaption>View</figcaption></figure>
     </div>
 
-    <a href="#" id="back-link">← Back to works</a>
+    <a href="../../works/works.html" id="back-link">← Back to works</a>
   </div>
 
-  <!-- Fascia footer -->
-  <div id="layout-footer">
-    <span class="date-time"></span>
-    <span id="layout-text">Reality</span>
-    <span id="cursor-position"></span>
-  </div>
-
-  <!-- Cursore personalizzato -->
+  <div id="layout-footer"><span class="date-time"></span><span id="layout-text">Reality</span><span id="cursor-position"></span></div>
   <div id="custom-cursor">+</div>
-
-  <!-- Modal fullscreen -->
-  <div id="imageModal">
-    <span class="close-btn">×</span>
-    <img src="" alt="preview immagine">
-  </div>
+  <div id="imageModal"><span class="close-btn">×</span><img src="" alt="preview immagine"></div>
 
   <script src="miesianhouse.js"></script>
-  <script>
-// Disabilita tasto destro
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-
-// Disabilita alcune scorciatoie da tastiera
-document.addEventListener("keydown", (e) => {
-  // F12
-  if (e.key === "F12") {
-    e.preventDefault();
-  }
-  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
-  if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) {
-    e.preventDefault();
-  }
-  // Ctrl+U (visualizza sorgente)
-  if (e.ctrlKey && e.key.toUpperCase() === "U") {
-    e.preventDefault();
-  }
-});
-</script>
-
+  <script src="../../assets/fm-archive.js"></script>
 </body>
 </html>
