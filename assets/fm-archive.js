@@ -6,6 +6,25 @@
   cursor.textContent = '0.00 / 0.00';
   document.body.appendChild(cursor);
 
+  function getBackTarget() {
+    const path = window.location.pathname;
+    if (path.includes('/projects/')) return '../../works/works.html';
+    if (path.includes('/extras/')) return '../../extra/extra.html';
+    if (path.includes('/works/') || path.includes('/extra/') || path.includes('/who/') || path.includes('/contacts/')) return '../index.html';
+    return 'index.html';
+  }
+
+  const back = document.getElementById('back-link');
+  if (back) {
+    const target = back.getAttribute('href') && back.getAttribute('href') !== '#' ? back.getAttribute('href') : getBackTarget();
+    back.setAttribute('href', target);
+    back.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      window.location.href = target;
+    }, true);
+  }
+
   window.addEventListener('mousemove', function (event) {
     const nx = event.clientX / window.innerWidth;
     const ny = event.clientY / window.innerHeight;
@@ -19,8 +38,7 @@
     if (key === 'a') document.body.classList.toggle('archive-mode');
     if (key === 'i') document.body.classList.toggle('invert');
     if (event.key === 'Escape') {
-      const back = document.getElementById('back-link');
-      if (back && back.href) window.location.href = back.href;
+      window.location.href = getBackTarget();
     }
   });
 })();
