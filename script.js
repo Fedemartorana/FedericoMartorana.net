@@ -1,84 +1,42 @@
-const layoutText = document.getElementById("layout-text");
-const cursorPosition = document.getElementById("cursor-position");
-const textContainer = document.getElementById("text-container");
-const dateTimeSpan = document.querySelector('.date-time');
-const customCursor = document.getElementById('custom-cursor');
+const cursor = document.getElementById('cursor');
+const clock = document.getElementById('clock');
+const archivePath = document.getElementById('archivePath');
+const liveCoordinates = document.getElementById('liveCoordinates');
+const modeIndicator = document.getElementById('modeIndicator');
 
-// Colori disponibili
-const colors = [
-  "#c2c1b6", "#878787", "#e1c57f", "#c76758", "#c1ce93",
-  "#88a07e", "#899eaa", "#9b9fc2", "#4d4639", "#1d1d1b"
+const surveys = [
+  { label: 'San Marcellino', coords: '45.1337 N / 10.0245 E', path: '/archive/45.1337-10.0245' },
+  { label: 'Sant Elia', coords: '45.8081 N / 9.0852 E', path: '/archive/45.8081-9.0852' },
+  { label: 'EFESTO', coords: '45.3626 N / 9.6818 E', path: '/archive/45.3626-9.6818' },
+  { label: 'Milan Origin', coords: '45.4654 N / 9.1859 E', path: '/archive/45.4654-9.1859' }
 ];
 
-// Etichette
-const labels = ["works", "extra", "who", "contacts"];
+const selectedSurvey = surveys[Math.floor(Math.random() * surveys.length)];
 
-// Tutte le permutazioni
-function getAllPermutations(arr) {
-  if (arr.length <= 1) return [arr];
-  const perms = [];
-  arr.forEach((item, i) => {
-    const rest = arr.slice(0, i).concat(arr.slice(i + 1));
-    getAllPermutations(rest).forEach(p => perms.push([item, ...p]));
-  });
-  return perms;
+if (archivePath) archivePath.textContent = selectedSurvey.path;
+if (liveCoordinates) liveCoordinates.innerHTML = selectedSurvey.coords + '<br>' + selectedSurvey.label + ' / survey origin';
+if (modeIndicator) {
+  modeIndicator.innerHTML = 'Keyboard commands<br>A - archive mode<br>W - wireframe cloud<br>I - invert black/white<br>Esc - close project<br>Survey: ' + selectedSurvey.label;
 }
 
-const textPermutations = getAllPermutations(labels);
-const totalLayouts = textPermutations.length * colors.length;
+window.addEventListener('mousemove', function(e) {
+  if (!cursor) return;
+  const nx = e.clientX / window.innerWidth;
+  const ny = e.clientY / window.innerHeight;
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  cursor.textContent = nx.toFixed(2) + ' / ' + ny.toFixed(2);
+}); 
 
-// Layout casuale
-const randomColorIndex = Math.floor(Math.random() * colors.length);
-const randomTextPermutation = Math.floor(Math.random() * textPermutations.length);
-const layoutNum = randomColorIndex * textPermutations.length + randomTextPermutation + 1;
-
-const color = colors[randomColorIndex];
-const selectedOrder = textPermutations[randomTextPermutation];
-
-// Imposta colore della fascia
-document.documentElement.style.setProperty('--reality-color', color);
-
-// Crea le scritte in ordine casuale
-selectedOrder.forEach(label => {
-  const span = document.createElement("span");
-  span.textContent = label;
-  span.className = "word";
-  span.style.color = color;
-
-  span.addEventListener("click", () => {
-    const colorParam = encodeURIComponent(color);
-    const section = label.toLowerCase();
-    window.location.href = `./${section}/${section}.html?color=${colorParam}&layoutNum=${layoutNum}`;
-  });
-
-  textContainer.appendChild(span);
-});
-
-// Aggiorna indicatore reality
-layoutText.textContent = `Reality #${layoutNum} / ${totalLayouts}`;
-
-// Stile cursore
-customCursor.style.color = color;
-
-// Movimento cursore
-window.addEventListener('mousemove', e => {
-  customCursor.style.left = e.clientX + 'px';
-  customCursor.style.top = e.clientY + 'px';
-  cursorPosition.textContent = `x: ${e.clientX}, y: ${e.clientY}`;
-});
-
-// Data e ora
-function updateDateTime() {
-  const now = new Date();
-  const formatted = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' }) +
-                    ' ' +
-                    now.toLocaleTimeString('it-IT', { hour12: false });
-  dateTimeSpan.textContent = formatted;
+function updateClock() {
+  if (!clock) return;
+  clock.textContent = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 }
-updateDateTime();
-setInterval(updateDateTime, 1000);
+updateClock(); 
+setInterval(updateClock, 1000);
 
-// Colore testo footer fisso bianco
-dateTimeSpan.style.color = '#ffffff';
-layoutText.style.color = '#ffffff';
-cursorPosition.style.color = '#ffffff';
+window.addEventListener('keydown', function(e) {
+  const k = e.key.toLowerCase();
+  if (k === 'a') document.body.classList.toggle('archive-mode');
+  if (k === 'i') document.body.classList.toggle('invert');
+}); 
