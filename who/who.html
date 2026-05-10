@@ -3,60 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>who</title>
+  <title>Info — FM_ARCHIVE</title>
   <link rel="stylesheet" href="who.css" />
+  <link rel="stylesheet" href="../assets/fm-archive.css" />
 </head>
 <body>
   <div class="project-container">
-    <h1 class="project-title">WHO</h1>
-    
-    <!-- Testo biografico -->
+    <h1 class="project-title">INFO</h1>
     <p class="project-description">
 <strong>Federico Martorana</strong>
 
 <strong>about</strong>
 I am a graduating student in Architecture at Politecnico di Milano, where I have focused on the relationship between architecture and the visual arts, with particular attention to the intersections between architecture and sculpture—the subject of my thesis. Alongside this academic research, I have worked for several years in architecture studios, gaining professional experience in design, representation, and technical development, combining critical inquiry with a concrete and multidisciplinary practice.
-
     </p>
 
-    <!-- Bottone CV -->
     <a href="CV.pdf" target="_blank" class="cv-button">Open CV</a>
-
-    <a href="#" id="back-link">← Back to home</a>
+    <a href="../index.html" id="back-link">← Back to home</a>
   </div>
 
-  <!-- Fascia footer -->
-  <div id="layout-footer">
-    <span class="date-time"></span>
-    <span id="layout-text">Reality</span>
-    <span id="cursor-position"></span>
-  </div>
-
-  <!-- Cursore personalizzato -->
+  <div id="layout-footer"><span class="date-time"></span><span id="layout-text">Reality</span><span id="cursor-position"></span></div>
   <div id="custom-cursor">+</div>
 
   <script src="who.js"></script>
-  <script>
-// Disabilita tasto destro
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-
-// Disabilita alcune scorciatoie da tastiera
-document.addEventListener("keydown", (e) => {
-  // F12
-  if (e.key === "F12") {
-    e.preventDefault();
-  }
-  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
-  if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) {
-    e.preventDefault();
-  }
-  // Ctrl+U (visualizza sorgente)
-  if (e.ctrlKey && e.key.toUpperCase() === "U") {
-    e.preventDefault();
-  }
-});
-</script>
-
+  <script src="../assets/fm-archive.js"></script>
 </body>
-  
 </html>
