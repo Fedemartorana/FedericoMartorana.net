@@ -3,69 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Contacts</title>
+  <title>Contacts — FM_ARCHIVE</title>
   <link rel="stylesheet" href="contacts.css" />
+  <link rel="stylesheet" href="../assets/fm-archive.css" />
 </head>
 <body>
-
-  <!-- Overlay GOTCHA -->
-  <div id="gotcha-overlay">
-    GOTCHA!
-    <span id="gotcha-close">×</span>
-  </div>
-
   <div class="project-container">
     <h1 class="project-title">CONTACTS</h1>
+    <p class="project-description">
+<strong>mail</strong>
+info@federicomartorana.net
 
-    <!-- Modulo contatti -->
-    <form id="contact-form" class="contact-form">
-      <label for="name">Name</label>
-      <input type="text" id="name" name="from_name" required />
-
-      <label for="email">Email</label>
-      <input type="email" id="email" name="reply_to" required />
-
-      <label for="message">Message</label>
-      <textarea id="message" name="message" rows="6" required></textarea>
-
-      <button type="submit">Send</button>
-    </form>
-
-    <a href="#" id="back-link">← Back to home</a>
+<strong>message</strong>
+Use the link below to open your mail client.
+    </p>
+    <a href="mailto:info@federicomartorana.net" class="cv-button">Send email</a>
+    <a href="../index.html" id="back-link">← Back to home</a>
   </div>
-
-  <!-- Fascia footer -->
-  <div id="layout-footer">
-    <span class="date-time"></span>
-    <span id="layout-text">Reality</span>
-    <span id="cursor-position"></span>
-  </div>
-
-  <!-- Cursore personalizzato -->
-  <div id="custom-cursor">+</div>
-
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script src="contacts.js"></script>
-  <script>
-// Disabilita tasto destro
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-
-// Disabilita alcune scorciatoie da tastiera
-document.addEventListener("keydown", (e) => {
-  // F12
-  if (e.key === "F12") {
-    e.preventDefault();
-  }
-  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
-  if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) {
-    e.preventDefault();
-  }
-  // Ctrl+U (visualizza sorgente)
-  if (e.ctrlKey && e.key.toUpperCase() === "U") {
-    e.preventDefault();
-  }
-});
-</script>
-
+  <script src="../assets/fm-archive.js"></script>
 </body>
 </html>
