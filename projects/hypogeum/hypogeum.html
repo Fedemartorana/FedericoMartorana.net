@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hypogeum</title>
   <link rel="stylesheet" href="hypogeum.css" />
+  <link rel="stylesheet" href="../../assets/fm-archive.css" />
 </head>
 <body>
   <div class="project-container">
@@ -37,108 +38,25 @@ The built form is reshaped by natural light as it seeks to reclaim the space.
 The culmination is reached at the center, the cusp of the inverted dome, the only point where the continuity of the hemisphere is broken by an oculus through which a parallel and distorted reality can be admired.
     </p>
     
-    <!-- Sezione immagini in griglia -->
     <div class="additional-images">
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum01.jpg" alt="Logo" />
-        </div>
-        <figcaption>Logo</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum02.jpg" alt="Masterplan" />
-        </div>
-        <figcaption>Masterplan</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum03.jpg" alt="View" />
-        </div>
-        <figcaption>View</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum04.jpg" alt="Oculus room view" />
-        </div>
-        <figcaption>Oculus room view</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum05.jpg" alt="Oculus view" />
-        </div>
-        <figcaption>Oculus view</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum06.jpg" alt="Floor plans" />
-        </div>
-        <figcaption>Floor plans</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum07.jpg" alt="Section" />
-        </div>
-        <figcaption>Section</figcaption>
-      </figure>
-
-      <figure class="additional-image">
-        <div class="image-frame">
-          <img src="/img/hypogeum/hypogeum08.jpg" alt="Oculus room plan" />
-        </div>
-        <figcaption>Oculus room plan</figcaption>
-      </figure>
-
-
-      <!-- ... continua fino a hypogeum26 con lo stesso schema -->
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum01.jpg" alt="Logo" /></div><figcaption>Logo</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum02.jpg" alt="Masterplan" /></div><figcaption>Masterplan</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum03.jpg" alt="View" /></div><figcaption>View</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum04.jpg" alt="Oculus room view" /></div><figcaption>Oculus room view</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum05.jpg" alt="Oculus view" /></div><figcaption>Oculus view</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum06.jpg" alt="Floor plans" /></div><figcaption>Floor plans</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum07.jpg" alt="Section" /></div><figcaption>Section</figcaption></figure>
+      <figure class="additional-image"><div class="image-frame"><img src="/img/hypogeum/hypogeum08.jpg" alt="Oculus room plan" /></div><figcaption>Oculus room plan</figcaption></figure>
     </div>
 
-    <a href="#" id="back-link">← Back to works</a>
+    <a href="../../works/works.html" id="back-link">← Back to works</a>
   </div>
 
-  <!-- Fascia footer -->
-  <div id="layout-footer">
-    <span class="date-time"></span>
-    <span id="layout-text">Reality</span>
-    <span id="cursor-position"></span>
-  </div>
-
-  <!-- Cursore personalizzato -->
+  <div id="layout-footer"><span class="date-time"></span><span id="layout-text">Reality</span><span id="cursor-position"></span></div>
   <div id="custom-cursor">+</div>
-
-  <!-- Modal fullscreen -->
-  <div id="imageModal">
-    <span class="close-btn">×</span>
-    <img src="" alt="preview immagine">
-  </div>
+  <div id="imageModal"><span class="close-btn">×</span><img src="" alt="preview immagine"></div>
 
   <script src="hypogeum.js"></script>
-  <script>
-// Disabilita tasto destro
-document.addEventListener("contextmenu", (e) => e.preventDefault());
-
-// Disabilita alcune scorciatoie da tastiera
-document.addEventListener("keydown", (e) => {
-  // F12
-  if (e.key === "F12") {
-    e.preventDefault();
-  }
-  // Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C
-  if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key.toUpperCase())) {
-    e.preventDefault();
-  }
-  // Ctrl+U (visualizza sorgente)
-  if (e.ctrlKey && e.key.toUpperCase() === "U") {
-    e.preventDefault();
-  }
-});
-</script>
-
+  <script src="../../assets/fm-archive.js"></script>
 </body>
 </html>
