@@ -1,30 +1,77 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FM_ARCHIVE — Federico Martorana</title>
+  <meta name="description" content="Federico Martorana — living architectural archive generated from surveys, coordinates, drawings and memory." />
+  <!-- INITIALIZING ARCHIVE MEMORY SYSTEM -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <canvas id="cloud"></canvas>
+  <div class="cursor" id="cursor">0.00 / 0.00</div>
+  <div class="noise"></div>
+  <div class="archive-title">FM_ARCHIVE</div>
 
-  <div class="center-container" id="text-container">
-    <!-- Le scritte saranno generate con JS -->
-  </div>
+  <main class="site">
+    <header class="top">
+      <div>Federico Martorana</div>
+      <div id="archivePath">/archive/loading</div>
+      <div id="clock">00:00:00</div>
+    </header>
 
-  <!-- Fascia in basso -->
-  <div id="layout-footer">
-    <span class="date-time"></span>
-    <span id="layout-text">Reality</span>
-    <span id="cursor-position"></span>
-  </div>
+    <div class="live-coordinates" id="liveCoordinates">45.4654° N / 9.1859° E<br />Milan / portfolio origin</div>
 
-  <!-- Cursore custom -->
-  <div id="custom-cursor">+</div>
+    <div class="mode-indicator" id="modeIndicator">
+      Keyboard commands<br />
+      A — archive mode<br />
+      W — wireframe cloud<br />
+      I — invert black/white<br />
+      Esc — close project<br />
+      Survey: loading
+    </div>
 
-  <script src="script.js"></script>
-  <script>
+    <section class="hero">
+      <h1 class="name"><span>Federico</span><span>Martorana</span></h1>
+    </section>
 
+    <nav class="nav" aria-label="Main navigation">
+      <div class="nav-list">
+        <a class="nav-link" href="works/works.html">
+          <span class="nav-index">01</span>
+          <span class="nav-title">Academic Works</span>
+          <span class="nav-meta">Polimi / research / design</span>
+        </a>
+        <a class="nav-link" href="works/professional.html">
+          <span class="nav-index">02</span>
+          <span class="nav-title">Professional Works</span>
+          <span class="nav-meta">Practice / drawings / sites</span>
+        </a>
+        <a class="nav-link" href="extra/extra.html">
+          <span class="nav-index">03</span>
+          <span class="nav-title">Papers</span>
+          <span class="nav-meta">Writing / criticism / notes</span>
+        </a>
+        <a class="nav-link" href="who/who.html">
+          <span class="nav-index">04</span>
+          <span class="nav-title">Info</span>
+          <span class="nav-meta">CV / bio / contact</span>
+        </a>
+      </div>
+    </nav>
 
+    <section class="essay">
+      <h2>Not a gallery.</h2>
+      <p>This website works as a living architectural archive: coordinates, surveys, drawings and selected works. The point cloud is not decorative background; it is a spatial index that reacts to reading, movement and project selection.</p>
+    </section>
+
+    <footer class="footer">
+      <div>FM_ARCHIVE v26.05<br />BUILD 2026.05.09<br />LAST UPDATED: MAY 2026<br />PROJECTS INDEXED: 27<br />STATUS: ACTIVE</div>
+      <div>Federico Martorana<br />Milan, Italy<br />Architecture / conservation / reuse / representation<br />info@federicomartorana.net</div>
+    </footer>
+  </main>
+
+  <script type="module" src="script.js"></script>
 </body>
 </html>
