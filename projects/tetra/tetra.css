@@ -1,3 +1,5 @@
+@import url("../../assets/fm-archive.css");
+
 html, body {
   margin: 0;
   padding: 0;
@@ -47,7 +49,6 @@ html, body {
   white-space: pre-wrap;
 }
 
-/* Griglia immagini */
 .additional-images {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -62,7 +63,6 @@ html, body {
   text-align: center;
 }
 
-/* Cornice quadrata invisibile */
 .additional-image .image-frame {
   position: relative;
   width: 100%;
@@ -75,16 +75,14 @@ html, body {
   overflow: hidden;
 }
 
-/* Immagini adattate */
 .additional-image img {
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
-  cursor: none; /* forza cursore custom */
+  cursor: none;
 }
 
-/* Patina hover */
 .additional-image .image-frame::after {
   content: "";
   position: absolute;
@@ -99,7 +97,6 @@ html, body {
   opacity: 0.4;
 }
 
-/* Didascalia */
 .additional-image figcaption {
   margin-top: 8px;
   font-family: monospace;
@@ -107,7 +104,6 @@ html, body {
   color: var(--reality-color);
 }
 
-/* Modal fullscreen */
 #imageModal {
   position: fixed;
   inset: 0;
@@ -133,7 +129,6 @@ html, body {
   border-radius: 8px;
 }
 
-/* Bottone chiusura */
 #imageModal .close-btn {
   position: absolute;
   top: 20px;
@@ -141,11 +136,10 @@ html, body {
   font-size: 2rem;
   font-weight: bold;
   color: var(--reality-color);
-  cursor: none; /* mantiene cursore custom */
+  cursor: none;
   user-select: none;
 }
 
-/* Footer */
 #layout-footer {
   position: fixed;
   bottom: 0;
@@ -164,7 +158,6 @@ html, body {
   user-select: none;
 }
 
-/* Cursore personalizzato */
 #custom-cursor {
   position: fixed;
   left: 0;
