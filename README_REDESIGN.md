@@ -7,3 +7,5 @@ Planned updates:
 - Unified archive styling
 - Works and Professional Works separation
 - Existing project pages retained and progressively restyled
+
+Redeploy trigger: 2026-06-05T17:00:00+02:00
