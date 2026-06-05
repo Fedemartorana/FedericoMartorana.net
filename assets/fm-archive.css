@@ -55,36 +55,44 @@ body.archive-mode::before { opacity: 1 !important; content: "FM_ARCHIVE"; font-f
   width: 100% !important;
   max-width: none !important;
   margin: 0 !important;
-  padding: 14vh 0 22vh !important;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 42vw);
-  column-gap: 18px;
-  align-items: start;
+  padding: 15vh 0 22vh !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 42vw) !important;
+  column-gap: 18px !important;
+  row-gap: 0 !important;
+  align-items: start !important;
 }
 
 .project-title, h1.project-title, .archive-heading {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1 !important;
+  position: static !important;
   font-family: var(--sans) !important;
-  font-size: clamp(54px, 12vw, 180px) !important;
-  line-height: .76 !important;
+  font-size: clamp(58px, 11.2vw, 170px) !important;
+  line-height: .78 !important;
   letter-spacing: -.09em !important;
   text-transform: uppercase !important;
   font-weight: 620 !important;
   color: var(--fg) !important;
-  margin: 0 0 10vh !important;
-  max-width: 12ch;
+  margin: 0 0 11vh !important;
+  max-width: 11ch !important;
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
 }
 
 .project-image {
-  grid-column: 1;
+  grid-column: 1 !important;
+  grid-row: 2 !important;
   width: 100% !important;
-  max-height: 82vh;
-  object-fit: contain;
-  object-position: top left;
-  border-top: 1px solid var(--hard-line);
-  border-bottom: 1px solid var(--hard-line);
-  padding: 18px 0;
+  min-height: 220px !important;
+  max-height: 70vh !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  border-top: 1px solid var(--hard-line) !important;
+  border-bottom: 1px solid var(--hard-line) !important;
+  padding: 18px 0 !important;
   margin: 0 0 10vh !important;
+  background: transparent !important;
 }
 
 .project-description, .info-text, p, figcaption, label {
@@ -96,38 +104,39 @@ body.archive-mode::before { opacity: 1 !important; content: "FM_ARCHIVE"; font-f
 }
 
 .project-description {
-  grid-column: 2;
-  grid-row: 2;
-  white-space: pre-line;
+  grid-column: 2 !important;
+  grid-row: 2 !important;
+  white-space: pre-line !important;
   max-width: 74ch !important;
   margin: 0 0 12vh !important;
-  border-top: 1px solid var(--hard-line);
-  padding-top: 18px;
+  border-top: 1px solid var(--hard-line) !important;
+  padding-top: 18px !important;
 }
 
 .project-description strong, .info-text strong {
-  display: block;
+  display: block !important;
   font-family: var(--sans) !important;
-  font-size: clamp(28px, 5vw, 70px) !important;
-  line-height: .85 !important;
+  font-size: clamp(34px, 5vw, 72px) !important;
+  line-height: .84 !important;
   letter-spacing: -.065em !important;
-  text-transform: uppercase;
-  font-weight: 620;
-  margin: 34px 0 8px;
+  text-transform: uppercase !important;
+  font-weight: 620 !important;
+  margin: 36px 0 12px !important;
 }
+.project-description strong:first-child { margin-top: 0 !important; }
 
 .additional-images {
-  grid-column: 1 / -1;
+  grid-column: 1 / -1 !important;
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   gap: 18px !important;
-  margin: 4vh 0 12vh !important;
+  margin: 2vh 0 12vh !important;
 }
 
-.additional-image { margin: 0 !important; border-top: 1px solid var(--hard-line); padding-top: 8px; }
-.image-frame { background: transparent !important; border: 0 !important; }
-.additional-image img { width: 100%; height: auto; border: 0; }
-figcaption { margin-top: 8px; color: var(--muted) !important; }
+.additional-image { margin: 0 !important; border-top: 1px solid var(--hard-line) !important; padding-top: 8px !important; align-items: stretch !important; text-align: left !important; }
+.image-frame { width: 100% !important; height: auto !important; aspect-ratio: auto !important; background: transparent !important; border: 0 !important; overflow: visible !important; display: block !important; }
+.additional-image img { width: 100% !important; height: auto !important; object-fit: contain !important; border: 0 !important; }
+figcaption { margin-top: 8px !important; color: var(--muted) !important; }
 
 #back-link, .cv-button {
   position: fixed !important;
@@ -138,7 +147,7 @@ figcaption { margin-top: 8px; color: var(--muted) !important; }
   font-size: 10px !important;
   line-height: 1.35 !important;
   color: var(--muted) !important;
-  text-transform: uppercase;
+  text-transform: uppercase !important;
   background: transparent !important;
   border: 0 !important;
   padding: 0 !important;
@@ -189,13 +198,14 @@ body.invert #fm-cursor { background: rgba(242,241,236,.72); }
   grid-template-columns: 1fr auto !important;
   align-items: baseline !important;
   gap: 18px !important;
+  border: 0 !important;
   border-bottom: 1px solid var(--hard-line) !important;
   padding: 12px 0 !important;
   background: transparent !important;
   overflow: visible !important;
 }
 .project-square img { display: none !important; }
-.project-overlay { order: 1; position: static !important; background: transparent !important; display: block !important; color: var(--fg) !important; }
+.project-overlay { order: 1; position: static !important; background: transparent !important; display: block !important; color: var(--fg) !important; pointer-events: none !important; }
 .project-overlay a, .project-overlay span { color: var(--fg) !important; font-family: var(--sans) !important; font-size: clamp(34px, 7vw, 110px) !important; line-height: .8 !important; letter-spacing: -.075em !important; text-transform: uppercase !important; font-weight: 600 !important; }
 .archive-row-meta { order: 2; font-family: var(--mono) !important; font-size: 10px !important; color: var(--muted) !important; text-transform: uppercase; }
 .project-square:hover { opacity: .64; }
@@ -206,11 +216,19 @@ button { text-align: left; text-transform: uppercase; }
 #gotcha-overlay { background: var(--bg) !important; color: var(--fg) !important; font-family: var(--sans) !important; }
 
 @media (max-width: 860px) {
-  body.fm-internal { padding: 14px; }
-  .project-container { display: block; padding-top: 16vh !important; }
-  .project-title { max-width: 100%; }
-  .additional-images { grid-template-columns: 1fr !important; }
-  .project-square { grid-template-columns: 1fr !important; }
-  .archive-row-meta { display: none; }
-  body.fm-internal::after { display: none; }
+  body.fm-internal { padding: 12px !important; }
+  body.fm-internal::before { top: 12px; left: 12px; font-size: 9px; }
+  body.fm-internal::after { display: none !important; }
+  .project-container { display: block !important; padding: 15vh 0 18vh !important; }
+  .project-title { font-size: clamp(48px, 23vw, 112px) !important; line-height: .78 !important; letter-spacing: -.085em !important; max-width: 7.5ch !important; margin-bottom: 8vh !important; }
+  .project-image { width: 100% !important; max-height: none !important; min-height: 0 !important; margin: 0 0 8vh !important; padding: 12px 0 !important; }
+  .project-description { margin: 0 0 9vh !important; max-width: none !important; }
+  .project-description strong { font-size: clamp(38px, 15vw, 76px) !important; }
+  .additional-images { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .project-square { grid-template-columns: 1fr !important; min-height: 70px !important; }
+  .project-overlay span { font-size: clamp(38px, 15vw, 84px) !important; }
+  .archive-row-meta { display: none !important; }
+  #back-link { top: 12px !important; right: 12px !important; font-size: 9px !important; }
+  .cv-button { position: static !important; display: inline-block !important; margin: 16px 0 40px !important; }
+  #fm-cursor { display: none !important; }
 }
