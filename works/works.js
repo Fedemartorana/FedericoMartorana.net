@@ -1,7 +1,6 @@
 const worksContainer = document.getElementById('works-container');
 
 const projects = [
-  { title: 'Miesian House', href: '/projects/miesianhouse/miesianhouse.html' },
   { title: 'Hypogeum', href: '/projects/hypogeum/hypogeum.html' },
   { title: 'House Atelier', href: '/projects/houseatelier/houseatelier.html' },
   { title: 'Archive Exhibit Inhabit', href: '/projects/archiveexhibitinhabit/archiveexhibitinhabit.html' },
