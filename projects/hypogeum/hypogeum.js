@@ -2,14 +2,11 @@ const urlParams = new URLSearchParams(window.location.search);
 const color = urlParams.get('color') || '#000000';
 const layout = urlParams.get('layoutNum') || '–';
 
-// Imposta colore dinamico per tutti i testi e variabile CSS
 document.documentElement.style.setProperty('--reality-color', color);
 
-// Aggiorna testo Reality con numero
 const layoutText = document.getElementById("layout-text");
 if (layoutText) layoutText.textContent = `Reality #${layout}`;
 
-// Aggiorna data e ora
 const dateTimeSpan = document.querySelector('.date-time');
 function updateDateTime() {
   const now = new Date();
@@ -20,7 +17,6 @@ function updateDateTime() {
 updateDateTime();
 setInterval(updateDateTime, 1000);
 
-// Cursore personalizzato e coordinate
 const cursor = document.getElementById('custom-cursor');
 const cursorPosition = document.getElementById('cursor-position');
 
@@ -34,7 +30,6 @@ window.addEventListener('mousemove', e => {
   }
 });
 
-// Colore titolo e link back
 const projectTitle = document.querySelector('.project-title');
 if (projectTitle) projectTitle.style.color = color;
 
@@ -42,37 +37,31 @@ const backLink = document.getElementById('back-link');
 if (backLink) {
   backLink.style.color = color;
   backLink.style.cursor = 'none';
-  backLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    const targetURL = `../../works/works.html?color=${encodeURIComponent(color)}&layoutNum=${encodeURIComponent(layout)}`;
-    window.location.href = targetURL;
-  });
 }
 
-/* -------------------
-   Modal immagini
-------------------- */
-const modal = document.getElementById('imageModal');
-const modalImg = modal.querySelector('img');
-const closeBtn = modal.querySelector('.close-btn');
+const archivePreview = document.getElementById('archive-preview');
+const archiveCaption = document.getElementById('archive-caption');
+const archiveRows = document.querySelectorAll('.image-index-row');
 
-// Click su ogni immagine -> apri modal fullscreen
-document.querySelectorAll('.additional-image .image-frame img').forEach(img => {
-  img.style.cursor = 'none'; // mantiene cursore personalizzato
-  img.addEventListener('click', () => {
-    modalImg.src = img.src;
-    modal.classList.add('active');
+archiveRows.forEach(row => {
+  row.addEventListener('click', () => {
+    archiveRows.forEach(item => item.classList.remove('is-active'));
+    row.classList.add('is-active');
+
+    const src = row.getAttribute('data-src');
+    const caption = row.getAttribute('data-caption');
+
+    if (archivePreview && src) {
+      archivePreview.style.opacity = '0';
+      window.setTimeout(() => {
+        archivePreview.src = src;
+        archivePreview.alt = caption || '';
+        archivePreview.style.opacity = '1';
+      }, 120);
+    }
+
+    if (archiveCaption && caption) {
+      archiveCaption.textContent = caption;
+    }
   });
-});
-
-// Chiudi modal con X
-closeBtn.addEventListener('click', () => {
-  modal.classList.remove('active');
-});
-
-// Chiudi modal cliccando sullo sfondo
-modal.addEventListener('click', e => {
-  if (e.target === modal) {
-    modal.classList.remove('active');
-  }
 });
