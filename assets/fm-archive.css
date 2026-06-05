@@ -1,10 +1,10 @@
 /* FM_ARCHIVE internal page system */
 :root {
-  --bg: #050505;
-  --fg: #f2f1ec;
-  --muted: rgba(242,241,236,.42);
-  --line: rgba(242,241,236,.18);
-  --hard-line: rgba(242,241,236,.88);
+  --bg: #ffffff;
+  --fg: #000000;
+  --muted: rgba(0,0,0,.42);
+  --line: rgba(0,0,0,.18);
+  --hard-line: rgba(0,0,0,.88);
   --mono: "IBM Plex Mono", "SFMono-Regular", "Roboto Mono", monospace;
   --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
 }
@@ -31,7 +31,7 @@ body.fm-internal::before {
 }
 
 body.fm-internal::after {
-  content: "A archive / I invert / Esc back";
+  content: "A archive / Esc back";
   position: fixed;
   right: 18px;
   bottom: 18px;
@@ -45,7 +45,6 @@ body.fm-internal::after {
   text-align: right;
 }
 
-body.invert { --bg: #f2f1ec; --fg: #050505; --muted: rgba(5,5,5,.42); --line: rgba(5,5,5,.18); --hard-line: rgba(5,5,5,.88); }
 body.archive-mode *:not(#fm-cursor):not(#fm-cursor *) { opacity: 0 !important; }
 body.archive-mode::before { opacity: 1 !important; content: "FM_ARCHIVE"; font-family: var(--sans); font-size: clamp(60px, 13vw, 200px); line-height: .75; letter-spacing: -.095em; color: var(--fg); top: 50%; transform: translateY(-50%); }
 
@@ -138,6 +137,36 @@ body.archive-mode::before { opacity: 1 !important; content: "FM_ARCHIVE"; font-f
 .additional-image img { width: 100% !important; height: auto !important; object-fit: contain !important; border: 0 !important; }
 figcaption { margin-top: 8px !important; color: var(--muted) !important; }
 
+.image-archive {
+  grid-column: 1 / -1 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 34vw) !important;
+  gap: 18px !important;
+  margin: 2vh 0 12vh !important;
+  border-top: 1px solid var(--hard-line) !important;
+  padding-top: 18px !important;
+}
+.image-stage { min-height: 60vh; display: flex; flex-direction: column; justify-content: flex-start; }
+#archive-preview, .archive-preview { width: 100% !important; max-height: 78vh !important; object-fit: contain !important; object-position: top left !important; transition: opacity .12s linear; }
+#archive-caption, .archive-caption { margin-top: 8px; font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: uppercase; }
+.image-index { border-top: 1px solid var(--hard-line); }
+.image-index-row {
+  width: 100% !important;
+  display: grid !important;
+  grid-template-columns: 42px 1fr !important;
+  align-items: baseline !important;
+  gap: 12px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--line) !important;
+  padding: 10px 0 !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  text-align: left !important;
+}
+.image-index-row span { font-family: var(--mono); font-size: 10px; }
+.image-index-row strong { font-family: var(--sans); font-size: clamp(22px, 2.6vw, 44px); line-height: .9; letter-spacing: -.055em; text-transform: uppercase; font-weight: 620; }
+.image-index-row.is-active, .image-index-row:hover { color: var(--fg) !important; }
+
 #back-link, .cv-button {
   position: fixed !important;
   top: 18px !important;
@@ -172,12 +201,11 @@ figcaption { margin-top: 8px !important; color: var(--muted) !important; }
   font-size: 10px;
   line-height: 1;
   color: var(--fg);
-  background: rgba(5,5,5,.72);
+  background: rgba(255,255,255,.72);
   border: 1px solid var(--line);
   padding: 6px 7px;
   white-space: nowrap;
 }
-body.invert #fm-cursor { background: rgba(242,241,236,.72); }
 #fm-cursor::before { content: ""; position: absolute; left: -14px; top: -14px; width: 8px; height: 8px; border: 1px solid var(--fg); border-radius: 50%; background: var(--fg); }
 
 .works-container {
@@ -225,6 +253,11 @@ button { text-align: left; text-transform: uppercase; }
   .project-description { margin: 0 0 9vh !important; max-width: none !important; }
   .project-description strong { font-size: clamp(38px, 15vw, 76px) !important; }
   .additional-images { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .image-archive { display: block !important; margin-top: 8vh !important; }
+  .image-stage { min-height: 0; margin-bottom: 18px; }
+  #archive-preview, .archive-preview { max-height: none !important; }
+  .image-index-row { grid-template-columns: 34px 1fr !important; }
+  .image-index-row strong { font-size: clamp(28px, 11vw, 52px); }
   .project-square { grid-template-columns: 1fr !important; min-height: 70px !important; }
   .project-overlay span { font-size: clamp(38px, 15vw, 84px) !important; }
   .archive-row-meta { display: none !important; }
