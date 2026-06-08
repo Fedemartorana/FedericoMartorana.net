@@ -1,8 +1,7 @@
 const worksContainer = document.getElementById('works-container');
 
 const papers = [
-  { title: 'Thesis', image: '/img/thesis/thesis.jpg', href: '../extras/thesis/thesis.html' },
-  { title: 'Dal Co and Chipperfield', image: '/img/dalco&chipperfield/dalco&chipperfield.jpg', href: '../extras/dalco&chipperfield/dalco&chipperfield.html' }
+  { title: 'Thesis', image: '/img/thesis/thesis.jpg', href: '../extras/thesis/thesis.html' }
 ];
 
 papers.forEach((paper, index) => {
@@ -29,4 +28,4 @@ papers.forEach((paper, index) => {
   row.appendChild(img);
   row.appendChild(meta);
   worksContainer.appendChild(row);
-}); 
+});
