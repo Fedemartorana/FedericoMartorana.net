@@ -1,9 +1,9 @@
 :root {
-  --bg: #050505;
-  --fg: #f2f1ec;
-  --muted: rgba(242, 241, 236, .42);
-  --line: rgba(242, 241, 236, .18);
-  --hard-line: rgba(242, 241, 236, .88);
+  --bg: #ffffff;
+  --fg: #000000;
+  --muted: rgba(0, 0, 0, .42);
+  --line: rgba(0, 0, 0, .18);
+  --hard-line: rgba(0, 0, 0, .88);
   --mono: "IBM Plex Mono", "SFMono-Regular", "Roboto Mono", monospace;
   --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
 }
@@ -18,14 +18,6 @@ html, body {
   font-family: var(--sans);
   overflow-x: hidden;
   cursor: none;
-}
-
-body.invert {
-  --bg: #f2f1ec;
-  --fg: #050505;
-  --muted: rgba(5, 5, 5, .42);
-  --line: rgba(5, 5, 5, .18);
-  --hard-line: rgba(5, 5, 5, .88);
 }
 
 body.archive-mode .top,
@@ -45,7 +37,8 @@ a, button { color: inherit; text-decoration: none; cursor: none; }
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: .92;
+  opacity: .26;
+  filter: invert(1) grayscale(1);
 }
 
 .site {
@@ -210,14 +203,12 @@ a, button { color: inherit; text-decoration: none; cursor: none; }
   font-size: 10px;
   line-height: 1;
   color: var(--fg);
-  background: rgba(5,5,5,.72);
+  background: rgba(255,255,255,.72);
   border: 1px solid var(--line);
   padding: 6px 7px;
   white-space: nowrap;
   backdrop-filter: blur(6px);
 }
-
-body.invert .cursor { background: rgba(242,241,236,.72); }
 
 .cursor::before {
   content: "";
@@ -236,13 +227,11 @@ body.invert .cursor { background: rgba(242,241,236,.72); }
   inset: 0;
   z-index: 25;
   pointer-events: none;
-  opacity: .03;
+  opacity: .018;
   background-image: radial-gradient(var(--fg) .7px, transparent .7px);
   background-size: 5px 5px;
-  mix-blend-mode: screen;
+  mix-blend-mode: multiply;
 }
-
-body.invert .noise { mix-blend-mode: multiply; }
 
 .archive-page {
   min-height: 100vh;
@@ -342,4 +331,5 @@ button { text-align: left; }
   .nav-link, .archive-row { grid-template-columns: 38px 1fr; }
   .nav-meta, .archive-row-meta, .mode-indicator { display: none; }
   .essay, .footer, .info-grid { grid-template-columns: 1fr; }
+  .cursor { display: none; }
 }
