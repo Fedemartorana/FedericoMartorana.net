@@ -1,6 +1,13 @@
 (function () {
   document.body.classList.add('fm-internal');
 
+  if (!document.querySelector('script[src="/assets/analytics.js"]')) {
+    const analytics = document.createElement('script');
+    analytics.defer = true;
+    analytics.src = '/assets/analytics.js';
+    document.head.appendChild(analytics);
+  }
+
   const cursor = document.createElement('div');
   cursor.id = 'fm-cursor';
   cursor.textContent = '0.00 / 0.00';
