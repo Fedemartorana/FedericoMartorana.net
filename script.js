@@ -16,8 +16,18 @@ const selectedSurvey = surveys[Math.floor(Math.random() * surveys.length)];
 if (archivePath) archivePath.textContent = selectedSurvey.path;
 if (liveCoordinates) liveCoordinates.innerHTML = selectedSurvey.coords + '<br>' + selectedSurvey.label + ' / survey origin';
 if (modeIndicator) {
-  modeIndicator.innerHTML = 'Keyboard commands<br>A - archive mode<br>W - wireframe cloud<br>I - invert black/white<br>Esc - close project<br>Survey: ' + selectedSurvey.label;
+  modeIndicator.innerHTML = 'Keyboard commands<br>A - archive mode<br>W - wireframe cloud<br>Esc - close project<br>Survey: ' + selectedSurvey.label;
 }
+
+document.querySelectorAll('.nav-link').forEach(function(link) {
+  if (link.textContent.includes('Professional Works')) {
+    link.href = 'proworks/proworks.html';
+    link.removeAttribute('onclick');
+    link.removeAttribute('aria-disabled');
+    const meta = link.querySelector('.nav-meta');
+    if (meta) meta.textContent = 'Survey / documentation / representation';
+  }
+});
 
 window.addEventListener('mousemove', function(e) {
   if (!cursor) return;
@@ -38,5 +48,4 @@ setInterval(updateClock, 1000);
 window.addEventListener('keydown', function(e) {
   const k = e.key.toLowerCase();
   if (k === 'a') document.body.classList.toggle('archive-mode');
-  if (k === 'i') document.body.classList.toggle('invert');
-}); 
+});
