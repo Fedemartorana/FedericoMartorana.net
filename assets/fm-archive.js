@@ -171,8 +171,10 @@
       const url = canonical ? canonical.href : window.location.href;
       const shareData = { title: document.title, url: url };
       const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+      const mobileViewport = window.matchMedia('(max-width: 860px)').matches;
+      const canUseNativeShare = mobileViewport && coarsePointer && navigator.share;
 
-      if (coarsePointer && navigator.share) {
+      if (canUseNativeShare) {
         try {
           await navigator.share(shareData);
           if (typeof window.gtag === 'function') {
