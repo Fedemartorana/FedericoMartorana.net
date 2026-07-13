@@ -202,6 +202,37 @@ figcaption { margin-top: 8px !important; color: var(--muted) !important; }
 }
 #back-link:hover, .cv-button:hover { color: var(--fg) !important; opacity: .64; }
 
+.fm-share-button {
+  position: fixed !important;
+  top: 42px !important;
+  right: 18px !important;
+  z-index: 1000 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  font-family: var(--mono) !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+  color: var(--fg) !important;
+  text-transform: uppercase !important;
+  background: var(--bg) !important;
+  border: 0 !important;
+  padding: 4px 0 !important;
+  white-space: nowrap;
+}
+
+.fm-share-button:hover {
+  opacity: .56;
+}
+
+@media (max-width: 860px) {
+  .fm-share-button {
+    top: 34px !important;
+    right: 12px !important;
+    font-size: 9px !important;
+    padding: 5px 0 !important;
+  }
+}
+
 #layout-footer, #custom-cursor, .date-time, #layout-text, #cursor-position { display: none !important; }
 
 #fm-cursor {
