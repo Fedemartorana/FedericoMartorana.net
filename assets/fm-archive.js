@@ -120,11 +120,7 @@
     });
   });
 
-  function copyPageLink(url) {
-    if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(url);
-    }
-
+  function legacyCopyPageLink(url) {
     return new Promise(function (resolve, reject) {
       const input = document.createElement('textarea');
       input.value = url;
@@ -135,14 +131,25 @@
       input.select();
 
       try {
-        document.execCommand('copy');
-        resolve();
+        const copied = document.execCommand('copy');
+        if (copied) resolve();
+        else reject(new Error('Copy command was rejected'));
       } catch (error) {
         reject(error);
       } finally {
         input.remove();
       }
     });
+  }
+
+  function copyPageLink(url) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(url).catch(function () {
+        return legacyCopyPageLink(url);
+      });
+    }
+
+    return legacyCopyPageLink(url);
   }
 
   function showShareFeedback(button, message) {
