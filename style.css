@@ -333,3 +333,135 @@ button { text-align: left; }
   .essay, .footer, .info-grid { grid-template-columns: 1fr; }
   .cursor { display: none; }
 }
+
+
+/* 2026 responsive and accessibility refinement */
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 100svh;
+  align-items: end;
+}
+
+.scroll-cue {
+  position: absolute;
+  right: 0;
+  bottom: 18px;
+  z-index: 3;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.3;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color .18s linear, opacity .18s linear;
+}
+
+.scroll-cue:hover,
+.scroll-cue:focus-visible,
+.footer a:hover,
+.footer a:focus-visible {
+  color: var(--fg);
+}
+
+.footer a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .name {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media (max-width: 860px) {
+  .site {
+    padding: 12px;
+  }
+
+  .top {
+    top: 12px;
+    left: 12px;
+    right: 12px;
+  }
+
+  .hero {
+    height: 100svh;
+    min-height: 100svh;
+    padding-bottom: 12px;
+  }
+
+  .name {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0;
+    font-size: clamp(40px, 13.2vw, 52px);
+    line-height: .82;
+    letter-spacing: -.075em;
+    overflow-wrap: normal;
+  }
+
+  .scroll-cue {
+    right: 0;
+    bottom: 12px;
+    font-size: 9px;
+  }
+
+  .nav {
+    min-height: 100svh;
+    padding: 10vh 0 12vh;
+  }
+
+  .nav-link {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 10px;
+    min-height: 76px;
+    padding: 10px 0;
+  }
+
+  .nav-title {
+    min-width: 0;
+    font-size: clamp(30px, 10.4vw, 46px);
+    line-height: .86;
+    letter-spacing: -.065em;
+    overflow-wrap: anywhere;
+  }
+
+  .essay {
+    min-height: 50svh;
+  }
+
+  .essay h2 {
+    font-size: clamp(42px, 18vw, 72px);
+    line-height: .84;
+  }
+
+  .footer {
+    min-height: 36svh;
+    gap: 28px;
+    padding-bottom: 12px;
+  }
+}
+
+@media (pointer: coarse) {
+  html,
+  body,
+  a,
+  button {
+    cursor: auto;
+  }
+}
