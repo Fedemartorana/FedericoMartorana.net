@@ -120,6 +120,82 @@
     });
   });
 
+  function copyPageLink(url) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(url);
+    }
+
+    return new Promise(function (resolve, reject) {
+      const input = document.createElement('textarea');
+      input.value = url;
+      input.setAttribute('readonly', '');
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.select();
+
+      try {
+        document.execCommand('copy');
+        resolve();
+      } catch (error) {
+        reject(error);
+      } finally {
+        input.remove();
+      }
+    });
+  }
+
+  function showShareFeedback(button, message) {
+    window.clearTimeout(button.feedbackTimer);
+    button.textContent = message;
+    button.feedbackTimer = window.setTimeout(function () {
+      button.textContent = 'SHARE ↗';
+    }, 1400);
+  }
+
+  const currentPath = window.location.pathname;
+  const isSharePage =
+    currentPath.includes('/projects/') ||
+    currentPath.endsWith('/works/works.html');
+
+  if (isSharePage) {
+    const shareButton = document.createElement('button');
+    shareButton.type = 'button';
+    shareButton.className = 'fm-share-button';
+    shareButton.textContent = 'SHARE ↗';
+    shareButton.setAttribute('aria-label', 'Share this page');
+    document.body.appendChild(shareButton);
+
+    shareButton.addEventListener('click', async function () {
+      const canonical = document.querySelector('link[rel="canonical"]');
+      const url = canonical ? canonical.href : window.location.href;
+      const shareData = { title: document.title, url: url };
+      const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+
+      if (coarsePointer && navigator.share) {
+        try {
+          await navigator.share(shareData);
+          if (typeof window.gtag === 'function') {
+            window.gtag('event', 'share_page', { page_path: window.location.pathname });
+          }
+          return;
+        } catch (error) {
+          if (error && error.name === 'AbortError') return;
+        }
+      }
+
+      try {
+        await copyPageLink(url);
+        showShareFeedback(shareButton, 'LINK COPIED');
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'share_page', { page_path: window.location.pathname });
+        }
+      } catch (error) {
+        showShareFeedback(shareButton, 'COPY FAILED');
+      }
+    });
+  }
+
   window.addEventListener('keydown', function (event) {
     const key = event.key.toLowerCase();
 
