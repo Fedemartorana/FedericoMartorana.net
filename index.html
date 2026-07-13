@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ARCHIVIO FEDERICO MARTORANA — Federico Martorana</title>
-  <meta name="description" content="Federico Martorana —  portfolio from academic and professional experiences " />
+  <title>Federico Martorana — Architecture Portfolio</title>
+  <meta name="description" content="Federico Martorana — architecture, survey, representation and research portfolio." />
   <link rel="stylesheet" href="style.css" />
   <script defer src="/assets/analytics.js"></script>
 </head>
 <body>
-  <canvas id="cloud"></canvas>
   <div class="cursor" id="cursor">0.00 / 0.00</div>
-  <div class="noise"></div>
-  <div class="archive-title">ARCHIVIO FEDERICO MARTORANA</div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="archive-title" aria-hidden="true">ARCHIVIO FEDERICO MARTORANA</div>
 
   <main class="site">
     <header class="top">
@@ -21,24 +20,22 @@
       <div id="clock">00:00:00</div>
     </header>
 
-
-
-
-    <section class="hero">
-      <h1 class="name"><span>Federico</span><span>Martorana</span></h1>
+    <section class="hero" aria-labelledby="home-title">
+      <h1 class="name" id="home-title"><span>Federico</span><span>Martorana</span></h1>
+      <a class="scroll-cue" href="#index">↓ Scroll to index</a>
     </section>
 
-    <nav class="nav" aria-label="Main navigation">
+    <nav class="nav" id="index" aria-label="Main navigation">
       <div class="nav-list">
         <a class="nav-link" href="works/works.html">
           <span class="nav-index">01</span>
           <span class="nav-title">Academic Works</span>
           <span class="nav-meta">Polimi / research / design</span>
         </a>
-        <a class="nav-link" href="#" onclick="return false;" aria-disabled="true">
+        <a class="nav-link" href="proworks/proworks.html">
           <span class="nav-index">02</span>
           <span class="nav-title">Professional Works</span>
-          <span class="nav-meta">Coming soon</span>
+          <span class="nav-meta">Survey / documentation / representation</span>
         </a>
         <a class="nav-link" href="extra/extra.html">
           <span class="nav-index">03</span>
@@ -53,14 +50,26 @@
       </div>
     </nav>
 
-    <section class="essay">
-      <h2>PORTFOLIO</h2>
-      <p>This website works as a living architectural archive: about my academic and professional works, studies and thoughts</p>
+    <section class="essay" aria-labelledby="portfolio-heading">
+      <h2 id="portfolio-heading">Portfolio</h2>
+      <p>A living architectural archive of academic and professional work, surveys, studies and thoughts.</p>
     </section>
 
     <footer class="footer">
-      <div>FM_ARCHIVE v26.05<br />BUILD 2026.05.09<br />LAST UPDATED: MAY 2026<br />PROJECTS INDEXED: 27<br />STATUS: ACTIVE</div>
-      <div>Federico Martorana<br />Milan, Italy<br />Architecture / Arts / research <br />federico.martorana@outlook.it</div>
+      <div>
+        FM_ARCHIVE v26.07<br />
+        BUILD 2026.07.13<br />
+        LAST UPDATED: JULY 2026<br />
+        PROJECTS INDEXED: 06<br />
+        STATUS: ACTIVE
+      </div>
+      <div>
+        Federico Martorana<br />
+        Milan, Italy<br />
+        Architecture / survey / research<br />
+        <a href="mailto:info@federicomartorana.net">info@federicomartorana.net</a><br />
+        <a href="contacts/contacts.html">Contact</a>
+      </div>
     </footer>
   </main>
 
