@@ -417,7 +417,7 @@ button:focus-visible {
 
   .scroll-cue {
     right: 0;
-    bottom: 12px;
+    bottom: calc(12px + 7rem);
     font-size: 9px;
   }
 
