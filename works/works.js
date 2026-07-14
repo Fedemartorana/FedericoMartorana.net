@@ -5,7 +5,8 @@ const projects = [
   { title: 'House Atelier', href: '/projects/houseatelier/houseatelier.html' },
   { title: 'Archive Exhibit Inhabit', href: '/projects/archiveexhibitinhabit/archiveexhibitinhabit.html' },
   { title: 'Tetra', href: '/projects/tetra/tetra.html' },
-  { title: 'EFESTO', href: '/projects/efesto/efesto.html' }
+  { title: 'EFESTO', href: '/projects/efesto/efesto.html' },
+  { title: 'Terzo Tempo', href: '/projects/terzotempo/terzotempo.html' }
 ];
 
 projects.forEach((project, index) => {
