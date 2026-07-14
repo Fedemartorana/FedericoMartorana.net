@@ -1,3 +1,4 @@
+/opt/homebrew/Library/Homebrew/cmd/shellenv.sh: line 18: /bin/ps: Operation not permitted
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://federicomartorana.net/</loc><lastmod>2026-07-13</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
@@ -11,5 +12,6 @@
   <url><loc>https://federicomartorana.net/projects/archiveexhibitinhabit/archiveexhibitinhabit.html</loc><lastmod>2026-07-13</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://federicomartorana.net/projects/tetra/tetra.html</loc><lastmod>2026-07-13</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
   <url><loc>https://federicomartorana.net/projects/efesto/efesto.html</loc><lastmod>2026-07-13</lastmod><changefreq>yearly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://federicomartorana.net/projects/terzotempo/terzotempo.html</loc><lastmod>2026-07-14</lastmod><changefreq>yearly</changefreq><priority>0.9</priority></url>
   <url><loc>https://federicomartorana.net/extras/thesis/thesis.html</loc><lastmod>2026-07-13</lastmod><changefreq>yearly</changefreq><priority>0.8</priority></url>
 </urlset>
