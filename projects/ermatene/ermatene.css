@@ -1,0 +1,24 @@
+.project-title .project-subtitle {
+  display: block;
+  max-width: 42ch;
+  margin-top: 20px;
+  font-family: var(--mono);
+  font-size: clamp(10px, 1.1vw, 14px);
+  line-height: 1.35;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.ermatene-page img[data-media-kind="drawing"] {
+  filter: none !important;
+}
+
+@media (max-width: 860px) {
+  .project-title .project-subtitle {
+    margin-top: 14px;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: .01em;
+  }
+}

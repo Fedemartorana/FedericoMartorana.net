@@ -109,6 +109,7 @@
   function updateArchive(row) {
     const src = row.getAttribute('data-src');
     const caption = row.getAttribute('data-caption') || '';
+    const mediaKind = row.getAttribute('data-kind') || '';
 
     if (!archivePreview || !src || row.classList.contains('is-unavailable')) return;
 
@@ -133,6 +134,8 @@
     nextImage.onload = function () {
       archivePreview.src = src;
       archivePreview.alt = caption.replace(/^\d+\s*\/\s*/, '');
+      if (mediaKind) archivePreview.setAttribute('data-media-kind', mediaKind);
+      else archivePreview.removeAttribute('data-media-kind');
       archivePreview.style.opacity = '1';
       if (archiveCaption) archiveCaption.textContent = caption;
       if (imageStage) imageStage.classList.remove('is-loading', 'has-error');
