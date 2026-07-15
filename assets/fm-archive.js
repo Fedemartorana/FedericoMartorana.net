@@ -67,6 +67,44 @@
   const archiveCaption = document.getElementById('archive-caption');
   const archiveRows = Array.from(document.querySelectorAll('.image-index-row'));
   const imageStage = archivePreview ? archivePreview.closest('.image-stage') : null;
+  const mobileArchive = window.matchMedia('(max-width: 860px)');
+  let imageStageOrigin = null;
+
+  if (imageStage && imageStage.parentNode) {
+    imageStageOrigin = document.createComment('image-stage-origin');
+    imageStage.parentNode.insertBefore(imageStageOrigin, imageStage);
+    imageStage.id = imageStage.id || 'archive-stage';
+
+    archiveRows.forEach(function (row) {
+      row.setAttribute('aria-controls', imageStage.id);
+    });
+  }
+
+  function placeMobileArchiveStage(row) {
+    if (!imageStage || !imageStageOrigin) return;
+
+    if (mobileArchive.matches && row) {
+      row.insertAdjacentElement('afterend', imageStage);
+      imageStage.classList.add('is-inline-mobile');
+      return;
+    }
+
+    if (imageStageOrigin.parentNode) {
+      imageStageOrigin.parentNode.insertBefore(imageStage, imageStageOrigin.nextSibling);
+      imageStage.classList.remove('is-inline-mobile');
+    }
+  }
+
+  function revealMobileArchiveStage(row) {
+    if (!mobileArchive.matches) return;
+
+    window.requestAnimationFrame(function () {
+      row.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start'
+      });
+    });
+  }
 
   function updateArchive(row) {
     const src = row.getAttribute('data-src');
@@ -98,6 +136,7 @@
       archivePreview.style.opacity = '1';
       if (archiveCaption) archiveCaption.textContent = caption;
       if (imageStage) imageStage.classList.remove('is-loading', 'has-error');
+      revealMobileArchiveStage(row);
     };
 
     nextImage.onerror = function () {
@@ -116,8 +155,13 @@
 
   archiveRows.forEach(function (row) {
     row.addEventListener('click', function () {
+      placeMobileArchiveStage(row);
       updateArchive(row);
     });
+  });
+
+  mobileArchive.addEventListener('change', function () {
+    placeMobileArchiveStage(null);
   });
 
   function legacyCopyPageLink(url) {

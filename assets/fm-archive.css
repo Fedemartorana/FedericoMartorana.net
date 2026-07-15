@@ -299,7 +299,24 @@ button { text-align: left; text-transform: uppercase; }
   .image-archive { display: block !important; margin-top: 8vh !important; }
   .image-stage { min-height: 0; margin-bottom: 18px; }
   #archive-preview, .archive-preview { max-height: none !important; }
-  .image-index-row { grid-template-columns: 34px 1fr !important; }
+  .image-index-row {
+    grid-template-columns: 34px 1fr !important;
+    scroll-margin-top: 58px;
+  }
+  .image-index > .image-stage.is-inline-mobile {
+    width: 100%;
+    margin: 0 !important;
+    padding: 14px 0 22px;
+    border-bottom: 1px solid var(--hard-line);
+  }
+  .image-index > .image-stage.is-inline-mobile #archive-preview,
+  .image-index > .image-stage.is-inline-mobile .archive-preview {
+    display: block;
+    width: 100% !important;
+    max-height: 72svh !important;
+    object-fit: contain !important;
+    object-position: top left !important;
+  }
   .image-index-row strong { font-size: clamp(28px, 11vw, 52px); }
   .project-square { grid-template-columns: 1fr !important; min-height: 70px !important; }
   .project-overlay span { font-size: clamp(38px, 15vw, 84px) !important; }
