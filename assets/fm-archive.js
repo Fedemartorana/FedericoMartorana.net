@@ -67,7 +67,6 @@
   const archiveCaption = document.getElementById('archive-caption');
   const archiveRows = Array.from(document.querySelectorAll('.image-index-row'));
   const imageStage = archivePreview ? archivePreview.closest('.image-stage') : null;
-  const mobileArchive = window.matchMedia('(max-width: 860px)');
   let imageStageOrigin = null;
 
   if (imageStage && imageStage.parentNode) {
@@ -80,24 +79,22 @@
     });
   }
 
-  function placeMobileArchiveStage(row) {
+  function placeArchiveStage(row) {
     if (!imageStage || !imageStageOrigin) return;
 
-    if (mobileArchive.matches && row) {
+    if (row) {
       row.insertAdjacentElement('afterend', imageStage);
-      imageStage.classList.add('is-inline-mobile');
+      imageStage.classList.add('is-inline-archive');
       return;
     }
 
     if (imageStageOrigin.parentNode) {
       imageStageOrigin.parentNode.insertBefore(imageStage, imageStageOrigin.nextSibling);
-      imageStage.classList.remove('is-inline-mobile');
+      imageStage.classList.remove('is-inline-archive');
     }
   }
 
-  function revealMobileArchiveStage(row) {
-    if (!mobileArchive.matches) return;
-
+  function revealArchiveStage(row) {
     window.requestAnimationFrame(function () {
       row.scrollIntoView({
         behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
@@ -139,7 +136,7 @@
       archivePreview.style.opacity = '1';
       if (archiveCaption) archiveCaption.textContent = caption;
       if (imageStage) imageStage.classList.remove('is-loading', 'has-error');
-      revealMobileArchiveStage(row);
+      revealArchiveStage(row);
     };
 
     nextImage.onerror = function () {
@@ -158,14 +155,16 @@
 
   archiveRows.forEach(function (row) {
     row.addEventListener('click', function () {
-      placeMobileArchiveStage(row);
+      placeArchiveStage(row);
       updateArchive(row);
     });
   });
 
-  mobileArchive.addEventListener('change', function () {
-    placeMobileArchiveStage(null);
+  const initiallyActiveArchiveRow = archiveRows.find(function (row) {
+    return row.classList.contains('is-active');
   });
+
+  if (initiallyActiveArchiveRow) placeArchiveStage(initiallyActiveArchiveRow);
 
   function legacyCopyPageLink(url) {
     return new Promise(function (resolve, reject) {
