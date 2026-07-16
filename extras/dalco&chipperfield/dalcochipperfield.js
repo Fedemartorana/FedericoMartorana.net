@@ -76,3 +76,6 @@ modal.addEventListener('click', e => {
     modal.classList.remove('active');
   }
 });
+document.addEventListener('contextmenu', function (event) {
+  event.preventDefault();
+}, true);

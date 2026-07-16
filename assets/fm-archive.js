@@ -1,6 +1,10 @@
 (function () {
   document.body.classList.add('fm-internal');
 
+  document.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+  }, true);
+
   if (!document.querySelector('script[src="/assets/analytics.js"]')) {
     const analytics = document.createElement('script');
     analytics.defer = true;
@@ -67,6 +71,7 @@
   const archiveCaption = document.getElementById('archive-caption');
   const archiveRows = Array.from(document.querySelectorAll('.image-index-row'));
   const imageStage = archivePreview ? archivePreview.closest('.image-stage') : null;
+  const mediaShareButtons = new Map();
   let imageStageOrigin = null;
 
   if (imageStage && imageStage.parentNode) {
@@ -76,6 +81,26 @@
 
     archiveRows.forEach(function (row) {
       row.setAttribute('aria-controls', imageStage.id);
+
+      const entry = document.createElement('div');
+      entry.className = 'image-index-entry';
+      if (row.classList.contains('is-active')) entry.classList.add('is-active');
+      row.parentNode.insertBefore(entry, row);
+      entry.appendChild(row);
+
+      const mediaShareButton = document.createElement('button');
+      mediaShareButton.type = 'button';
+      mediaShareButton.className = 'fm-media-share-button';
+      mediaShareButton.textContent = '↗';
+      mediaShareButton.setAttribute('aria-label', 'Share this media');
+      entry.appendChild(mediaShareButton);
+      mediaShareButtons.set(row, mediaShareButton);
+
+      mediaShareButton.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        openSharePanel({ type: 'media', row: row });
+      });
     });
   }
 
@@ -83,7 +108,8 @@
     if (!imageStage || !imageStageOrigin) return;
 
     if (row) {
-      row.insertAdjacentElement('afterend', imageStage);
+      const entry = row.closest('.image-index-entry') || row;
+      entry.insertAdjacentElement('afterend', imageStage);
       imageStage.classList.add('is-inline-archive');
       return;
     }
@@ -113,10 +139,14 @@
     archiveRows.forEach(function (item) {
       item.classList.remove('is-active');
       item.removeAttribute('aria-current');
+      const entry = item.closest('.image-index-entry');
+      if (entry) entry.classList.remove('is-active');
     });
 
     row.classList.add('is-active');
     row.setAttribute('aria-current', 'true');
+    const activeEntry = row.closest('.image-index-entry');
+    if (activeEntry) activeEntry.classList.add('is-active');
 
     if (imageStage) {
       imageStage.classList.add('is-loading');
@@ -207,6 +237,271 @@
   }
 
   const currentPath = window.location.pathname;
+  const projectShareData = {
+    hypogeum: { number: '01', title: 'HYPOGEUM', subtitle: 'Climate Architecture' },
+    houseatelier: { number: '02', title: 'HOUSE ATELIER', subtitle: 'Artist House' },
+    archiveexhibitinhabit: { number: '03', title: 'ARCHIVE EXHIBIT INHABIT', subtitle: 'Archive, Exhibition and Inhabitation' },
+    tetra: { number: '04', title: 'TETRA', subtitle: 'Cultural Park in Naples' },
+    efesto: { number: '05', title: 'EFESTO', subtitle: 'Industrial Adaptive Reuse' },
+    terzotempo: { number: '06', title: 'TERZO TEMPO', subtitle: 'Metamorphosis of the Unfinished' },
+    ermatene: { number: '07', title: 'ERMA TENE', subtitle: 'A Place for the Monteverdi Festival' }
+  };
+
+  function getCurrentProject() {
+    const slug = Object.keys(projectShareData).find(function (key) {
+      return currentPath.includes('/projects/' + key + '/');
+    });
+
+    if (!slug) return null;
+    return Object.assign({ slug: slug }, projectShareData[slug]);
+  }
+
+  const currentProject = getCurrentProject();
+  let shareContext = null;
+  let sharePanel = null;
+  let sharePanelStatus = null;
+  const projectShareFiles = {};
+
+  function getCanonicalUrl() {
+    const canonical = document.querySelector('link[rel="canonical"]');
+    return canonical ? canonical.href : window.location.href;
+  }
+
+  function closeSharePanel() {
+    if (!sharePanel) return;
+    sharePanel.hidden = true;
+    shareContext = null;
+    document.body.classList.remove('fm-share-open');
+  }
+
+  function setSharePanelStatus(message) {
+    if (sharePanelStatus) sharePanelStatus.textContent = message || '';
+  }
+
+  function ensureSharePanel() {
+    if (sharePanel) return sharePanel;
+
+    sharePanel = document.createElement('div');
+    sharePanel.className = 'fm-share-panel';
+    sharePanel.hidden = true;
+    sharePanel.innerHTML =
+      '<div class="fm-share-dialog" role="dialog" aria-modal="true" aria-labelledby="fm-share-title">' +
+        '<div class="fm-share-dialog-header"><span id="fm-share-title">SHARE</span><button type="button" class="fm-share-close" aria-label="Close share menu">ESC</button></div>' +
+        '<button type="button" class="fm-share-option" data-share-format="story"><span>01</span><strong>STORY</strong><small>9:16</small></button>' +
+        '<button type="button" class="fm-share-option" data-share-format="post"><span>02</span><strong>POST</strong><small>4:5</small></button>' +
+        '<button type="button" class="fm-share-option" data-share-format="link"><span>03</span><strong>COPY LINK</strong><small>URL</small></button>' +
+        '<p class="fm-share-status" aria-live="polite"></p>' +
+      '</div>';
+    document.body.appendChild(sharePanel);
+
+    sharePanelStatus = sharePanel.querySelector('.fm-share-status');
+
+    sharePanel.addEventListener('click', function (event) {
+      if (event.target === sharePanel) closeSharePanel();
+    });
+
+    sharePanel.querySelector('.fm-share-close').addEventListener('click', closeSharePanel);
+
+    sharePanel.querySelectorAll('[data-share-format]').forEach(function (button) {
+      button.addEventListener('click', async function () {
+        const format = button.getAttribute('data-share-format');
+        if (!shareContext) return;
+
+        if (format === 'link') {
+          try {
+            await copyPageLink(getCanonicalUrl());
+            setSharePanelStatus('LINK COPIED');
+          } catch (error) {
+            setSharePanelStatus('COPY FAILED');
+          }
+          return;
+        }
+
+        button.disabled = true;
+        setSharePanelStatus('PREPARING ' + format.toUpperCase());
+
+        try {
+          let file;
+          if (shareContext.type === 'media') {
+            file = createMediaShareFile(shareContext.row, format);
+          } else if (projectShareFiles[format]) {
+            file = projectShareFiles[format];
+          } else {
+            file = await getProjectShareFile(format);
+          }
+          await shareOrSaveFile(file);
+          setSharePanelStatus(navigator.share ? 'READY TO SHARE' : 'CARD SAVED');
+          trackShare(shareContext.type, format);
+        } catch (error) {
+          setSharePanelStatus('SHARE UNAVAILABLE');
+        } finally {
+          button.disabled = false;
+        }
+      });
+    });
+
+    return sharePanel;
+  }
+
+  function openSharePanel(context) {
+    if (!currentProject) return;
+    shareContext = context;
+    ensureSharePanel();
+    setSharePanelStatus(context.type === 'media' ? 'SELECT FORMAT / CURRENT MEDIA' : 'SELECT FORMAT / PROJECT CARD');
+    sharePanel.hidden = false;
+    document.body.classList.add('fm-share-open');
+    sharePanel.querySelector('[data-share-format="story"]').focus();
+  }
+
+  function getProjectShareFile(format) {
+    const url = '/img/share/' + currentProject.slug + '/' + format + '.jpg';
+    return fetch(url).then(function (response) {
+      if (!response.ok) throw new Error('Project share card not found');
+      return response.blob();
+    }).then(function (blob) {
+      const file = new File([blob], currentProject.slug + '-' + format + '.jpg', { type: 'image/jpeg' });
+      projectShareFiles[format] = file;
+      return file;
+    });
+  }
+
+  if (currentProject) {
+    ['story', 'post'].forEach(function (format) {
+      getProjectShareFile(format).catch(function () {});
+    });
+  }
+
+  function fitCanvasText(context, text, maximumWidth, startingSize, minimumSize, weight, family) {
+    let size = startingSize;
+    do {
+      context.font = weight + ' ' + size + 'px ' + family;
+      if (context.measureText(text).width <= maximumWidth) return size;
+      size -= 2;
+    } while (size > minimumSize);
+    return minimumSize;
+  }
+
+  function drawContainedImage(context, image, x, y, width, height) {
+    const scale = Math.min(width / image.naturalWidth, height / image.naturalHeight);
+    const renderedWidth = image.naturalWidth * scale;
+    const renderedHeight = image.naturalHeight * scale;
+    context.drawImage(
+      image,
+      x + (width - renderedWidth) / 2,
+      y + (height - renderedHeight) / 2,
+      renderedWidth,
+      renderedHeight
+    );
+  }
+
+  function canvasToJpegFile(canvas, filename) {
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+    const encoded = dataUrl.split(',')[1];
+    const binary = window.atob(encoded);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+    return new File([bytes], filename, { type: 'image/jpeg' });
+  }
+
+  function createMediaShareFile(row, format) {
+    if (!currentProject || !archivePreview) throw new Error('Active project media not found');
+    if (!archivePreview.complete || !archivePreview.naturalWidth) throw new Error('Active media is still loading');
+
+    const isStory = format === 'story';
+    const width = 1080;
+    const height = isStory ? 1920 : 1350;
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d');
+    const sans = 'Inter, "Helvetica Neue", Arial, sans-serif';
+    const mono = '"IBM Plex Mono", "SFMono-Regular", Menlo, monospace';
+    const image = archivePreview;
+    const caption = row.getAttribute('data-caption') || archiveCaption && archiveCaption.textContent || '';
+    const mediaTitle = caption.replace(/^\d+\s*\/\s*/, '').toUpperCase();
+    const mediaNumber = (caption.match(/^\d+/) || [''])[0];
+    const margin = 58;
+
+    context.fillStyle = '#ffffff';
+    context.fillRect(0, 0, width, height);
+    context.textBaseline = 'top';
+
+    context.fillStyle = '#000000';
+    context.font = '700 38px ' + sans;
+    context.fillText('FM_ARCHIVE', margin, 58);
+    context.textAlign = 'right';
+    context.font = '700 72px ' + sans;
+    context.fillText(currentProject.number, width - margin, 48);
+    context.textAlign = 'left';
+
+    const titleY = isStory ? 245 : 185;
+    const titleSize = fitCanvasText(context, currentProject.title, width - margin * 2, isStory ? 116 : 94, 58, '700', sans);
+    context.font = '700 ' + titleSize + 'px ' + sans;
+    context.fillText(currentProject.title, margin, titleY);
+
+    const subtitleY = titleY + titleSize + 42;
+    const subtitleSize = fitCanvasText(context, currentProject.subtitle.toUpperCase(), width - margin * 2, isStory ? 30 : 25, 18, '700', sans);
+    context.font = '700 ' + subtitleSize + 'px ' + sans;
+    context.fillText(currentProject.subtitle.toUpperCase(), margin, subtitleY);
+
+    context.fillStyle = 'rgba(0,0,0,.48)';
+    context.font = '400 ' + (isStory ? 20 : 18) + 'px ' + mono;
+    context.fillText((mediaNumber ? mediaNumber + ' / ' : '') + mediaTitle, margin, subtitleY + subtitleSize + 32);
+
+    const imageY = isStory ? 650 : 500;
+    const imageHeight = isStory ? 900 : 700;
+    drawContainedImage(context, image, 28, imageY, width - 56, imageHeight);
+
+    context.fillStyle = 'rgba(0,0,0,.48)';
+    context.font = '400 ' + (isStory ? 18 : 16) + 'px ' + mono;
+    context.fillText('FEDERICOMARTORANA.NET', margin, height - 92);
+
+    const safeMediaTitle = mediaTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'media';
+    return canvasToJpegFile(
+      canvas,
+      currentProject.slug + '-' + safeMediaTitle + '-' + format + '.jpg'
+    );
+  }
+
+  function downloadFile(file) {
+    const link = document.createElement('a');
+    const objectUrl = URL.createObjectURL(file);
+    link.href = objectUrl;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(function () { URL.revokeObjectURL(objectUrl); }, 1000);
+  }
+
+  async function shareOrSaveFile(file) {
+    const shareData = { files: [file], title: currentProject ? currentProject.title : document.title };
+    const canShareFiles = navigator.share && (!navigator.canShare || navigator.canShare({ files: [file] }));
+
+    if (canShareFiles) {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error) {
+        if (error && error.name === 'AbortError') return;
+      }
+    }
+
+    downloadFile(file);
+  }
+
+  function trackShare(type, format) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'share_page', {
+        page_path: window.location.pathname,
+        share_content: type,
+        share_format: format
+      });
+    }
+  }
+
   const isSharePage =
     currentPath.includes('/projects/') ||
     currentPath.endsWith('/works/works.html');
@@ -220,8 +515,12 @@
     document.body.appendChild(shareButton);
 
     shareButton.addEventListener('click', async function () {
-      const canonical = document.querySelector('link[rel="canonical"]');
-      const url = canonical ? canonical.href : window.location.href;
+      if (currentProject) {
+        openSharePanel({ type: 'project' });
+        return;
+      }
+
+      const url = getCanonicalUrl();
       const shareData = { title: document.title, url: url };
       const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
       const mobileViewport = window.matchMedia('(max-width: 860px)').matches;
@@ -259,6 +558,10 @@
     }
 
     if (event.key === 'Escape') {
+      if (sharePanel && !sharePanel.hidden) {
+        closeSharePanel();
+        return;
+      }
       window.location.assign(getBackTarget());
     }
   });

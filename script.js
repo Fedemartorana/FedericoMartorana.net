@@ -2,6 +2,10 @@ const cursor = document.getElementById('cursor');
 const clock = document.getElementById('clock');
 const archivePath = document.getElementById('archivePath');
 
+document.addEventListener('contextmenu', function (event) {
+  event.preventDefault();
+}, true);
+
 const archiveCoordinates = [
   '/archive/45.1337-10.0245',
   '/archive/45.8081-9.0852',
