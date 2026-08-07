@@ -8,12 +8,12 @@
 <title>ASAP — ATLANTE</title>
 <style>
 :root{
-  --paper:#fff;
-  --ink:#080808;
-  --muted:#717171;
-  --line:#cfcfcf;
-  --soft:#f2f2f0;
-  --accent:#ff2f00;
+  --paper:#f4f1e9;
+  --ink:#11100f;
+  --muted:#77736c;
+  --line:#bbb7ae;
+  --soft:#e9e5dc;
+  --accent:#ff2d00;
   --rail:360px;
 }
 *{box-sizing:border-box}
@@ -30,12 +30,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .cover-top,.cover-bottom{display:flex;justify-content:space-between;gap:20px;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 .cover-copy h1{font-size:clamp(56px,8vw,128px);line-height:.78;letter-spacing:-.075em;margin:0;font-weight:700}
 .cover-copy p{font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.22;max-width:520px;margin:28px 0 0}
-.cover-stage{display:grid;place-items:center;padding:5vh 6vw;background:var(--soft);overflow:hidden}
-.issue-cover{position:relative;width:min(48vh,440px);aspect-ratio:3/4;background:var(--paper);border:1px solid var(--ink);box-shadow:18px 20px 0 var(--ink);padding:22px;display:flex;flex-direction:column;justify-content:space-between;transform:rotate(-1.5deg);animation:cover-in .8s cubic-bezier(.2,.8,.2,1) both}
-.issue-cover::after{content:"01";position:absolute;right:-.04em;bottom:-.18em;font-size:clamp(180px,30vh,310px);line-height:1;letter-spacing:-.1em;color:transparent;-webkit-text-stroke:1px var(--line);pointer-events:none}
-.cover-mark{font-size:13px;letter-spacing:.1em;text-transform:uppercase;display:flex;justify-content:space-between}
-.issue-cover h2{font-size:clamp(54px,8vh,86px);line-height:.82;letter-spacing:-.065em;margin:auto 0;position:relative;z-index:1}
-.cover-barcode{height:76px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 5px,var(--ink) 5px 10px,transparent 10px 13px,var(--ink) 13px 14px,transparent 14px 19px)}
+.cover-stage{display:grid;place-items:center;padding:4vh 6vw;background:var(--soft);overflow:auto}
+.cover-object{width:min(48vh,430px);display:grid;gap:18px;animation:cover-in .8s cubic-bezier(.2,.8,.2,1) both}
+.issue-cover{display:block;width:100%;height:auto;border:1px solid var(--ink);background:var(--paper)}
 .enter{border:0;background:var(--accent);color:#fff;padding:16px 18px;text-transform:uppercase;letter-spacing:.1em;font-size:11px;cursor:pointer;display:flex;justify-content:space-between;gap:36px;position:relative;z-index:1;transition:background .2s,color .2s}
 .enter:hover{background:var(--ink)}
 
@@ -58,7 +55,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .track .title{font-size:15px;line-height:1.12}
 .track .author{display:block;font-size:10px;margin-top:4px;opacity:.68;text-transform:uppercase;letter-spacing:.06em}
 .reader{min-width:0;position:relative}
-.reader-head{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 26px 10px}
+.reader-head{position:sticky;top:0;z-index:5;background:rgba(244,241,233,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:11px 26px 10px}
 .reader-meta{display:flex;align-items:center;justify-content:space-between;gap:18px;font-size:10px;text-transform:uppercase;letter-spacing:.1em}
 .reader-tools{display:flex;align-items:center;gap:14px}
 .text-button{border:0;background:none;padding:0;text-transform:uppercase;letter-spacing:.1em;font-size:10px;cursor:pointer}
@@ -66,9 +63,9 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .share-status{position:fixed;right:22px;bottom:22px;z-index:12;background:var(--ink);color:var(--paper);padding:10px 12px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}
 .share-status.visible{opacity:1;transform:none}
 
-/* Reading progress as a completing barcode */
-.progress{height:15px;margin-top:10px;position:relative;overflow:hidden;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);background:repeating-linear-gradient(90deg,#d8d8d8 0 1px,transparent 1px 4px,#d8d8d8 4px 7px,transparent 7px 11px)}
-.progress span{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,var(--accent) 0 2px,transparent 2px 4px,var(--accent) 4px 9px,transparent 9px 12px,var(--accent) 12px 13px,transparent 13px 17px);transition:width .08s linear}
+/* Reading progress */
+.progress{height:10px;margin-top:10px;position:relative;overflow:hidden;background:#d4d0c7}
+.progress span{display:block;height:100%;width:0;background:var(--accent);transition:width .08s linear}
 
 .article{position:relative;max-width:1060px;margin:0 auto;padding:54px 54px 120px;animation:article-in .42s ease both}
 .article::before{content:attr(data-number);position:absolute;right:28px;top:20px;z-index:-1;font-size:clamp(180px,26vw,380px);line-height:.8;letter-spacing:-.1em;color:transparent;-webkit-text-stroke:1px #e3e3e3}
@@ -113,7 +110,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .mark:last-child{border-right:0}
 .mobile-index{display:none}
 
-@keyframes cover-in{from{opacity:0;transform:translateY(28px) rotate(-4deg)}to{opacity:1;transform:translateY(0) rotate(-1.5deg)}}
+@keyframes cover-in{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 @keyframes article-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
 @media(max-width:820px){
@@ -123,7 +120,7 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
   .cover-copy h1{font-size:64px;margin:48px 0 0}
   .cover-copy p{font-size:18px}
   .cover-stage{padding:42px 26px 62px}
-  .issue-cover{width:min(76vw,360px);box-shadow:12px 14px 0 var(--ink)}
+  .cover-object{width:min(76vw,360px)}
   .shell{display:block}
   .rail{position:relative;height:auto;border-right:0}
   .brand h1{font-size:58px;margin-top:36px}
@@ -166,10 +163,8 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
     <div class="cover-bottom"><span>Edizione digitale</span><span>05 articoli</span></div>
   </div>
   <div class="cover-stage">
-    <div class="issue-cover">
-      <div class="cover-mark"><span>ASAP</span><span>01</span></div>
-      <h2>ATLANTE<br>...</h2>
-      <div class="cover-barcode" aria-hidden="true"></div>
+    <div class="cover-object">
+      <img class="issue-cover" src="cover-issue-01.png" alt="Copertina del numero 01 della rivista">
       <button class="enter" id="enter"><span>Entra nel numero</span><span>↗</span></button>
     </div>
   </div>
@@ -233,8 +228,19 @@ const lorem=[
   `Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`,
   `Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.`
 ];
+const oltreIlMercato=[
+  `Un’epoca che vuole la riduzione del complesso a formula. Così vuole il mercato e così si conforma l’accademia rinunciando al ruolo di fucine di pensiero critico per tendere verso il ruolo di generatrici di standard. Il mercato teme l’imprevedibilità dell’interpretazione, reclama risposte univoche e certe; l’accademia per inerzia risponde con una didattica che spezzetta il sapere in protocolli stagni. Termina l’epoca della <em>poesis</em> e inizia quella della pedagogia a “manuale di istruzioni”.`,
+  `Uno scenario in cui le due fazioni che popolano le nostre aule generano un dialogo che diventa eco di una frattura:`,
+  `<em>“Sarò pronto alla realtà”, il pragmatista. “Apprendo il metodo per neutralizzare ogni incertezza, ogni problema che incontrerò avrà già una soluzione ben codificata: studiarla, farla propria e applicarla mi renderà competente. Non voglio dubbi, voglio risposte certe e chiare, la sicurezza del professionista sta proprio nell’efficienza dell’esecuzione, non ho e non voglio l’onere dell’invenzione”.</em>`,
+  `<em>“Queste sicurezze però sono le sbarre della tua prigione”, il pensatore. “La bellezza del sapere risiede proprio nello sbaglio, in quel tempo che viene sospeso grazie alla ricerca, nell’azzardo, nel rischio. Certamente navigo a vista e la certezza di futuro non mi appartiene, ma dentro a questo vuoto formativo posso decidere chi essere. L’istituzione un po’ mi ignora, mi solleva dal peso di appartenere ad un canone: non voglio essere ingranaggio né macchina, voglio essere pensiero che poi, nel caso, diventa forma”.</em>`,
+  `<em>“È utopia però”, replica. “Se sei tutto non sei nulla. La scomposizione del sapere configura un porto sicuro entro il quale sono spendibile, ho un valore. Perché dovrei cercare il ‘come sarebbe se…’ quando il ‘com’è’ è l’unica cosa che mi dà continuità?”.</em>`,
+  `<em>“Ecco che ti perdi”, conclude il secondo. “Ti adatterai talmente tanto ad ogni forma che il mercato ti impone, che smetterai di avere una forma tua. Accetti che esista solo il ‘dato’ e così censuri l’immaginazione. La certezza è il tuo unico fine, e perciò si atrofizza l’idea di pensare e progettare mondi alternativi”.</em>`,
+  `La crisi identitaria allora non è un sintomo di decadenza, forse è opportunità insperata. L’istituzione abbandona l’individuo ferendolo, ma offrendogli la possibilità di autodeterminazione radicale.`,
+  `È necessaria una sintesi. Non possiamo voltare le spalle al mercato, né prescindere dai manuali che sono l’alfabeto del nostro operare. Il rischio però diventa scambiare l’alfabeto con l’opera. Il libretto di istruzioni non deve diventare recinto per l’architettura ma il punto di partenza: letto, appreso e poi criticato implacabilmente.`,
+  `Strappate le pagine inutili, incollate i vostri appunti ai margini, riscrivete i capitoli obsoleti. Questa è la responsabilità. Tecnica e pensiero… la prima deve tornare ad essere lo strumento, il secondo l’unico e insindacabile fine.`
+];
 const articles=[
-  {n:'01',title:'Titolo articolo',author:'Nome autore',type:'Formato',time:'04:10',theme:'Tema',question:'Domanda di partenza o sottotitolo dell’articolo.',body:lorem,pull:'Citazione o passaggio in evidenza.'},
+  {n:'01',title:'Oltre il mercato',author:'Federico Martorana',type:'Saggio',time:'04:30',theme:'Oltre il mercato',question:'Può l’accademia formare pensiero critico senza ridursi alle richieste del mercato?',body:oltreIlMercato,pull:'Il libretto di istruzioni non deve diventare recinto per l’architettura, ma il punto di partenza.',images:false},
   {n:'02',title:'Titolo articolo',author:'Nome autore',type:'Formato',time:'03:35',theme:'Tema',question:'Domanda di partenza o sottotitolo dell’articolo.',body:lorem,pull:'Citazione o passaggio in evidenza.'},
   {n:'03',title:'Titolo articolo',author:'Nome autore',type:'Formato',time:'05:20',theme:'Tema',question:'Domanda di partenza o sottotitolo dell’articolo.',body:lorem,pull:'Citazione o passaggio in evidenza.'},
   {n:'04',title:'Titolo articolo',author:'Nome autore',type:'Formato',time:'04:45',theme:'Tema',question:'Domanda di partenza o sottotitolo dell’articolo.',body:lorem,pull:'Citazione o passaggio in evidenza.'},
@@ -282,9 +288,9 @@ function openArticle(i,updateHash=false){
       <div class="cell"><span class="label">Tema</span><span class="value">${a.theme}</span></div>
       <div class="cell"><span class="label">Tempo</span><span class="value">${a.time}</span></div>
     </section>
-    ${imagePlaceholder('Figura 01')}
+    ${a.images===false?'':imagePlaceholder('Figura 01')}
     <div class="body">
-      ${a.body.map((p,k)=>`${k===1?`<blockquote class="pull">${a.pull}</blockquote>`:''}<p>${p}</p>${k===1?imagePlaceholder('Figura 02'):''}`).join('')}
+      ${a.body.map((p,k)=>`${k===1?`<blockquote class="pull">${a.pull}</blockquote>`:''}<p>${p}</p>${a.images!==false&&k===1?imagePlaceholder('Figura 02'):''}`).join('')}
       <nav class="article-nav" aria-label="Navigazione tra articoli">
         <button id="previous"><small>← Traccia precedente</small><strong>${previous.n} — ${previous.title}</strong></button>
         <button id="next"><small>Traccia successiva →</small><strong>${next.n} — ${next.title}</strong></button>
