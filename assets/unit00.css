@@ -18,35 +18,36 @@
 }
 
 .unit00-stage {
-  --unit00-step: 1.6s;
+  --unit00-bubble-left: 0px;
   position: fixed;
   left: 18px;
-  bottom: 18px;
+  top: calc(100vh - 112px);
   width: 62px;
   pointer-events: auto;
-  transition: left var(--unit00-step) cubic-bezier(.22, .72, .14, 1), opacity .2s linear;
+  transition: left 1.2s cubic-bezier(.22, .72, .14, 1), top 1.2s cubic-bezier(.22, .72, .14, 1), opacity .2s linear;
 }
 
 .unit00-body {
   position: relative;
   display: block;
   width: 52px !important;
-  height: 52px !important;
+  height: 60px !important;
   padding: 0 !important;
   border: 0 !important;
   background: transparent !important;
   color: inherit !important;
   appearance: none;
+  touch-action: none;
 }
 
 .unit00-cube {
   --eye-x: 0px;
   --eye-y: 0px;
   position: absolute;
-  left: 4px;
-  bottom: 3px;
-  width: 42px;
-  height: 42px;
+  left: 7px;
+  bottom: 13px;
+  width: 38px;
+  height: 38px;
   border: 1px solid #000;
   background: #fff;
   box-shadow: 5px -5px 0 #000;
@@ -57,26 +58,75 @@
 .unit00-cube::before {
   content: "";
   position: absolute;
-  left: 8px;
-  right: 8px;
-  top: 16px;
+  left: 7px;
+  right: 7px;
+  top: 14px;
   height: 1px;
   background: rgba(0, 0, 0, .14);
 }
 
 .unit00-eye {
   position: absolute;
-  top: 17px;
-  width: 5px;
-  height: 5px;
+  top: 15px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: #000;
   transform: translate(var(--eye-x), var(--eye-y));
   transition: width .16s linear, height .16s linear, transform .08s linear;
 }
 
-.unit00-eye:first-child { left: 10px; }
-.unit00-eye:last-child { right: 10px; }
+.unit00-eye:first-child { left: 9px; }
+.unit00-eye:nth-child(2) { right: 9px; }
+
+.unit00-eye::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: -4px;
+  width: 7px;
+  height: 1px;
+  background: #000;
+  transform: rotate(-8deg);
+}
+
+.unit00-eye:nth-child(2)::before { transform: rotate(8deg); }
+
+.unit00-mouth {
+  position: absolute;
+  left: 14px;
+  bottom: 7px;
+  width: 10px;
+  height: 1px;
+  background: #000;
+  transform: rotate(-7deg);
+}
+
+.unit00-arm,
+.unit00-leg {
+  position: absolute;
+  display: block;
+  background: #000;
+  transform-origin: top center;
+}
+
+.unit00-arm {
+  top: 23px;
+  width: 10px;
+  height: 2px;
+}
+
+.unit00-arm-left { left: -9px; transform: rotate(24deg); }
+.unit00-arm-right { right: -9px; transform: rotate(-24deg); }
+
+.unit00-leg {
+  bottom: -10px;
+  width: 3px;
+  height: 10px;
+}
+
+.unit00-leg-left { left: 9px; transform: rotate(5deg); }
+.unit00-leg-right { right: 9px; transform: rotate(-5deg); }
 
 .unit00-name,
 .unit00-sound {
@@ -102,9 +152,9 @@
 
 .unit00-bubble {
   position: absolute;
-  left: 0;
-  bottom: 84px;
-  width: min(286px, calc(100vw - 36px));
+  left: var(--unit00-bubble-left);
+  bottom: 102px;
+  width: min(240px, calc(100vw - 24px));
   padding: 10px;
   border: 1px solid #000;
   background: rgba(255, 255, 255, .96);
@@ -114,9 +164,9 @@
   pointer-events: auto;
 }
 
-.unit00-stage.is-right .unit00-bubble {
-  right: 8px;
-  left: auto;
+.unit00-stage.is-top .unit00-bubble {
+  top: 62px;
+  bottom: auto;
 }
 
 .unit00-bubble[hidden] { display: none; }
@@ -155,6 +205,8 @@
   text-transform: uppercase;
 }
 
+.unit00-bubble.is-choice .unit00-dismiss { visibility: hidden; }
+
 .unit00-actions button:hover,
 .unit00-actions button:focus-visible {
   background: #000 !important;
@@ -171,11 +223,6 @@
   animation: unit00-walk .32s steps(2, end) infinite;
 }
 
-.unit00-stage.is-gas .unit00-cube {
-  box-shadow: 8px -8px 0 #000;
-  transform: rotate(-5deg) translateY(-3px);
-}
-
 .unit00-stage.is-fanculo .unit00-cube {
   box-shadow: -5px -5px 0 #000;
   transform: rotateY(180deg) rotate(2deg);
@@ -187,8 +234,20 @@
   border-radius: 0;
 }
 
+.unit00-stage.is-fanculo .unit00-mouth { width: 12px; transform: rotate(-10deg); }
+.unit00-stage.is-fanculo .unit00-arm-left { transform: rotate(38deg); }
+.unit00-stage.is-fanculo .unit00-arm-right { transform: rotate(-38deg); }
+
 .unit00-stage.is-sleeping .unit00-cube { transform: rotate(7deg) translateY(6px); }
 .unit00-stage.is-sleeping .unit00-eye { width: 8px; height: 1px; border-radius: 0; }
+.unit00-stage.is-dragging { transition: none !important; }
+.unit00-stage.is-dragging .unit00-cube {
+  box-shadow: -8px -8px 0 #000;
+  transform: rotateY(180deg) rotate(-5deg) translateY(-4px);
+}
+
+.unit00-stage.is-moving .unit00-leg-left { animation: unit00-leg-left .32s steps(2, end) infinite; }
+.unit00-stage.is-moving .unit00-leg-right { animation: unit00-leg-right .32s steps(2, end) infinite; }
 
 @keyframes unit00-walk {
   0% { margin-bottom: 0; }
@@ -196,19 +255,19 @@
   100% { margin-bottom: 0; }
 }
 
+@keyframes unit00-leg-left {
+  0% { transform: rotate(18deg); }
+  100% { transform: rotate(-18deg); }
+}
+
+@keyframes unit00-leg-right {
+  0% { transform: rotate(-18deg); }
+  100% { transform: rotate(18deg); }
+}
+
 @media (max-width: 680px), (pointer: coarse) {
   .unit00-stage {
-    left: 12px !important;
-    bottom: 12px;
-    transition: opacity .2s linear;
-  }
-
-  .unit00-bubble {
-    position: fixed;
-    left: 12px !important;
-    right: 12px !important;
-    bottom: 92px;
-    width: auto;
+    transition: left .8s cubic-bezier(.22, .72, .14, 1), top .8s cubic-bezier(.22, .72, .14, 1), opacity .2s linear;
   }
 }
 
