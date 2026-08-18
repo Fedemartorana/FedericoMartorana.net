@@ -7,13 +7,15 @@
   const LEGACY_INTRO_KEY = 'unit00-intro-v1';
   const LEGACY_SOUND_KEY = 'unit00-sound-v1';
   const POSITION_KEY = 'unit00-position-v1';
+  const VISIT_START_KEY = 'unit00-visit-start-v1';
+  const POOPED_KEY = 'unit00-pooped-v1';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   if (!document.getElementById(STYLE_ID)) {
     const style = document.createElement('link');
     style.id = STYLE_ID;
     style.rel = 'stylesheet';
-    style.href = '/assets/unit00.css?v=20260818-3';
+    style.href = '/assets/unit00.css?v=20260818-4';
     document.head.appendChild(style);
   }
 
@@ -23,6 +25,14 @@
 
   function savePreference(key, value) {
     try { window.localStorage.setItem(key, value); } catch (error) { /* Storage is optional. */ }
+  }
+
+  function readSession(key) {
+    try { return window.sessionStorage.getItem(key); } catch (error) { return null; }
+  }
+
+  function saveSession(key, value) {
+    try { window.sessionStorage.setItem(key, value); } catch (error) { /* Storage is optional. */ }
   }
 
   function getAudioChoice() {
@@ -91,6 +101,7 @@
   const soundButton = system.querySelector('.unit00-sound');
   let bubbleTimer = 0;
   let behaviorTimer = 0;
+  let poopTimer = 0;
   let hasSpokenThisPage = false;
   let audio = null;
   let audioChoice = getAudioChoice();
@@ -285,45 +296,100 @@
     if (!settings.sticky) {
       bubbleTimer = window.setTimeout(function () {
         bubble.hidden = true;
-      }, settings.duration || 3300);
+      }, settings.duration || 7200);
     }
+  }
+
+  function dropPoop() {
+    window.clearTimeout(poopTimer);
+    poopTimer = 0;
+    if (readSession(POOPED_KEY) === 'yes') return;
+    if (audioChoice === null) {
+      poopTimer = window.setTimeout(dropPoop, 2500);
+      return;
+    }
+
+    const rect = cube.getBoundingClientRect();
+    const dropping = document.createElement('span');
+    const roomOnRight = rect.right + 32 < window.innerWidth;
+    dropping.className = 'unit00-dropping';
+    dropping.setAttribute('aria-hidden', 'true');
+    dropping.style.left = (roomOnRight ? rect.right + 5 : rect.left - 23) + 'px';
+    dropping.style.top = (rect.bottom - 8) + 'px';
+    system.appendChild(dropping);
+    saveSession(POOPED_KEY, 'yes');
+    window.clearTimeout(behaviorTimer);
+    speak('One minute in and you are still here. Fine. I left you a little review.', { duration: 9000 });
+    behaviorTimer = window.setTimeout(runBehavior, 9800);
+  }
+
+  function schedulePoop() {
+    if (readSession(POOPED_KEY) === 'yes') return;
+    const now = Date.now();
+    let startedAt = Number(readSession(VISIT_START_KEY));
+    if (!Number.isFinite(startedAt) || startedAt <= 0 || startedAt > now) {
+      startedAt = now;
+      saveSession(VISIT_START_KEY, String(startedAt));
+    }
+    poopTimer = window.setTimeout(dropPoop, Math.max(500, 60000 - (now - startedAt)));
   }
 
   const projectComments = {
     hypogeum: [
       'Keep scrolling. The darkness is doing half the architecture.',
       'Look at the section again. Yes, again.',
-      'Underground, heavy, slightly hostile. Obviously it works.'
+      'Underground, heavy, slightly hostile. Obviously it works.',
+      'The section is doing more than most entire buildings.',
+      'Do not look for a window. Commit to the cave.',
+      'It is not gloomy. It is controlled pressure. Learn the difference.'
     ],
     houseatelier: [
       'A house and a workspace without the usual domestic nonsense.',
       'Look at the light. It did not land there by accident.',
-      'Keep going. The quiet bits are the expensive bits.'
+      'Keep going. The quiet bits are the expensive bits.',
+      'Domestic, but not domesticated. That is the useful part.',
+      'Notice what is missing. Clutter, mostly.',
+      'The light is carrying the room. Let it.'
     ],
     archiveexhibitinhabit: [
       'Archive, exhibit, inhabit. Three verbs. Try to keep up.',
       'This one is smarter than it first looks. Scroll back.',
-      'Yes, the system is the project. That is why it is good.'
+      'Yes, the system is the project. That is why it is good.',
+      'The archive is not sleeping. It is waiting for you to catch up.',
+      'Look at how the pieces negotiate space. Better than most people.',
+      'This is what happens when research actually becomes architecture.'
     ],
     tetra: [
       'Four sides, no wasted gestures. You are welcome.',
       'The geometry looks inevitable because someone did the work.',
-      'Stay with it. The repetition is the point, not a loading error.'
+      'Stay with it. The repetition is the point, not a loading error.',
+      'Simple geometry. Annoyingly difficult to do this well.',
+      'Every line has a job. Unlike some visitors.',
+      'Order can be dramatic too. Here is the evidence.'
     ],
     efesto: [
       'Metal, dust and fire. Finally, something with a pulse.',
       'The ruin is not a defect. Look closer.',
-      'Keep scrolling. This one gets better when it gets dirtier.'
+      'Keep scrolling. This one gets better when it gets dirtier.',
+      'This is not ruin porn. There is an actual idea underneath it.',
+      'The material already had a life. The project was smart enough to listen.',
+      'If you only see decay, go back and use your eyes properly.'
     ],
     terzotempo: [
       'Concrete in motion. Yes, it can do that.',
       'Do not skim the sequence. The sequence is why it works.',
-      'This is the part where structure stops being boring.'
+      'This is the part where structure stops being boring.',
+      'The sequence has rhythm. Scroll like you have one.',
+      'Mass, pause, movement. It is all there.',
+      'Concrete does not need to sit still just because you do.'
     ],
     ermatene: [
       'Air, stone and resonance. No decorative bullshit required.',
       'Look at the gaps, not only the objects.',
-      'It is restrained. That does not mean timid.'
+      'It is restrained. That does not mean timid.',
+      'The empty space is not empty. Please try harder.',
+      'This one whispers because shouting would ruin it.',
+      'Nothing is accidental here, including the silence.'
     ]
   };
 
@@ -332,33 +398,51 @@
     if (path.includes('/works/')) return [
       'Pick a project. They are not going to open themselves.',
       'Start with EFESTO if you need drama. TETRA if you need order.',
-      'Open one properly. Thumbnails are for cowards.'
+      'Open one properly. Thumbnails are for cowards.',
+      'HYPogeum goes down. TERZO TEMPO moves. Choose a verb.',
+      'You cannot judge architecture from the index. Click.',
+      'There are seven projects here and somehow you are still hovering.'
     ];
     if (path.includes('/proworks/')) return [
       'Here: proof he can do the serious work too.',
       'Read the list. Competence is less photogenic, still useful.',
-      'Yes, he can draw the boring things properly. Relax.'
+      'Yes, he can draw the boring things properly. Relax.',
+      'Surveys, drawings, feasibility. The unsexy machinery behind the pretty image.',
+      'This page pays the bills. Show some respect.',
+      'Professional does not mean personality-free. Keep reading.'
     ];
     if (path.includes('/extra/') || path.includes('/extras/')) return [
       'This is the obsessive part. Naturally, it is worth reading.',
       'You came this far. Now read instead of pretending to browse.',
-      'The side material is not filler. Pay attention.'
+      'The side material is not filler. Pay attention.',
+      'The footnotes have teeth. Do not skip them.',
+      'Research first, architecture later. Revolutionary, apparently.',
+      'You wanted depth. Here it is. Now deal with it.'
     ];
     if (path.includes('/who/')) return [
       'That is Federico. Mystery solved. Go back to the work.',
       'Enough biography. The projects explain him better.',
-      'You wanted a face. There. Happy now?'
+      'You wanted a face. There. Happy now?',
+      'Architect, human, occasionally available. Continue.',
+      'Do not overanalyse the portrait. He builds things.',
+      'Biography consumed. Return to WORKS immediately.'
     ];
     if (path.includes('/contacts/')) return [
       'You found the contact page. Use it if you are serious.',
       'The email is right there. I cannot send it for you.',
-      'Have a project? Write. Have an opinion? Keep it concise.'
+      'Have a project? Write. Have an opinion? Keep it concise.',
+      'Good architecture starts with an email. Unfortunately.',
+      'Stop rehearsing the message and send it.',
+      'Budget, site, ambition. Bring at least two.'
     ];
     return [
       'Start with WORKS. Obviously.',
       'PRO WORKS if you need proof he can behave professionally.',
       'WHO if you are nosy. CONTACTS if you have a budget.',
-      'Pick a section. This is a website, not a waiting room.'
+      'Pick a section. This is a website, not a waiting room.',
+      'The archive is over there. I drew no arrow because you have eyes.',
+      'Start anywhere. I will judge the choice either way.',
+      'WORKS first, biography later. This is not a dating profile.'
     ];
   }
 
@@ -375,7 +459,23 @@
     'Do not rush it. You clearly missed something.',
     'Keep going. I did not wake up for one image.',
     'You can leave, but the next website will be worse.',
-    'Fine, stare at me instead of the architecture.'
+    'Fine, stare at me instead of the architecture.',
+    'That image is excellent. Your scrolling technique is not.',
+    'Pause. Look. Architecture is not a TikTok transition.',
+    'You missed something three images ago. I noticed.',
+    'This is the good part. Conveniently, all of it is the good part.',
+    'I could explain the composition, but looking is free.',
+    'The project is making an argument. Try not to interrupt.',
+    'Still here? Good. Your taste may be improving.',
+    'Zoom mentally. The website is not doing that for you.',
+    'A little attention would make this easier for both of us.',
+    'Yes, Federico made this. No, I am not surprised.',
+    'You are browsing very slowly. I respect it and hate it.',
+    'Do not just collect references. Understand one for once.',
+    'There is a reason that line is there. Find it.',
+    'I have seen your cursor. Commit to a decision.',
+    'Good work deserves time. Unfortunately, it got you.',
+    'The architecture is confident enough for both of you.'
   ];
 
   function runBehavior() {
@@ -387,16 +487,14 @@
     stage.classList.toggle('is-sleeping', Math.random() > .55);
 
     if (!userPositioned && Math.random() > .72) placeSafely(true, true);
-    if (!hasSpokenThisPage || Math.random() > .28) {
-      const lines = comments.concat(contextComments());
-      const nextLine = hasSpokenThisPage
-        ? lines[Math.floor(Math.random() * lines.length)]
-        : currentHint();
-      speak(nextLine, { duration: 3600 });
-      hasSpokenThisPage = true;
-    }
+    const lines = comments.concat(contextComments());
+    const nextLine = hasSpokenThisPage
+      ? lines[Math.floor(Math.random() * lines.length)]
+      : currentHint();
+    speak(nextLine, { duration: 7800 });
+    hasSpokenThisPage = true;
 
-    behaviorTimer = window.setTimeout(runBehavior, 12000 + Math.random() * 10000);
+    behaviorTimer = window.setTimeout(runBehavior, 8200 + Math.random() * 2600);
   }
 
   function createAudio() {
@@ -465,7 +563,7 @@
     const soundscape = createAudio();
     if (soundscape) soundscape.context.resume();
     updateSoundLabel();
-    if (announce) speak("Sound's on. Don't make a thing of it.", { duration: 2800 });
+    if (announce) speak("Sound's on. Don't make a thing of it.", { duration: 5600 });
   }
 
   function disableSound(announce) {
@@ -475,7 +573,7 @@
     savePreference(LEGACY_SOUND_KEY, 'off');
     if (audio) audio.context.suspend();
     updateSoundLabel();
-    if (announce) speak('Quiet, then. Fine by me.', { duration: 2400 });
+    if (announce) speak('Quiet, then. Fine by me.', { duration: 5200 });
   }
 
   function toggleSound() {
@@ -495,7 +593,7 @@
     if (answer.getAttribute('data-unit00-answer') === 'yes') enableSound(true);
     else disableSound(true);
 
-    behaviorTimer = window.setTimeout(runBehavior, 2800 + Math.random() * 1400);
+    behaviorTimer = window.setTimeout(runBehavior, 1900 + Math.random() * 900);
   });
 
   dismiss.addEventListener('click', function () {
@@ -547,7 +645,7 @@
     if (wasMoved) {
       suppressClick = true;
       savePosition();
-      speak("Fine. I'll stay here.", { duration: 1900 });
+      speak("Fine. I'll stay here. Your interior design remains questionable.", { duration: 5200 });
     }
   }
 
@@ -594,6 +692,7 @@
 
   updateSoundLabel();
   window.requestAnimationFrame(restorePosition);
+  schedulePoop();
 
   window.setTimeout(function () {
     if (audioChoice === null) {
@@ -602,6 +701,6 @@
       return;
     }
 
-    behaviorTimer = window.setTimeout(runBehavior, 2600 + Math.random() * 1800);
+    behaviorTimer = window.setTimeout(runBehavior, 1800 + Math.random() * 900);
   }, 700);
 })();

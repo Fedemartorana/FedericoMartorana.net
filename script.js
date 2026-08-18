@@ -50,6 +50,6 @@ window.addEventListener('keydown', function (event) {
 });
 
 const unit00Script = document.createElement('script');
-unit00Script.src = '/assets/unit00.js?v=20260818-3';
+unit00Script.src = '/assets/unit00.js?v=20260818-4';
 unit00Script.dataset.unit00 = '';
 document.head.appendChild(unit00Script);
