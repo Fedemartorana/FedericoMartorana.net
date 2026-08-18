@@ -7,6 +7,7 @@
   const LEGACY_INTRO_KEY = 'unit00-intro-v1';
   const LEGACY_SOUND_KEY = 'unit00-sound-v1';
   const POSITION_KEY = 'unit00-position-v1';
+  const IDENTITY_INTRO_KEY = 'unit00-identity-intro-v1';
   const VISIT_START_KEY = 'unit00-visit-start-v1';
   const POOPED_KEY = 'unit00-pooped-v1';
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -73,11 +74,11 @@
 
   const system = document.createElement('aside');
   system.id = 'unit00-system';
-  system.setAttribute('aria-label', 'UNIT00 site custodian');
+  system.setAttribute('aria-label', 'UNIT00 site guide');
   system.innerHTML =
     '<div class="unit00-stage is-fanculo">' +
       '<div class="unit00-bubble" role="status" aria-live="polite" hidden>' +
-        '<div class="unit00-bubble-head"><span>UNIT00 / CUSTODIAN</span><button class="unit00-dismiss" type="button" aria-label="Close UNIT00 message">×</button></div>' +
+        '<div class="unit00-bubble-head"><span>UNIT00</span><button class="unit00-dismiss" type="button" aria-label="Close UNIT00 message">×</button></div>' +
         '<p class="unit00-message"></p>' +
         '<div class="unit00-actions" hidden><button type="button" data-unit00-answer="yes">YES, SOUND</button><button type="button" data-unit00-answer="no">NO, THANKS</button></div>' +
       '</div>' +
@@ -103,6 +104,7 @@
   let behaviorTimer = 0;
   let poopTimer = 0;
   let hasSpokenThisPage = false;
+  let lastSpokenText = '';
   let audio = null;
   let audioChoice = getAudioChoice();
   let soundWanted = audioChoice === 'on';
@@ -289,6 +291,7 @@
     const settings = options || {};
     window.clearTimeout(bubbleTimer);
     message.textContent = text;
+    lastSpokenText = text;
     actions.hidden = !settings.choices;
     bubble.classList.toggle('is-choice', Boolean(settings.choices));
     bubble.hidden = false;
@@ -298,6 +301,14 @@
         bubble.hidden = true;
       }, settings.duration || 7200);
     }
+  }
+
+  function introduceUnit00() {
+    if (readPreference(IDENTITY_INTRO_KEY) === 'seen') return false;
+    savePreference(IDENTITY_INTRO_KEY, 'seen');
+    hasSpokenThisPage = true;
+    speak("I'm UNIT00. I live in this archive, point you toward the good stuff and judge every bad decision you make. Try to keep up.", { duration: 10000 });
+    return true;
   }
 
   function dropPoop() {
@@ -446,9 +457,43 @@
     ];
   }
 
+  function situationalComments() {
+    const pageHeight = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    const progress = Math.max(0, Math.min(1, window.scrollY / pageHeight));
+    const startedAt = Number(readSession(VISIT_START_KEY));
+    const secondsHere = Number.isFinite(startedAt) ? (Date.now() - startedAt) / 1000 : 0;
+    const lines = [];
+
+    if (progress < .08) {
+      lines.push('You are still at the top. The rest of the page has filed a complaint.');
+      lines.push('Scroll down. I promise the scrollbar is not decorative.');
+    } else if (progress < .45) {
+      lines.push('Good. You have started. Do not celebrate yet.');
+      lines.push('Halfway would be an achievement. This is not halfway.');
+    } else if (progress < .82) {
+      lines.push('Now you are actually inside the project. Took you long enough.');
+      lines.push('This is where people usually start pretending they understood everything.');
+    } else {
+      lines.push('You made it this far. Finish properly.');
+      lines.push('Almost at the bottom. Miracles remain possible.');
+    }
+
+    if (secondsHere > 150) {
+      lines.push('You have been here for a while. Good. Fast browsing is usually bad browsing.');
+      lines.push('Still here after two minutes. Either you like it or you are lost. Both are useful.');
+    }
+
+    return lines;
+  }
+
+  function pickLine(lines) {
+    const alternatives = lines.filter(function (line) { return line !== lastSpokenText; });
+    const pool = alternatives.length ? alternatives : lines;
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
   function currentHint() {
-    const hints = contextComments();
-    return hints[Math.floor(Math.random() * hints.length)];
+    return pickLine(contextComments());
   }
 
   const comments = [
@@ -475,7 +520,15 @@
     'There is a reason that line is there. Find it.',
     'I have seen your cursor. Commit to a decision.',
     'Good work deserves time. Unfortunately, it got you.',
-    'The architecture is confident enough for both of you.'
+    'The architecture is confident enough for both of you.',
+    'I am not saying this project is good. I am saying your alternatives are worse.',
+    'Keep looking. Your first impression was underqualified.',
+    'The composition is balanced. You, less so.',
+    'Every image earned its place. Have you?',
+    'You could skim this. You could also be wrong faster.',
+    'I am guiding you beautifully. A little gratitude would be grotesque but welcome.',
+    'Federico did the architecture. I handle quality control on visitors.',
+    'No pop-up newsletter. Just me. Somehow you got the better deal.'
   ];
 
   function runBehavior() {
@@ -487,14 +540,14 @@
     stage.classList.toggle('is-sleeping', Math.random() > .55);
 
     if (!userPositioned && Math.random() > .72) placeSafely(true, true);
-    const lines = comments.concat(contextComments());
+    const lines = comments.concat(contextComments(), situationalComments());
     const nextLine = hasSpokenThisPage
-      ? lines[Math.floor(Math.random() * lines.length)]
+      ? pickLine(lines)
       : currentHint();
     speak(nextLine, { duration: 7800 });
     hasSpokenThisPage = true;
 
-    behaviorTimer = window.setTimeout(runBehavior, 8200 + Math.random() * 2600);
+    behaviorTimer = window.setTimeout(runBehavior, 12500 + Math.random() * 4500);
   }
 
   function createAudio() {
@@ -590,10 +643,11 @@
     bubble.classList.remove('is-choice');
     savePreference(LEGACY_INTRO_KEY, 'seen');
 
-    if (answer.getAttribute('data-unit00-answer') === 'yes') enableSound(true);
-    else disableSound(true);
+    if (answer.getAttribute('data-unit00-answer') === 'yes') enableSound(false);
+    else disableSound(false);
 
-    behaviorTimer = window.setTimeout(runBehavior, 1900 + Math.random() * 900);
+    const introduced = introduceUnit00();
+    behaviorTimer = window.setTimeout(runBehavior, introduced ? 11200 : 2600 + Math.random() * 1000);
   });
 
   dismiss.addEventListener('click', function () {
@@ -606,7 +660,7 @@
       return;
     }
     stage.classList.remove('is-sleeping');
-    speak(Math.random() > .34 ? currentHint() : comments[Math.floor(Math.random() * comments.length)]);
+    speak(pickLine(comments.concat(contextComments(), situationalComments())));
   });
 
   bodyButton.addEventListener('pointerdown', function (event) {
@@ -701,6 +755,7 @@
       return;
     }
 
-    behaviorTimer = window.setTimeout(runBehavior, 1800 + Math.random() * 900);
+    const introduced = introduceUnit00();
+    behaviorTimer = window.setTimeout(runBehavior, introduced ? 11200 : 2600 + Math.random() * 1000);
   }, 700);
 })();
