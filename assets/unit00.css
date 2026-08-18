@@ -31,7 +31,7 @@
   position: relative;
   display: block;
   width: 52px !important;
-  height: 60px !important;
+  height: 52px !important;
   padding: 0 !important;
   border: 0 !important;
   background: transparent !important;
@@ -45,7 +45,7 @@
   --eye-y: 0px;
   position: absolute;
   left: 7px;
-  bottom: 13px;
+  bottom: 7px;
   width: 38px;
   height: 38px;
   border: 1px solid #000;
@@ -102,32 +102,6 @@
   transform: rotate(-7deg);
 }
 
-.unit00-arm,
-.unit00-leg {
-  position: absolute;
-  display: block;
-  background: #000;
-  transform-origin: top center;
-}
-
-.unit00-arm {
-  top: 23px;
-  width: 10px;
-  height: 2px;
-}
-
-.unit00-arm-left { left: -9px; transform: rotate(24deg); }
-.unit00-arm-right { right: -9px; transform: rotate(-24deg); }
-
-.unit00-leg {
-  bottom: -10px;
-  width: 3px;
-  height: 10px;
-}
-
-.unit00-leg-left { left: 9px; transform: rotate(5deg); }
-.unit00-leg-right { right: 9px; transform: rotate(-5deg); }
-
 .unit00-name,
 .unit00-sound {
   display: block;
@@ -153,7 +127,7 @@
 .unit00-bubble {
   position: absolute;
   left: var(--unit00-bubble-left);
-  bottom: 102px;
+  bottom: 94px;
   width: min(240px, calc(100vw - 24px));
   padding: 10px;
   border: 1px solid #000;
@@ -235,9 +209,6 @@
 }
 
 .unit00-stage.is-fanculo .unit00-mouth { width: 12px; transform: rotate(-10deg); }
-.unit00-stage.is-fanculo .unit00-arm-left { transform: rotate(38deg); }
-.unit00-stage.is-fanculo .unit00-arm-right { transform: rotate(-38deg); }
-
 .unit00-stage.is-sleeping .unit00-cube { transform: rotate(7deg) translateY(6px); }
 .unit00-stage.is-sleeping .unit00-eye { width: 8px; height: 1px; border-radius: 0; }
 .unit00-stage.is-dragging { transition: none !important; }
@@ -246,23 +217,10 @@
   transform: rotateY(180deg) rotate(-5deg) translateY(-4px);
 }
 
-.unit00-stage.is-moving .unit00-leg-left { animation: unit00-leg-left .32s steps(2, end) infinite; }
-.unit00-stage.is-moving .unit00-leg-right { animation: unit00-leg-right .32s steps(2, end) infinite; }
-
 @keyframes unit00-walk {
   0% { margin-bottom: 0; }
   50% { margin-bottom: 5px; }
   100% { margin-bottom: 0; }
-}
-
-@keyframes unit00-leg-left {
-  0% { transform: rotate(18deg); }
-  100% { transform: rotate(-18deg); }
-}
-
-@keyframes unit00-leg-right {
-  0% { transform: rotate(-18deg); }
-  100% { transform: rotate(18deg); }
 }
 
 @media (max-width: 680px), (pointer: coarse) {

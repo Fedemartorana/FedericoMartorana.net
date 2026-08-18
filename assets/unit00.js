@@ -13,7 +13,7 @@
     const style = document.createElement('link');
     style.id = STYLE_ID;
     style.rel = 'stylesheet';
-    style.href = '/assets/unit00.css?v=20260818-2';
+    style.href = '/assets/unit00.css?v=20260818-3';
     document.head.appendChild(style);
   }
 
@@ -74,8 +74,6 @@
       '<button class="unit00-body" type="button" aria-label="Talk to or drag UNIT00">' +
         '<span class="unit00-cube" aria-hidden="true">' +
           '<span class="unit00-eye"></span><span class="unit00-eye"></span><span class="unit00-mouth"></span>' +
-          '<span class="unit00-arm unit00-arm-left"></span><span class="unit00-arm unit00-arm-right"></span>' +
-          '<span class="unit00-leg unit00-leg-left"></span><span class="unit00-leg unit00-leg-right"></span>' +
         '</span>' +
       '</button>' +
       '<span class="unit00-name">UNIT00</span>' +
@@ -93,6 +91,7 @@
   const soundButton = system.querySelector('.unit00-sound');
   let bubbleTimer = 0;
   let behaviorTimer = 0;
+  let hasSpokenThisPage = false;
   let audio = null;
   let audioChoice = getAudioChoice();
   let soundWanted = audioChoice === 'on';
@@ -262,7 +261,7 @@
   function restorePosition() {
     const saved = parseSavedPosition();
     if (!saved) {
-      placeSafely(false, audioChoice === null);
+      placeSafely(false, true);
       return;
     }
 
@@ -290,24 +289,93 @@
     }
   }
 
+  const projectComments = {
+    hypogeum: [
+      'Keep scrolling. The darkness is doing half the architecture.',
+      'Look at the section again. Yes, again.',
+      'Underground, heavy, slightly hostile. Obviously it works.'
+    ],
+    houseatelier: [
+      'A house and a workspace without the usual domestic nonsense.',
+      'Look at the light. It did not land there by accident.',
+      'Keep going. The quiet bits are the expensive bits.'
+    ],
+    archiveexhibitinhabit: [
+      'Archive, exhibit, inhabit. Three verbs. Try to keep up.',
+      'This one is smarter than it first looks. Scroll back.',
+      'Yes, the system is the project. That is why it is good.'
+    ],
+    tetra: [
+      'Four sides, no wasted gestures. You are welcome.',
+      'The geometry looks inevitable because someone did the work.',
+      'Stay with it. The repetition is the point, not a loading error.'
+    ],
+    efesto: [
+      'Metal, dust and fire. Finally, something with a pulse.',
+      'The ruin is not a defect. Look closer.',
+      'Keep scrolling. This one gets better when it gets dirtier.'
+    ],
+    terzotempo: [
+      'Concrete in motion. Yes, it can do that.',
+      'Do not skim the sequence. The sequence is why it works.',
+      'This is the part where structure stops being boring.'
+    ],
+    ermatene: [
+      'Air, stone and resonance. No decorative bullshit required.',
+      'Look at the gaps, not only the objects.',
+      'It is restrained. That does not mean timid.'
+    ]
+  };
+
+  function contextComments() {
+    if (projectSlug) return projectComments[projectSlug];
+    if (path.includes('/works/')) return [
+      'Pick a project. They are not going to open themselves.',
+      'Start with EFESTO if you need drama. TETRA if you need order.',
+      'Open one properly. Thumbnails are for cowards.'
+    ];
+    if (path.includes('/proworks/')) return [
+      'Here: proof he can do the serious work too.',
+      'Read the list. Competence is less photogenic, still useful.',
+      'Yes, he can draw the boring things properly. Relax.'
+    ];
+    if (path.includes('/extra/') || path.includes('/extras/')) return [
+      'This is the obsessive part. Naturally, it is worth reading.',
+      'You came this far. Now read instead of pretending to browse.',
+      'The side material is not filler. Pay attention.'
+    ];
+    if (path.includes('/who/')) return [
+      'That is Federico. Mystery solved. Go back to the work.',
+      'Enough biography. The projects explain him better.',
+      'You wanted a face. There. Happy now?'
+    ];
+    if (path.includes('/contacts/')) return [
+      'You found the contact page. Use it if you are serious.',
+      'The email is right there. I cannot send it for you.',
+      'Have a project? Write. Have an opinion? Keep it concise.'
+    ];
+    return [
+      'Start with WORKS. Obviously.',
+      'PRO WORKS if you need proof he can behave professionally.',
+      'WHO if you are nosy. CONTACTS if you have a budget.',
+      'Pick a section. This is a website, not a waiting room.'
+    ];
+  }
+
   function currentHint() {
-    if (projectSlug) return projectSlug.toUpperCase() + ". You made it. This one sounds like " + mood.label + '.';
-    if (path.includes('/works/')) return "Pick one. I'm not choosing for you.";
-    if (path.includes('/proworks/')) return 'This is the serious bit. Apparently.';
-    if (path.includes('/extra/') || path.includes('/extras/')) return 'You came here to read. Brave.';
-    if (path.includes('/who/') || path.includes('/contacts/')) return 'That is him. Mystery solved.';
-    return 'Pick a section. I trust you can manage.';
+    const hints = contextComments();
+    return hints[Math.floor(Math.random() * hints.length)];
   }
 
   const comments = [
-    "Take your time. I'm not going anywhere.",
-    "You can scroll. I won't stop you.",
-    "Don't look at me. Look at the work.",
-    "Yes, I'm still here.",
-    "Need help? That's unfortunate.",
-    "I'd click something eventually.",
-    "Fine. I'll wait.",
-    currentHint()
+    'Scroll. The good part is not coming to you.',
+    'Click something. I am not doing everything around here.',
+    'Yes, it looks good. That is why you are still here.',
+    'Look closer. The details are doing more work than you are.',
+    'Do not rush it. You clearly missed something.',
+    'Keep going. I did not wake up for one image.',
+    'You can leave, but the next website will be worse.',
+    'Fine, stare at me instead of the architecture.'
   ];
 
   function runBehavior() {
@@ -318,12 +386,17 @@
     stage.classList.add('is-fanculo');
     stage.classList.toggle('is-sleeping', Math.random() > .55);
 
-    if (!userPositioned && Math.random() > .72) placeSafely(true, false);
-    if (Math.random() > .46) {
-      speak(comments[Math.floor(Math.random() * comments.length)], { duration: 2800 });
+    if (!userPositioned && Math.random() > .72) placeSafely(true, true);
+    if (!hasSpokenThisPage || Math.random() > .28) {
+      const lines = comments.concat(contextComments());
+      const nextLine = hasSpokenThisPage
+        ? lines[Math.floor(Math.random() * lines.length)]
+        : currentHint();
+      speak(nextLine, { duration: 3600 });
+      hasSpokenThisPage = true;
     }
 
-    behaviorTimer = window.setTimeout(runBehavior, 17000 + Math.random() * 15000);
+    behaviorTimer = window.setTimeout(runBehavior, 12000 + Math.random() * 10000);
   }
 
   function createAudio() {
@@ -422,7 +495,7 @@
     if (answer.getAttribute('data-unit00-answer') === 'yes') enableSound(true);
     else disableSound(true);
 
-    behaviorTimer = window.setTimeout(runBehavior, 12000);
+    behaviorTimer = window.setTimeout(runBehavior, 2800 + Math.random() * 1400);
   });
 
   dismiss.addEventListener('click', function () {
@@ -529,6 +602,6 @@
       return;
     }
 
-    behaviorTimer = window.setTimeout(runBehavior, 9000 + Math.random() * 7000);
+    behaviorTimer = window.setTimeout(runBehavior, 2600 + Math.random() * 1800);
   }, 700);
 })();
