@@ -307,7 +307,7 @@
     if (readPreference(IDENTITY_INTRO_KEY) === 'seen') return false;
     savePreference(IDENTITY_INTRO_KEY, 'seen');
     hasSpokenThisPage = true;
-    speak("I'm UNIT00. I live in this archive, point you toward the good stuff and judge every bad decision you make. Try to keep up.", { duration: 10000 });
+    speak("I'm UNIT00. I live here, point you toward the good stuff. Try to keep up.", { duration: 10000 });
     return true;
   }
 
