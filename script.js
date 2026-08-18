@@ -48,3 +48,8 @@ window.addEventListener('keydown', function (event) {
     document.body.classList.toggle('archive-mode');
   }
 });
+
+const unit00Script = document.createElement('script');
+unit00Script.src = '/assets/unit00.js?v=20260818-1';
+unit00Script.dataset.unit00 = '';
+document.head.appendChild(unit00Script);
