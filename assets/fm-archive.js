@@ -5,10 +5,11 @@
     event.preventDefault();
   }, true);
 
-  if (!document.querySelector('script[src="/assets/analytics.js"]')) {
+  if (!document.querySelector('script[data-fm-analytics]')) {
     const analytics = document.createElement('script');
     analytics.defer = true;
-    analytics.src = '/assets/analytics.js';
+    analytics.src = '/assets/analytics.js?v=20260829-1';
+    analytics.dataset.fmAnalytics = '';
     document.head.appendChild(analytics);
   }
 
@@ -267,6 +268,15 @@
     return canonical ? canonical.href : window.location.href;
   }
 
+  function getTrackedShareUrl() {
+    const url = new URL(getCanonicalUrl());
+    url.searchParams.set('utm_source', 'portfolio');
+    url.searchParams.set('utm_medium', 'share');
+    url.searchParams.set('utm_campaign', 'portfolio_share');
+    url.searchParams.set('utm_content', currentProject ? currentProject.slug : 'academic_works');
+    return url.href;
+  }
+
   function closeSharePanel() {
     if (!sharePanel) return;
     sharePanel.hidden = true;
@@ -309,8 +319,9 @@
 
         if (format === 'link') {
           try {
-            await copyPageLink(getCanonicalUrl());
+            await copyPageLink(getTrackedShareUrl());
             setSharePanelStatus('LINK COPIED');
+            trackShare(shareContext.type, 'link');
           } catch (error) {
             setSharePanelStatus('COPY FAILED');
           }
@@ -520,7 +531,7 @@
         return;
       }
 
-      const url = getCanonicalUrl();
+      const url = getTrackedShareUrl();
       const shareData = { title: document.title, url: url };
       const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
       const mobileViewport = window.matchMedia('(max-width: 860px)').matches;
@@ -569,7 +580,7 @@
 
 if (!document.querySelector('script[data-unit00]')) {
   const unit00Script = document.createElement('script');
-  unit00Script.src = '/assets/unit00.js?v=20260818-5';
+  unit00Script.src = '/assets/unit00.js?v=20260829-1';
   unit00Script.dataset.unit00 = '';
   document.head.appendChild(unit00Script);
 }

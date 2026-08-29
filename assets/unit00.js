@@ -72,6 +72,21 @@
     noise: .007
   };
 
+  function trackUnit00(name, params) {
+    const payload = Object.assign({
+      page_path: window.location.pathname,
+      project_name: projectSlug || undefined
+    }, params || {});
+
+    if (typeof window.fmTrack === 'function') {
+      window.fmTrack(name, payload);
+      return;
+    }
+
+    window.fmTrackQueue = window.fmTrackQueue || [];
+    window.fmTrackQueue.push({ name: name, params: payload });
+  }
+
   const system = document.createElement('aside');
   system.id = 'unit00-system';
   system.setAttribute('aria-label', 'UNIT00 site guide');
@@ -308,6 +323,7 @@
     savePreference(IDENTITY_INTRO_KEY, 'seen');
     hasSpokenThisPage = true;
     speak("I'm UNIT00. I live here, point you toward the good stuff. Try to keep up.", { duration: 10000 });
+    trackUnit00('unit00_intro');
     return true;
   }
 
@@ -331,6 +347,7 @@
     saveSession(POOPED_KEY, 'yes');
     window.clearTimeout(behaviorTimer);
     speak('One minute in and you are still here. Fine. I left you a little review.', { duration: 9000 });
+    trackUnit00('unit00_milestone', { milestone: 'one_minute_pooped' });
     behaviorTimer = window.setTimeout(runBehavior, 9800);
   }
 
@@ -632,6 +649,7 @@
   function toggleSound() {
     if (soundWanted) disableSound(true);
     else enableSound(true);
+    trackUnit00('unit00_sound_toggle', { audio_enabled: soundWanted });
   }
 
   soundButton.addEventListener('click', toggleSound);
@@ -643,8 +661,10 @@
     bubble.classList.remove('is-choice');
     savePreference(LEGACY_INTRO_KEY, 'seen');
 
-    if (answer.getAttribute('data-unit00-answer') === 'yes') enableSound(false);
+    const acceptedSound = answer.getAttribute('data-unit00-answer') === 'yes';
+    if (acceptedSound) enableSound(false);
     else disableSound(false);
+    trackUnit00('unit00_audio_choice', { audio_enabled: acceptedSound });
 
     const introduced = introduceUnit00();
     behaviorTimer = window.setTimeout(runBehavior, introduced ? 11200 : 2600 + Math.random() * 1000);
@@ -652,6 +672,7 @@
 
   dismiss.addEventListener('click', function () {
     bubble.hidden = true;
+    trackUnit00('unit00_message_dismiss');
   });
 
   bodyButton.addEventListener('click', function () {
@@ -661,6 +682,7 @@
     }
     stage.classList.remove('is-sleeping');
     speak(pickLine(comments.concat(contextComments(), situationalComments())));
+    trackUnit00('unit00_click');
   });
 
   bodyButton.addEventListener('pointerdown', function (event) {
@@ -700,6 +722,7 @@
       suppressClick = true;
       savePosition();
       speak("Fine. I'll stay here. Your interior design remains questionable.", { duration: 5200 });
+      trackUnit00('unit00_drag');
     }
   }
 
