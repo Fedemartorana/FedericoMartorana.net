@@ -75,6 +75,26 @@
   const mediaShareButtons = new Map();
   let imageStageOrigin = null;
 
+  const projectHeading = document.querySelector('.project-title');
+  const projectImageName = projectHeading
+    ? Array.from(projectHeading.childNodes)
+        .filter(function (node) { return node.nodeType === Node.TEXT_NODE; })
+        .map(function (node) { return node.textContent; })
+        .join(' ')
+        .replace(/\s+/g, ' ')
+        .trim()
+    : document.title.split('—')[0].trim();
+
+  function getArchiveAlt(row, caption) {
+    const declaredAlt = row.getAttribute('data-alt');
+    if (declaredAlt) return declaredAlt;
+
+    const imageLabel = caption.replace(/^\d+\s*\/\s*/, '').trim();
+    if (!projectImageName) return imageLabel;
+    if (!imageLabel) return projectImageName + ' project image';
+    return projectImageName + ' — ' + imageLabel;
+  }
+
   if (imageStage && imageStage.parentNode) {
     imageStageOrigin = document.createComment('image-stage-origin');
     imageStage.parentNode.insertBefore(imageStageOrigin, imageStage);
@@ -161,7 +181,7 @@
 
     nextImage.onload = function () {
       archivePreview.src = src;
-      archivePreview.alt = caption.replace(/^\d+\s*\/\s*/, '');
+      archivePreview.alt = getArchiveAlt(row, caption);
       if (mediaKind) archivePreview.setAttribute('data-media-kind', mediaKind);
       else archivePreview.removeAttribute('data-media-kind');
       archivePreview.style.opacity = '1';
@@ -195,7 +215,11 @@
     return row.classList.contains('is-active');
   });
 
-  if (initiallyActiveArchiveRow) placeArchiveStage(initiallyActiveArchiveRow);
+  if (initiallyActiveArchiveRow) {
+    const initialCaption = initiallyActiveArchiveRow.getAttribute('data-caption') || '';
+    if (archivePreview) archivePreview.alt = getArchiveAlt(initiallyActiveArchiveRow, initialCaption);
+    placeArchiveStage(initiallyActiveArchiveRow);
+  }
 
   function legacyCopyPageLink(url) {
     return new Promise(function (resolve, reject) {

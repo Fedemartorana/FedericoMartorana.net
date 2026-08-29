@@ -124,6 +124,18 @@ body.archive-mode::before { opacity: 1 !important; content: "FM_ARCHIVE"; font-f
   padding-top: 18px !important;
 }
 
+.project-intro {
+  display: block !important;
+  max-width: 38ch !important;
+  margin: 0 0 48px !important;
+  font-family: var(--sans) !important;
+  font-size: clamp(18px, 2.15vw, 32px) !important;
+  line-height: 1.02 !important;
+  letter-spacing: -.035em !important;
+  text-transform: none !important;
+  font-weight: 540 !important;
+}
+
 .project-description strong, .info-text strong {
   display: block !important;
   font-family: var(--sans) !important;
