@@ -8,7 +8,7 @@
   if (!document.querySelector('script[data-fm-analytics]')) {
     const analytics = document.createElement('script');
     analytics.defer = true;
-    analytics.src = '/assets/analytics.js?v=20260829-1';
+    analytics.src = '/assets/analytics.js?v=20260904-1';
     analytics.dataset.fmAnalytics = '';
     document.head.appendChild(analytics);
   }
@@ -19,15 +19,12 @@
   if (finePointer) {
     cursor = document.createElement('div');
     cursor.id = 'fm-cursor';
-    cursor.textContent = '0.00 / 0.00';
+    cursor.setAttribute('aria-hidden', 'true');
     document.body.appendChild(cursor);
 
     window.addEventListener('mousemove', function (event) {
-      const nx = event.clientX / window.innerWidth;
-      const ny = event.clientY / window.innerHeight;
       cursor.style.left = event.clientX + 'px';
       cursor.style.top = event.clientY + 'px';
-      cursor.textContent = nx.toFixed(2) + ' / ' + ny.toFixed(2);
     });
   }
 
@@ -66,6 +63,16 @@
     } else if (image.id !== 'archive-preview') {
       image.loading = 'lazy';
     }
+  });
+
+  document.querySelectorAll('a[data-file-check]').forEach(function (link) {
+    fetch(link.href, { method: 'HEAD' })
+      .then(function (response) {
+        if (response.ok) link.hidden = false;
+      })
+      .catch(function () {
+        link.hidden = true;
+      });
   });
 
   const archivePreview = document.getElementById('archive-preview');

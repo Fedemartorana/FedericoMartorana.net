@@ -126,6 +126,10 @@
       sendEvent('open_cv', eventContext());
     }
 
+    if (href.toLowerCase().includes('federico-martorana-portfolio.pdf') || text.toLowerCase().includes('download portfolio')) {
+      sendEvent('download_portfolio', eventContext());
+    }
+
     if (path.includes('/contacts/') || text.toLowerCase().includes('contact')) {
       sendEvent('open_contacts', eventContext({ source_page: window.location.pathname }));
     }

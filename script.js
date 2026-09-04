@@ -21,11 +21,8 @@ const finePointer = window.matchMedia('(pointer: fine)').matches;
 
 if (cursor && finePointer) {
   window.addEventListener('mousemove', function (event) {
-    const nx = event.clientX / window.innerWidth;
-    const ny = event.clientY / window.innerHeight;
     cursor.style.left = event.clientX + 'px';
     cursor.style.top = event.clientY + 'px';
-    cursor.textContent = nx.toFixed(2) + ' / ' + ny.toFixed(2);
   });
 } else if (cursor) {
   cursor.hidden = true;

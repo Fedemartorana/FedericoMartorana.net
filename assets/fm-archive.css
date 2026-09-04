@@ -241,13 +241,23 @@ figcaption { margin-top: 8px !important; color: var(--muted) !important; }
   border: 0 !important;
   padding: 0 !important;
 }
-.cv-button {
-  top: 48px !important;
+.document-links {
+  position: fixed;
+  top: 48px;
+  right: 18px;
+  z-index: 1000;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.document-links .cv-button {
+  position: static !important;
   color: var(--fg) !important;
   border: 1px solid var(--hard-line) !important;
   padding: 8px 10px !important;
   background: var(--bg) !important;
 }
+.document-links [hidden] { display: none !important; }
 #back-link:hover, .cv-button:hover { color: var(--fg) !important; opacity: .64; }
 
 .fm-share-button {
@@ -354,17 +364,10 @@ figcaption { margin-top: 8px !important; color: var(--muted) !important; }
   position: fixed;
   z-index: 10000;
   pointer-events: none;
-  transform: translate(12px, 12px);
-  font-family: var(--mono);
-  font-size: 10px;
-  line-height: 1;
-  color: var(--fg);
-  background: rgba(255,255,255,.72);
-  border: 1px solid var(--line);
-  padding: 6px 7px;
-  white-space: nowrap;
+  width: 0;
+  height: 0;
 }
-#fm-cursor::before { content: ""; position: absolute; left: -14px; top: -14px; width: 8px; height: 8px; border: 1px solid var(--fg); border-radius: 50%; background: var(--fg); }
+#fm-cursor::before { content: ""; position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border: 1px solid var(--fg); border-radius: 50%; background: var(--fg); }
 
 .works-container {
   width: 100% !important;
@@ -432,7 +435,8 @@ button { text-align: left; text-transform: uppercase; }
   .project-overlay span { font-size: clamp(38px, 15vw, 84px) !important; }
   .archive-row-meta { display: none !important; }
   #back-link { top: 12px !important; right: 12px !important; font-size: 9px !important; }
-  .cv-button { position: static !important; display: inline-block !important; margin: 16px 0 40px !important; }
+  .document-links { position: static; display: flex; flex-wrap: wrap; margin: 16px 0 40px; }
+  .document-links .cv-button { position: static !important; display: inline-block !important; margin: 0 !important; }
   #fm-cursor { display: none !important; }
   .fm-share-panel { place-items: end stretch; padding: 12px; }
   .fm-share-dialog { width: 100%; }
