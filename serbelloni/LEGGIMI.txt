@@ -1,0 +1,52 @@
+G8 — PORTICO E PROSPETTI OVEST, SUD, EST
+Pacchetto per GitHub Pages
+
+Questo pacchetto contiene gli stessi 9.163.079 punti e le stesse mappature
+dell'HTML autonomo. Nessun punto è stato rimosso per ridurre la dimensione.
+I dati sono separati in file più piccoli, caricati quando servono.
+
+PUBBLICARE NEL TUO SITO ESISTENTE
+1. Estrai lo ZIP sul computer. Troverai la cartella portico-g8.
+2. Apri il repository del tuo sito su GitHub, nella cartella pubblicata da Pages.
+   Se Pages pubblica dalla radice, usa la radice del repository.
+   Se Pages pubblica da /docs, entra prima nella cartella docs.
+3. Scegli Add file > Upload files e trascina la cartella portico-g8 completa.
+   Mantieni la sottocartella data e tutti i nomi dei file.
+4. Salva le modifiche nel branch pubblicato (Commit changes; se necessario,
+   completa la pull request prevista dalle impostazioni del repository).
+5. Dopo la pubblicazione, apri l'indirizzo del tuo sito seguito da /portico-g8/.
+   Se il tuo sito è già in una sottocartella, conserva anche quel prefisso.
+
+Il file ZIP serve per il trasferimento: GitHub Pages usa i file estratti.
+Il vecchio HTML autonomo di oltre 100 MB non va aggiunto al repository.
+La cartella portico-g8 contiene il proprio index.html e non sostituisce
+la pagina iniziale del tuo sito.
+
+SE GITHUB PAGES NON È ANCORA ATTIVO
+In Settings > Pages > Build and deployment scegli Deploy from a branch,
+il branch che contiene i file e la cartella corretta (root oppure /docs),
+quindi Save. Usa l'indirizzo indicato da GitHub Pages e aggiungi /portico-g8/.
+Se il tuo sito utilizza già GitHub Actions o un framework, conserva il flusso
+esistente e includi portico-g8 tra i file statici pubblicati dal progetto.
+
+MODIFICARE LE DICITURE E RIPUBBLICARLE
+Nel visualizzatore apri Modifica tutte le diciture.
+Le modifiche vengono conservate nel browser in cui le esegui.
+Per renderle visibili anche agli altri visitatori:
+1. Premi Salva index per il sito.
+2. Premi Scarica index.html pronto.
+3. Sostituisci soltanto portico-g8/index.html nel repository e salva le modifiche.
+Il file index.html resta piccolo. La cartella data non va ricaricata.
+
+Scarica HTML personalizzato continua invece a generare un unico HTML autonomo
+per l'uso offline: quel file incorpora tutti i dati e supera ancora 100 MB.
+
+LIMITI GITHUB VERIFICATI
+GitHub: 25 MiB per file negli upload dal browser; 100 MiB per file con Git.
+Ogni file di questo pacchetto rimane sotto entrambi i limiti.
+Git LFS non è necessario e non è supportato direttamente da GitHub Pages.
+
+Documentazione ufficiale:
+https://docs.github.com/en/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
+https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-git-large-file-storage
