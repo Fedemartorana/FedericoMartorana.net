@@ -65,7 +65,7 @@ accept.addEventListener('click', async () => {
   camera = true; accept.disabled = true; message.hidden = false;
   message.textContent = 'Allow camera access in your browser. Your move.';
   try {
-    const {createHeadTracker} = await import('./tracking.mjs?v=20261101-portrait');
+    const {createHeadTracker} = await import('./tracking.mjs?v=20261101-safari');
     if (id !== request || document.hidden) return;
     tracker ||= createHeadTracker({
       video: document.querySelector('#fm-camera-video'), mesh: face.querySelector('canvas'),
@@ -81,13 +81,14 @@ accept.addEventListener('click', async () => {
         if (state === 'off') {
           tracked = false; face.hidden = true;
           // start() first clears any earlier session. Only errors are shown in the existing dialog.
-          if (dialog.open && detail !== 'Camera off · use the mouse') {
+          if (camera && !document.hidden && detail !== 'Camera off · use the mouse') {
             camera = false; message.hidden = false;
-            message.textContent = mobileInput ? 'Camera unavailable. Try tilting your device instead.' : 'Camera unavailable. Check browser permissions, retry, or use the mouse.';
+            message.textContent = detail;
             accept.disabled = false;
+            if(!dialog.open)dialog.showModal();
           }
         } else if (state === 'loading') {
-          message.textContent = 'Setting up head tracking…';
+          message.textContent = detail;
         } else {
           accept.disabled = false; if (dialog.open) dialog.close();
         }

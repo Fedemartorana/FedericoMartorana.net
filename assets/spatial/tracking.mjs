@@ -54,6 +54,11 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
       try { worker = new Worker(new URL('./face-worker.js?v=20261101-portrait', import.meta.url)); }
       catch (error) { stream.getTracks().forEach(track => track.stop()); throw error; }
       const current = session = {worker, stream, raf: 0, timeout: 0, busy: false, lastTime: -Infinity, videoTime: -1, tracked: false, misses: 0};
+      // Safari supports canvas bitmap capture more consistently than video bitmap capture.
+      const capture=document.createElement('canvas');
+      const captureContext=capture.getContext('2d');
+      if(!captureContext)throw new Error('Camera capture canvas unavailable');
+      video.muted=true;video.playsInline=true;
       video.srcObject = stream;
       for (const track of stream.getVideoTracks()) track.addEventListener('ended', () => {
         if (session === current) stop('Camera disconnected · use the mouse');
@@ -65,7 +70,7 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
       worker.onerror = () => { if (session === current) stop('Tracking unavailable · use the mouse or retry'); };
       worker.onmessage = ({data}) => {
         if (session !== current) return;
-        if (data.type === 'error') { console.error('Local face tracking:', data.message); stop('Tracking unavailable · use the mouse or retry'); return; }
+        if (data.type === 'error') { console.error('Local face tracking:', data.message); stop('Tracking failed · '+data.message); return; }
         if (data.type === 'ready') {
           current.interval=data.detailed ? (innerWidth<600 ? 140 : 100) : 66;
           clearTimeout(current.timeout); current.connections = data.connections;
@@ -97,11 +102,15 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
         if (document.hidden || current.busy || time-current.lastTime < current.interval || video.readyState < 2 || video.currentTime === current.videoTime) return;
         current.busy = true; current.lastTime = time; current.videoTime = video.currentTime;
         try {
-          const bitmap = await createImageBitmap(video);
+          if(!video.videoWidth || !video.videoHeight){current.busy=false;return;}
+          if(capture.width!==video.videoWidth)capture.width=video.videoWidth;
+          if(capture.height!==video.videoHeight)capture.height=video.videoHeight;
+          captureContext.drawImage(video,0,0,capture.width,capture.height);
+          const bitmap = await createImageBitmap(capture);
           if (session !== current) { bitmap.close(); return; }
           current.timeout = setTimeout(() => { if (session === current) stop('Tracking interrupted · try Enable camera again'); }, 10000);
           worker.postMessage({type: 'frame', bitmap, time}, [bitmap]);
-        } catch (error) { if (session === current) stop('Camera frame unavailable · use the mouse or retry'); }
+        } catch (error) { if (session === current) stop('Camera frame failed · '+error.name+': '+error.message); }
       }
       worker.postMessage({type: 'init',maxPoints:innerWidth<600 ? 6500 : 12000});
     } catch (error) {

@@ -27,10 +27,10 @@ test('camera lifecycle: detection, face loss, recenter, stop, denial and cancell
     emit(data) {this.onmessage({data});}
   }
   Object.assign(globalThis, {isSecureContext:true, innerWidth:1280, Worker:FakeWorker,
-    window:{Worker:FakeWorker,createImageBitmap:true}, document:{hidden:false},
+    window:{Worker:FakeWorker,createImageBitmap:true}, document:{hidden:false,createElement:()=>({tagName:'CANVAS',getContext:()=>({drawImage(){}})})},
     requestAnimationFrame:callback => {rafs.set(++rafId,callback); return rafId;},
     cancelAnimationFrame:id => rafs.delete(id),
-    createImageBitmap:async () => ({close(){}})
+    createImageBitmap:async source => {assert.equal(source.tagName,'CANVAS','capture must use the Safari-compatible canvas path');return {close(){}};}
   });
   let acquire;
   Object.defineProperty(globalThis, 'navigator', {configurable:true,value:{mediaDevices:{getUserMedia:options => {
@@ -50,6 +50,8 @@ test('camera lifecycle: detection, face loss, recenter, stop, denial and cancell
   const worker = workers.at(-1);
   assert.equal(worker.lastMessage.type,'init');
   worker.emit({type:'ready',connections:[]});
+  const scheduled=rafId, tick=rafs.get(scheduled);rafs.delete(scheduled);await tick(100);
+  assert.equal(worker.lastMessage.type,'frame');
   worker.emit({type:'face',points:landmarks()});
   assert.ok(poses.at(-1).every(value=>value===0));
   worker.emit({type:'face',points:landmarks(.05,0)});
