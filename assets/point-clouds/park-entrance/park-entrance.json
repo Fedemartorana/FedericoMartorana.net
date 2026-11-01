@@ -1,0 +1,12 @@
+{
+  "count": 280960,
+  "aspect": 1.4576512455516015,
+  "width": 640,
+  "height": 439,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../sources/park-entrance.webp",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "5234d3fe7f64d383d45906510ad771a0988ee321d1c0c14e130a85ff70110cdf",
+  "binary_sha256": "c7df41503e02df0ad4315575485621e7652344659bdb27105d31dc1b9223f4ed"
+}

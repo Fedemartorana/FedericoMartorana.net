@@ -1,0 +1,12 @@
+{
+  "count": 284160,
+  "aspect": 1.4422535211267606,
+  "width": 640,
+  "height": 444,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../sources/tetra24.jpg",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "3f4b5d9f6edb8554dc9ea69d1696329ff58b04b36251a4adbc1a20963a92c8d5",
+  "binary_sha256": "df0c76ab320f1d0d2be306ab87378408d3b5313f664aa815ca5dffedcbb93e4d"
+}

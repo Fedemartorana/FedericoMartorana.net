@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "selection": "random-per-visit",
+  "default": "nave",
+  "clouds": [
+    {
+      "id": "park-entrance",
+      "metadata": "park-entrance/park-entrance.json",
+      "binary": "park-entrance/park-entrance.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "tetra24",
+      "metadata": "tetra24/tetra24.json",
+      "binary": "tetra24/tetra24.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "hypogeum",
+      "metadata": "hypogeum/hypogeum.json",
+      "binary": "hypogeum/hypogeum.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "tetra22",
+      "metadata": "tetra22/tetra22.json",
+      "binary": "tetra22/tetra22.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "nave",
+      "metadata": "nave/nave.json",
+      "binary": "nave/nave.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "sports-landscape",
+      "metadata": "sports-landscape/sports-landscape.json",
+      "binary": "sports-landscape/sports-landscape.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "archive",
+      "metadata": "archive/archive.json",
+      "binary": "archive/archive.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "internal-garden",
+      "metadata": "internal-garden/internal-garden.json",
+      "binary": "internal-garden/internal-garden.bin",
+      "motionScale": 1
+    },
+    {
+      "id": "overpass",
+      "metadata": "overpass/overpass.json",
+      "binary": "overpass/overpass.bin",
+      "motionScale": 0.35
+    }
+  ]
+}

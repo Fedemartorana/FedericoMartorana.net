@@ -1,0 +1,12 @@
+{
+  "count": 280960,
+  "aspect": 1.4576512455516015,
+  "width": 640,
+  "height": 439,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../sources/internal-garden.webp",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "4d9c535b6d2914638fde1a61e6924a27f7ae3658e24407309544ec684df31217",
+  "binary_sha256": "35dd5bb1141ff7d6a80c1a6101315ab99cf23e536b86b26ab6ac5e900ca01269"
+}

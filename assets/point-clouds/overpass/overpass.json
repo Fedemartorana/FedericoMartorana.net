@@ -1,0 +1,12 @@
+{
+  "count": 272640,
+  "aspect": 1.502439024390244,
+  "width": 640,
+  "height": 426,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../sources/overpass.png",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "9b288806800f29684be4f7a1be19180cb2ddff4d47fe01c3a7eb29c0767b887b",
+  "binary_sha256": "b2a9ff69bb80826d9923769d3c2d7ae53585d52defa4821d7832c1b1245d38a7"
+}

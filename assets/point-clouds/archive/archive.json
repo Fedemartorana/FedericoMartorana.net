@@ -1,0 +1,12 @@
+{
+  "count": 272640,
+  "aspect": 1.502439024390244,
+  "width": 640,
+  "height": 426,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../sources/archive.png",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "6774e70f18055b60292f3d6c5fd3e1ddd36836dc857fbd39610ff03544a795d9",
+  "binary_sha256": "17c62492288abc72d0282870428f55dfe4910082e8b136baca1826192f0aff5c"
+}

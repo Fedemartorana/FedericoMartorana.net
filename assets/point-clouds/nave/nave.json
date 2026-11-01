@@ -1,0 +1,12 @@
+{
+  "count": 270720,
+  "aspect": 1.5142857142857142,
+  "width": 640,
+  "height": 423,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../../../img/ermatene/01_Hero_nave.webp",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "1bb4394f7d5eeebfde58339e40b5c5661a2c7e26e1c545f3c16c3904d5966bd0",
+  "binary_sha256": "290828404621bfec95cc7d903d613c7a593a9478dd87206cdfe887fb105119f7"
+}

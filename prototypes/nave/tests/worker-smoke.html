@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="robots" content="noindex,nofollow">
+<title>Local tracking diagnostic</title>
+<h1>Local tracking diagnostic</h1>
+<p>This diagnostic uses a blank synthetic frame. It never opens the camera.</p>
+<pre id="result" role="status">Loading local detector…</pre>
+<script type="module">
+const result = document.querySelector('#result');
+const worker = new Worker('../../../assets/spatial/face-worker.js');
+const timer = setTimeout(() => finish('FAIL: timeout'), 45000);
+function finish(message) {clearTimeout(timer); result.textContent = message; worker.terminate();}
+worker.onerror = event => finish(`FAIL: ${event.message}`);
+worker.onmessage = async ({data}) => {
+  if(data.type === 'error') finish(`FAIL: ${data.message}`);
+  if(data.type === 'ready') {
+    result.textContent = `Detector ready: ${data.connections.length} connections. Testing frame…`;
+    const canvas = document.createElement('canvas'); canvas.width = 640; canvas.height = 480;
+    const ctx = canvas.getContext('2d'); ctx.fillStyle = '#808080'; ctx.fillRect(0,0,640,480);
+    const bitmap = await createImageBitmap(canvas);
+    worker.postMessage({type:'frame', bitmap, time:performance.now()}, [bitmap]);
+  }
+  if(data.type === 'face') finish(data.points === null ? 'PASS: local model, WASM, worker, frame transfer and inference; blank frame correctly has no face.' : 'FAIL: unexpected face');
+};
+worker.postMessage({type:'init'});
+</script></html>

@@ -1,0 +1,12 @@
+{
+  "count": 280960,
+  "aspect": 1.4576512455516015,
+  "width": 640,
+  "height": 439,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../sources/sports-landscape.webp",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "85f0b9f6e633883a8aed0a0bf726ffe4fc5fed17fecb5ddd45f9384ea403d7db",
+  "binary_sha256": "c01960f834138dec062e08983dd6739991d2e1660a34e02cd8e22c75198accb7"
+}

@@ -1,0 +1,98 @@
+{
+  "package": "point-clouds.zip",
+  "package_sha256": "7183a03b58223441542ddc24f3c61674553cbcd134f5c3453c567468ec6d541c",
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "model_revision": "5426e4f0f36572d16453bbda7a8389317b1bef99",
+  "clouds": [
+    {
+      "id": "park-entrance",
+      "count": 280960,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/park-entrance.webp",
+      "issues": [
+        "Contorni della vegetazione ammorbiditi; profondità dei fili e dei tralicci sottili poco affidabile. Il cielo resta uno sfondo campionato, non una superficie fisica."
+      ],
+      "binary_sha256": "c7df41503e02df0ad4315575485621e7652344659bdb27105d31dc1b9223f4ed"
+    },
+    {
+      "id": "tetra24",
+      "count": 284160,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/tetra24.jpg",
+      "issues": [
+        "Torri approssimate con superfici relativamente piatte; rilievi metallici, sfere riflettenti e reticoli non risolti fedelmente. Il cielo è sfondo, non geometria fisica."
+      ],
+      "binary_sha256": "df0c76ab320f1d0d2be306ab87378408d3b5313f664aa815ca5dffedcbb93e4d"
+    },
+    {
+      "id": "hypogeum",
+      "count": 229120,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/hypogeum.jpg",
+      "issues": [
+        "Affidabilità ridotta nelle ombre profonde: colonne posteriori e figura umana si confondono con il fondo. Bordo e intradosso dell’oculo stimati in modo semplificato."
+      ],
+      "binary_sha256": "0b0332c4f5da12c7dc1d10dca7d1dc2f1142cf4a04731701f4e85779435147de"
+    },
+    {
+      "id": "tetra22",
+      "count": 287360,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/tetra22.jpg",
+      "issues": [
+        "Facciate e profondità della corte ribassata semplificate; dettagli dei reticoli e aggetti appiattiti. Grafica sovrapposta e cielo rimangono campionati."
+      ],
+      "binary_sha256": "5e99ecf3b723fb352c4b189a0599f91860a253e36fc4a0406356fa8f1dea23fe"
+    },
+    {
+      "id": "nave",
+      "count": 270720,
+      "source_reused": true,
+      "source": "img/ermatene/01_Hero_nave.webp",
+      "issues": [
+        "Prospettiva generale leggibile; decorazioni, nicchie, balaustre e lampade hanno profondità attenuata. Non adatto a misurare elementi architettonici."
+      ],
+      "binary_sha256": "290828404621bfec95cc7d903d613c7a593a9478dd87206cdfe887fb105119f7"
+    },
+    {
+      "id": "sports-landscape",
+      "count": 280960,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/sports-landscape.webp",
+      "issues": [
+        "Vegetazione in primo piano espansa e smussata; facciate traslucide e schermature accorpate. Gradini e strutture sottili hanno profondità semplificata."
+      ],
+      "binary_sha256": "c01960f834138dec062e08983dd6739991d2e1660a34e02cd8e22c75198accb7"
+    },
+    {
+      "id": "archive",
+      "count": 272640,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/archive.png",
+      "issues": [
+        "Tavoli e persone distinguibili; arredi minuti e gambe sottili perdono dettaglio. Vetrate e porzioni esterne possono essere attribuite alla superficie del vetro."
+      ],
+      "binary_sha256": "17c62492288abc72d0282870428f55dfe4910082e8b136baca1826192f0aff5c"
+    },
+    {
+      "id": "internal-garden",
+      "count": 280960,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/internal-garden.webp",
+      "issues": [
+        "Reti, schermature trasparenti e vegetazione sono semplificate; alcune persone e arredi si fondono nello stesso piano. Controluce meno affidabile."
+      ],
+      "binary_sha256": "35dd5bb1141ff7d6a80c1a6101315ab99cf23e536b86b26ab6ac5e900ca01269"
+    },
+    {
+      "id": "overpass",
+      "count": 272640,
+      "source_reused": false,
+      "source": "assets/point-clouds/sources/overpass.png",
+      "issues": [
+        "Criticità marcata: la vetrata è stimata quasi come un piano continuo; ambiente e strutture visibili attraverso il vetro risultano appiattiti. Parallasse oltre la vetrata poco attendibile."
+      ],
+      "binary_sha256": "b2a9ff69bb80826d9923769d3c2d7ae53585d52defa4821d7832c1b1245d38a7"
+    }
+  ]
+}

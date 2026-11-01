@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="An experimental spatial study of the Erma Tene nave, reconstructed as points from one image.">
+  <title>Nave / Spatial study — Federico Martorana</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="study.css">
+  <script src="study.js" defer></script>
+</head>
+<body>
+  <img id="source" src="../../img/ermatene/01_Hero_nave.webp" alt="Erma Tene: a vaulted church nave with a sequence of luminous vertical elements.">
+  <canvas id="scene" tabindex="0" aria-label="Interactive point cloud of the nave. Move the pointer, drag, or use arrow keys to shift the viewpoint."></canvas>
+  <header>
+    <a href="../../index.html">Federico Martorana</a>
+    <span>Spatial studies / 001</span>
+    <span class="tag">Prototype</span>
+  </header>
+  <main>
+    <div class="project"><span class="eyebrow">ERMA TENE / NAVE</span><h1>Space,<br>in points.</h1><p>One image. An estimated depth.<br>A different position.</p></div>
+    <div class="axis" aria-hidden="true"><span>+</span><small id="position">X +0.00 / Y +0.00</small></div>
+  </main>
+  <footer>
+    <div class="readout"><span id="status" role="status">Preparing the point field…</span><span id="hint">Move the pointer · drag on touch</span></div>
+    <div class="controls" aria-label="Scene controls">
+      <label class="depth" for="depth">Perspective <input id="depth" type="range" min="0" max="100" value="70"><output id="depth-value" for="depth">70%</output></label>
+      <button id="pause" type="button" aria-pressed="false">Pause</button>
+      <button id="photo" type="button" aria-pressed="false">Source image</button>
+      <button id="reset" type="button">Recenter ↗</button>
+      <button id="camera" type="button" aria-pressed="false">Enable camera</button>
+    </div>
+  </footer>
+  <aside id="face-panel" hidden aria-label="Live face tracking">
+    <canvas id="face-mesh" width="600" height="640" aria-label="Live face landmarks, processed locally"></canvas>
+    <span id="face-status" role="status">Camera off</span>
+    <small>LOCAL / LIVE · NO RECORDING</small>
+  </aside>
+  <video id="tracking-video" autoplay playsinline muted aria-hidden="true"></video>
+  <dialog id="camera-consent" aria-labelledby="camera-title" aria-describedby="camera-description">
+    <span class="eyebrow">A DIFFERENT POSITION</span>
+    <h2 id="camera-title">Move the space<br>with your head.</h2>
+    <p id="camera-description">La webcam rileva in tempo reale la posizione del viso per muovere la scena. I fotogrammi sono elaborati solo sul tuo dispositivo: nessuna registrazione, salvataggio o invio a server. Il microfono non viene utilizzato.</p>
+    <p>Puoi spegnerla in qualsiasi momento. Se non acconsenti, puoi continuare con il mouse.</p>
+    <div class="consent-actions">
+      <button id="camera-accept" type="button">Attiva webcam</button>
+      <button id="camera-dismiss" type="button" autofocus>Continua con il mouse</button>
+    </div>
+  </dialog>
+  <noscript><p class="notice">JavaScript is disabled. The original image is shown.</p></noscript>
+</body>
+</html>

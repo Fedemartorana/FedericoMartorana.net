@@ -1,0 +1,12 @@
+{
+  "count": 229120,
+  "aspect": 1.7855274629468179,
+  "width": 640,
+  "height": 358,
+  "model": "depth-anything/Depth-Anything-V2-Small-hf",
+  "method": "Estimated relative inverse depth; not a metric survey",
+  "source": "../sources/hypogeum.jpg",
+  "format": "uint16 little-endian normalized: u,v,inverse-depth,luminance",
+  "source_sha256": "9e77d7fdb60ba8201a0eefb7c220c4946df42555ef74188a996a3629c14d0d17",
+  "binary_sha256": "0b0332c4f5da12c7dc1d10dca7d1dc2f1142cf4a04731701f4e85779435147de"
+}

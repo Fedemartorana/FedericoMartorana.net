@@ -1,4 +1,6 @@
 (function () {
+  // Local previews must not contribute visits or interaction events to production GA4.
+  if (['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname) || window.location.hostname.endsWith('.localhost')) return;
   const GA_ID = 'G-HCZPGFH2WY';
   const scrollDepths = [25, 50, 75, 90];
   const sentScrollDepths = new Set();

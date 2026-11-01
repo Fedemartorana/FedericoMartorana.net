@@ -41,6 +41,7 @@ updateClock();
 window.setInterval(updateClock, 1000);
 
 window.addEventListener('keydown', function (event) {
+  if (document.querySelector('dialog[open]') || event.target.closest('input,textarea,select,[contenteditable="true"]')) return;
   if (event.key.toLowerCase() === 'a') {
     document.body.classList.toggle('archive-mode');
   }
