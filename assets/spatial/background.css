@@ -4,7 +4,7 @@ body.fm-points-ready #fm-point-background{opacity:1}
 body.fm-points-ready{--bg:#050505;--fg:#f5f5f1;--muted:#c5c5c0;--line:rgba(255,255,255,.25);--hard-line:rgba(255,255,255,.8)}
 body.fm-points-ready :is(.unit00-name,.unit00-sound){color:var(--fg)!important}
 body.fm-points-ready .unit00-sound{border-top-color:var(--fg)!important}
-#fm-face{position:fixed;top:68px;right:18px;z-index:3;width:120px;height:128px;padding:0;border:0;background:transparent;opacity:.75;cursor:pointer}
+#fm-face{position:fixed;top:68px;right:18px;z-index:10001;width:152px;height:184px;padding:0;border:0;background:transparent;opacity:.9;cursor:pointer}
 #fm-face canvas{display:block;width:100%;height:100%;pointer-events:none}
 #fm-face[hidden]{display:none}
 #fm-face:focus-visible{outline:1px solid currentColor;outline-offset:4px}
@@ -16,7 +16,7 @@ body.fm-points-ready .unit00-sound{border-top-color:var(--fg)!important}
 .fm-camera-actions{display:flex;gap:18px;margin-top:24px}
 .fm-camera-actions button{width:auto;flex:1;padding:12px 0;font:10px/1.4 var(--mono);cursor:pointer;text-align:left}
 #fm-camera-message[hidden]{display:none}
-@media(max-width:860px){#fm-face{width:84px;height:90px;top:74px;right:12px}#fm-camera-choice{padding:22px}}
+@media(max-width:860px){#fm-face{width:100px;height:122px;top:74px;right:12px}#fm-camera-choice{padding:22px}}
 @media(prefers-reduced-motion:reduce){#fm-point-background,#fm-face{transition:none}}
 /* Keep the mobile browser toolbar from rescaling the scene during scrolling. */
 @media(max-width:600px),(pointer:coarse){#fm-point-background{height:100lvh}}

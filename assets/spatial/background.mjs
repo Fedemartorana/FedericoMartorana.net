@@ -9,7 +9,7 @@ const accept = document.querySelector('#fm-camera-yes');
 const decline = document.querySelector('#fm-camera-no');
 const message = document.querySelector('#fm-camera-message');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-let field, tracker, tracked = false, camera = false, request = 0, positioning = 0, lastPlacement = 0;
+let field, tracker, tracked = false, camera = false, request = 0, positioning = 0;
 const mobileInput=matchMedia('(max-width: 600px), (pointer: coarse)').matches;
 let stillFallback=false;
 const tilt=createTilt({
@@ -29,21 +29,11 @@ if(mobileInput){
 function positionFace() {
   positioning = 0;
   if (!tracked) {face.hidden = true; return;}
-  // Prefer the upper right, then another clear corner; never cover existing content.
+  // Persistent foreground portrait; only loss of tracking or camera-off hides it.
   face.hidden = false;
-  const rect = face.getBoundingClientRect();
-  const blockers = Array.from(document.querySelectorAll('.top,.name,.nav-link,.essay,.footer,.archive-title,#unit00-system .unit00-stage')).flatMap(element => {
-    const style = getComputedStyle(element);
-    if (style.visibility === 'hidden' || style.display === 'none' || Number(style.opacity) === 0) return [];
-    const box = element.getBoundingClientRect();
-    return box.width && box.height ? [box] : [];
-  });
-  const narrow = innerWidth <= 860, margin = narrow ? 12 : 18, top = narrow ? 74 : 68;
-  const right = innerWidth-margin-rect.width, bottom = innerHeight-margin-rect.height;
-  const corner = [[right,top],[margin,top],[right,bottom],[margin,bottom]].find(([x,y]) =>
-    y >= margin && !blockers.some(box => x < box.right+8 && x+rect.width > box.left-8 && y < box.bottom+8 && y+rect.height > box.top-8));
-  face.hidden = !corner;
-  if (corner) {face.style.left=corner[0]+'px';face.style.top=corner[1]+'px';face.style.right='auto';}
+  face.style.left='auto';
+  face.style.right='max(18px, env(safe-area-inset-right))';
+  face.style.top='max(74px, calc(env(safe-area-inset-top) + 54px))';
 }
 function schedulePosition() {if (!positioning) positioning = requestAnimationFrame(positionFace);}
 function stopCamera() {
@@ -75,7 +65,7 @@ accept.addEventListener('click', async () => {
   camera = true; accept.disabled = true; message.hidden = false;
   message.textContent = 'Allow camera access in your browser. Your move.';
   try {
-    const {createHeadTracker} = await import('./tracking.mjs');
+    const {createHeadTracker} = await import('./tracking.mjs?v=20261101-portrait');
     if (id !== request || document.hidden) return;
     tracker ||= createHeadTracker({
       video: document.querySelector('#fm-camera-video'), mesh: face.querySelector('canvas'),
@@ -83,9 +73,7 @@ accept.addEventListener('click', async () => {
         const previous = tracked; tracked = Boolean(pose);
         if (pose && !reducedMotion.matches) field?.move(pose);
         else if (previous && !pose) field?.neutral();
-        if (tracked !== previous || (tracked && performance.now()-lastPlacement > 250)) {
-          lastPlacement = performance.now(); schedulePosition();
-        }
+        if (tracked !== previous) schedulePosition();
       },
       onState: (state, detail) => {
         document.querySelector('#fm-camera-video').dataset.trackingState = state;
@@ -118,7 +106,6 @@ window.addEventListener('pointermove', event => {
 }, {passive:true});
 document.documentElement.addEventListener('pointerleave', () => {if (!mobileInput && !tracked) field?.move([0,0]);});
 window.addEventListener('resize', () => {field?.resize(); schedulePosition();});
-window.addEventListener('scroll', schedulePosition, {passive:true});
 document.addEventListener('visibilitychange', () => {
   if(document.hidden){tilt.stop();decline.disabled=false;field?.neutral();}
   if (document.hidden && camera) stopCamera();

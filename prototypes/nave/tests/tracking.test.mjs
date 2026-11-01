@@ -26,7 +26,7 @@ test('camera lifecycle: detection, face loss, recenter, stop, denial and cancell
     terminate() {this.terminated = true;}
     emit(data) {this.onmessage({data});}
   }
-  Object.assign(globalThis, {isSecureContext:true, Worker:FakeWorker,
+  Object.assign(globalThis, {isSecureContext:true, innerWidth:1280, Worker:FakeWorker,
     window:{Worker:FakeWorker,createImageBitmap:true}, document:{hidden:false},
     requestAnimationFrame:callback => {rafs.set(++rafId,callback); return rafId;},
     cancelAnimationFrame:id => rafs.delete(id),

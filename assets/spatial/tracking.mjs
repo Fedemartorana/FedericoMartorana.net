@@ -1,8 +1,9 @@
 import {measureHead, headOffset} from './head-pose.mjs';
+import {drawPortrait} from './portrait-draw.mjs';
 
 export function createHeadTracker({video, mesh, onState, onPose}) {
   const context = mesh.getContext('2d');
-  let generation = 0, session = null, origin = null;
+  let generation = 0, session = null, origin = null, portraitFrame=null;
 
   function clearMesh() { context.clearRect(0, 0, mesh.width, mesh.height); }
   function stop(message = 'Camera off · use the mouse') {
@@ -13,7 +14,7 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
       session.worker.terminate();
       session.stream?.getTracks().forEach(track => track.stop());
     }
-    session = null; origin = null;
+    session = null; origin = null; portraitFrame=null;
     video.pause(); video.srcObject = null;
     clearMesh(); onPose(null); onState('off', message);
   }
@@ -50,7 +51,7 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
       }});
       if (id !== generation) { stream.getTracks().forEach(track => track.stop()); return; }
       let worker;
-      try { worker = new Worker(new URL('./face-worker.js', import.meta.url)); }
+      try { worker = new Worker(new URL('./face-worker.js?v=20261101-portrait', import.meta.url)); }
       catch (error) { stream.getTracks().forEach(track => track.stop()); throw error; }
       const current = session = {worker, stream, raf: 0, timeout: 0, busy: false, lastTime: -Infinity, videoTime: -1, tracked: false, misses: 0};
       video.srcObject = stream;
@@ -66,6 +67,7 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
         if (session !== current) return;
         if (data.type === 'error') { console.error('Local face tracking:', data.message); stop('Tracking unavailable · use the mouse or retry'); return; }
         if (data.type === 'ready') {
+          current.interval=data.detailed ? (innerWidth<600 ? 140 : 100) : 66;
           clearTimeout(current.timeout); current.connections = data.connections;
           onState('searching', 'Look at the screen · finding your face');
           current.raf = requestAnimationFrame(tick);
@@ -75,14 +77,15 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
           if (pose) {
             current.misses = 0;
             origin ||= pose;
-            draw(data.points, current.connections);
+            if(data.portrait)portraitFrame=drawPortrait(context,mesh.width,mesh.height,data.portrait,portraitFrame);
+            else {portraitFrame=null;draw(data.points, current.connections);}
             onPose(headOffset(pose, origin));
             if (!current.tracked) onState('tracking', 'Head tracking live · Recenter to calibrate');
             current.tracked = true;
           } else {
             // Brief gaps during a quick turn should not reset calibration or flicker.
             if (++current.misses < 3) return;
-            clearMesh(); onPose(null); origin = null;
+            clearMesh(); onPose(null); origin = null;portraitFrame=null;
             if (current.tracked) onState('searching', 'Face not visible · mouse available');
             current.tracked = false;
           }
@@ -91,7 +94,7 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
       async function tick(time) {
         if (session !== current) return;
         current.raf = requestAnimationFrame(tick);
-        if (document.hidden || current.busy || time-current.lastTime < 66 || video.readyState < 2 || video.currentTime === current.videoTime) return;
+        if (document.hidden || current.busy || time-current.lastTime < current.interval || video.readyState < 2 || video.currentTime === current.videoTime) return;
         current.busy = true; current.lastTime = time; current.videoTime = video.currentTime;
         try {
           const bitmap = await createImageBitmap(video);
@@ -100,7 +103,7 @@ export function createHeadTracker({video, mesh, onState, onPose}) {
           worker.postMessage({type: 'frame', bitmap, time}, [bitmap]);
         } catch (error) { if (session === current) stop('Camera frame unavailable · use the mouse or retry'); }
       }
-      worker.postMessage({type: 'init'});
+      worker.postMessage({type: 'init',maxPoints:innerWidth<600 ? 6500 : 12000});
     } catch (error) {
       if (id !== generation) return;
       const messages = {
