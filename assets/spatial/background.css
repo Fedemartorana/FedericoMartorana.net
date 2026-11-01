@@ -18,3 +18,16 @@ body.fm-points-ready .unit00-sound{border-top-color:var(--fg)!important}
 #fm-camera-message[hidden]{display:none}
 @media(max-width:860px){#fm-face{width:84px;height:90px;top:74px;right:12px}#fm-camera-choice{padding:22px}}
 @media(prefers-reduced-motion:reduce){#fm-point-background,#fm-face{transition:none}}
+@media(max-width:600px){
+  .site{padding:16px max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+  .top{top:max(16px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left));right:max(16px,env(safe-area-inset-right));font-size:9px}
+  .hero{height:calc(100svh - 32px);min-height:calc(100svh - 32px);padding-bottom:56px}
+  .name{font-size:clamp(40px,14.5vw,64px);line-height:.85;max-width:100%}
+  .scroll-cue{bottom:12px;font-size:10px}
+  .nav{min-height:80svh;padding:12svh 0}
+  .nav-title{font-size:clamp(28px,9.4vw,44px);overflow-wrap:normal}
+  #fm-camera-choice{width:calc(100% - 32px);max-height:calc(100svh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:22px}
+  .fm-camera-actions{gap:14px}
+  .fm-camera-actions button{min-height:48px}
+}
+@media(max-width:360px){.fm-camera-actions{flex-direction:column;gap:8px}.fm-camera-actions button{flex:auto;width:100%}}

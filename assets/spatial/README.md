@@ -6,6 +6,10 @@ The active background uses a near-black page, denser grayscale points and white 
 
 ## Camera
 
+On phones/narrow screens the alternative to camera tracking is device tilt, requested from the explicit choice button. iOS-style permission is requested directly in that click gesture. The first valid sensor reading calibrates a neutral position; portrait/landscape changes recalibrate it, displacement is clamped and mobile parallax is reduced. Denied permissions, absent sensors or no initial reading within 3.5 seconds offer a static background in the same dialog. No sensor data is stored or sent. Hide/pagehide, Escape, reduced motion and selecting camera mode remove the sensor listener. Desktop retains the mouse option. Mobile layout includes safe-area padding, larger responsive title, separated scroll cue and touch-sized dialog actions.
+
+Verification: tilt coordinate/rotation, permission denial, late permission cancellation and listener cleanup pass automated tests. Mobile layout and missing-sensor fallback are checked in a desktop browser at phone width. Actual iPhone/Android sensor behavior still requires a physical phone on HTTPS. API reference: https://www.w3.org/TR/orientation-event/ .
+
 The initial dialog offers camera or mouse, with no microphone, identity inference, recording, upload or persistent face data. Camera code and locally hosted model/WASM load only after opt-in. The tracking worker is shared with the earlier prototype through its small re-export modules.
 
 Escape, clicking the face, hiding the tab or leaving the page releases the camera stream. Returning to the tab uses the mouse; reload to request camera mode again. Camera errors are displayed only in the initial dialog; runtime failure quietly falls back to mouse. No camera/landmark data is passed to analytics. Localhost analytics are disabled so QA does not contaminate production GA4.

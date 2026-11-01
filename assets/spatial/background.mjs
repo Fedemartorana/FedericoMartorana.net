@@ -1,5 +1,6 @@
 import {loadCloud} from './cloud-data.mjs';
 import {createPointField} from './point-field.mjs';
+import {createTilt} from './tilt.mjs';
 
 const canvas = document.querySelector('#fm-point-background');
 const face = document.querySelector('#fm-face');
@@ -9,6 +10,21 @@ const decline = document.querySelector('#fm-camera-no');
 const message = document.querySelector('#fm-camera-message');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let field, tracker, tracked = false, camera = false, request = 0, positioning = 0, lastPlacement = 0;
+const mobileInput=matchMedia('(max-width: 600px), (pointer: coarse)').matches;
+let stillFallback=false;
+const tilt=createTilt({
+  onPose:pose=>{if(!reducedMotion.matches && !camera)field?.move(pose);},
+  onReady:()=>{if(dialog.open)dialog.close();decline.disabled=false;},
+  onUnavailable:()=>{
+    decline.disabled=false;stillFallback=true;decline.textContent='Keep it still';
+    message.hidden=false;message.textContent='Tilt unavailable. Check motion permissions, or keep it still.';
+  }
+});
+if(mobileInput){
+  decline.textContent="I'll tilt the device";
+  document.querySelector('#fm-camera-description').textContent='Move your head. Or tilt your device. Camera and motion processing stay on your device. No recording. No uploads. No microphone.';
+  document.querySelector('#fm-camera-help').textContent='Tap your face to stop the camera. Leaving this tab stops camera and tilt. Reload to restart. Tilt may ask for motion access.';
+}
 
 function positionFace() {
   positioning = 0;
@@ -36,18 +52,25 @@ function stopCamera() {
   tracker?.stop(); field?.neutral();
 }
 function fail() {
+  tilt.stop();
   stopCamera(); field?.dispose(); field = null;
   document.body.classList.remove('fm-points-ready');
   if (dialog.open) dialog.close();
 }
-function dismiss() {stopCamera(); if (dialog.open) dialog.close();}
-decline.addEventListener('click', dismiss);
+function dismiss() {tilt.stop();stopCamera(); if (dialog.open) dialog.close();}
+decline.addEventListener('click',()=>{
+  if(!mobileInput || stillFallback){dismiss();return;}
+  stopCamera();decline.disabled=true;message.hidden=false;
+  message.textContent='Allow motion access. Then tilt gently.';
+  tilt.start();
+});
 dialog.addEventListener('cancel', dismiss);
 face.addEventListener('click', stopCamera);
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') stopCamera();
+  if (event.key === 'Escape') {tilt.stop();stopCamera();}
 });
 accept.addEventListener('click', async () => {
+  tilt.stop();decline.disabled=false;
   const id = ++request;
   camera = true; accept.disabled = true; message.hidden = false;
   message.textContent = 'Allow camera access in your browser. Your move.';
@@ -72,7 +95,7 @@ accept.addEventListener('click', async () => {
           // start() first clears any earlier session. Only errors are shown in the existing dialog.
           if (dialog.open && detail !== 'Camera off · use the mouse') {
             camera = false; message.hidden = false;
-            message.textContent = 'Camera unavailable. Check browser permissions, retry, or use the mouse.';
+            message.textContent = mobileInput ? 'Camera unavailable. Try tilting your device instead.' : 'Camera unavailable. Check browser permissions, retry, or use the mouse.';
             accept.disabled = false;
           }
         } else if (state === 'loading') {
@@ -86,23 +109,24 @@ accept.addEventListener('click', async () => {
   } catch (error) {
     if (id !== request) return;
     stopCamera(); message.hidden = false;
-    message.textContent = 'Camera unavailable. The mouse still works.';
+    message.textContent = mobileInput ? 'Camera unavailable. Try tilting your device instead.' : 'Camera unavailable. The mouse still works.';
   } finally {if (id === request) accept.disabled = false;}
 });
 window.addEventListener('pointermove', event => {
-  if (!field || tracked || reducedMotion.matches || dialog.open || event.pointerType === 'touch') return;
+  if (mobileInput || !field || tracked || reducedMotion.matches || dialog.open || event.pointerType === 'touch') return;
   field.move([event.clientX/innerWidth*2-1,1-event.clientY/innerHeight*2]);
 }, {passive:true});
-document.documentElement.addEventListener('pointerleave', () => {if (!tracked) field?.move([0,0]);});
+document.documentElement.addEventListener('pointerleave', () => {if (!mobileInput && !tracked) field?.move([0,0]);});
 window.addEventListener('resize', () => {field?.resize(); schedulePosition();});
 window.addEventListener('scroll', schedulePosition, {passive:true});
 document.addEventListener('visibilitychange', () => {
+  if(document.hidden){tilt.stop();decline.disabled=false;field?.neutral();}
   if (document.hidden && camera) stopCamera();
   field?.visibility();
 });
-window.addEventListener('pagehide', () => {stopCamera(); field?.visibility(); cancelAnimationFrame(positioning); positioning=0;});
+window.addEventListener('pagehide', () => {tilt.stop();stopCamera(); field?.visibility(); cancelAnimationFrame(positioning); positioning=0;});
 window.addEventListener('pageshow', () => field?.visibility());
-reducedMotion.addEventListener('change', () => {if(reducedMotion.matches){stopCamera();field?.neutral();}});
+reducedMotion.addEventListener('change', () => {if(reducedMotion.matches){tilt.stop();stopCamera();field?.neutral();}});
 
 async function init() {
   const controller = new AbortController();

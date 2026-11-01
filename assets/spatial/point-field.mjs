@@ -55,7 +55,6 @@ export function createPointField(canvas, {meta, bytes, motionScale = 1}, {onFail
     const attribute = gl.getAttribLocation(program,'point');
     gl.enableVertexAttribArray(attribute); gl.vertexAttribPointer(attribute,4,gl.UNSIGNED_SHORT,true,8,0);
     for (const name of ['viewport','eye','aspect','pixelRatio','motionScale']) uniforms[name] = gl.getUniformLocation(program,name);
-    gl.uniform1f(uniforms.motionScale,motionScale);
     gl.uniform1f(uniforms.aspect,meta.aspect); gl.clearColor(.02,.02,.02,1);
     gl.enable(gl.DEPTH_TEST); gl.enable(gl.BLEND); gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
   } catch (error) {dispose(); throw error;}
@@ -74,6 +73,7 @@ export function createPointField(canvas, {meta, bytes, motionScale = 1}, {onFail
   function resize() {
     if (stopped) return;
     const ratio = Math.min(devicePixelRatio || 1,1.75);
+    gl.uniform1f(uniforms.motionScale,motionScale*(innerWidth<600 ? .6 : 1));
     canvas.width = Math.round(innerWidth*ratio); canvas.height = Math.round(innerHeight*ratio);
     gl.viewport(0,0,canvas.width,canvas.height); gl.uniform2f(uniforms.viewport,innerWidth,innerHeight); gl.uniform1f(uniforms.pixelRatio,ratio);
     wake();
