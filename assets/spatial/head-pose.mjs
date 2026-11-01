@@ -11,7 +11,7 @@ export function measureHead(points) {
 
 export function headOffset(pose, origin) {
   return [
-    clamp(-(pose.x-origin.x)/origin.width*1.8 - (pose.yaw-origin.yaw)*.65),
+    clamp((pose.x-origin.x)/origin.width*1.8 + (pose.yaw-origin.yaw)*.65),
     clamp(-(pose.y-origin.y)/origin.width*1.8 - (pose.pitch-origin.pitch)*.45)
   ];
 }

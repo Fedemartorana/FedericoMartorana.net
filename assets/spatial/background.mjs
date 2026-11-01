@@ -1,6 +1,6 @@
 import {loadCloud} from './cloud-data.mjs';
 import {createPointField} from './point-field.mjs?v=20261101-4';
-import {createTilt} from './tilt.mjs';
+import {createTilt} from './tilt.mjs?v=20261101-horizontal';
 
 const canvas = document.querySelector('#fm-point-background');
 const face = document.querySelector('#fm-face');
@@ -65,7 +65,7 @@ accept.addEventListener('click', async () => {
   camera = true; accept.disabled = true; message.hidden = false;
   message.textContent = 'Allow camera access in your browser. Your move.';
   try {
-    const {createHeadTracker} = await import('./tracking.mjs?v=20261101-safari');
+    const {createHeadTracker} = await import('./tracking.mjs?v=20261101-horizontal');
     if (id !== request || document.hidden) return;
     tracker ||= createHeadTracker({
       video: document.querySelector('#fm-camera-video'), mesh: face.querySelector('canvas'),

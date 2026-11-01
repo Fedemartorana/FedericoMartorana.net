@@ -1,4 +1,4 @@
-import {measureHead, headOffset} from './head-pose.mjs';
+import {measureHead, headOffset} from './head-pose.mjs?v=20261101-horizontal';
 import {drawPortrait} from './portrait-draw.mjs';
 
 export function createHeadTracker({video, mesh, onState, onPose}) {

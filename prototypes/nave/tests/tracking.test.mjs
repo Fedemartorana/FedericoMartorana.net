@@ -8,12 +8,12 @@ function landmarks(dx = 0, dy = 0) {
   points[33] = {x:.4+dx,y:.4+dy,z:0}; points[263] = {x:.6+dx,y:.4+dy,z:0};
   return points;
 }
-test('relative movement is mirrored, bounded, and neutral after calibration', () => {
+test('horizontal direction is corrected while vertical movement and calibration are preserved', () => {
   const origin = measureHead(landmarks());
   assert.ok(headOffset(origin, origin).every(value => value === 0));
   const offset = headOffset(measureHead(landmarks(.05,-.05)), origin);
-  assert.ok(offset[0] < -.4 && offset[1] > .4);
-  assert.deepEqual(headOffset(measureHead(landmarks(2,-2)), origin), [-1,1]);
+  assert.ok(offset[0] > .4 && offset[1] > .4);
+  assert.deepEqual(headOffset(measureHead(landmarks(2,-2)), origin), [1,1]);
   const invalid = landmarks(); invalid[263] = invalid[33];
   assert.equal(measureHead(invalid), null);
 });
@@ -55,7 +55,7 @@ test('camera lifecycle: detection, face loss, recenter, stop, denial and cancell
   worker.emit({type:'face',points:landmarks()});
   assert.ok(poses.at(-1).every(value=>value===0));
   worker.emit({type:'face',points:landmarks(.05,0)});
-  assert.ok(poses.at(-1)[0]<-.4);
+  assert.ok(poses.at(-1)[0]>.4);
   tracker.recenter(); worker.emit({type:'face',points:landmarks(.05,0)});
   assert.ok(poses.at(-1).every(value=>value===0));
   worker.emit({type:'face',points:null});

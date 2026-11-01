@@ -1,7 +1,7 @@
 const delta=(v,o)=>((v-o+540)%360)-180;
 export function tiltOffset(beta,gamma,origin,angle){
   const x=delta(gamma,origin.gamma),y=-delta(beta,origin.beta),r=angle*Math.PI/180;
-  return [x*Math.cos(r)+y*Math.sin(r),y*Math.cos(r)-x*Math.sin(r)].map(v=>Math.max(-1,Math.min(1,v/22)) || 0);
+  return [-(x*Math.cos(r)+y*Math.sin(r)),y*Math.cos(r)-x*Math.sin(r)].map(v=>Math.max(-1,Math.min(1,v/22)) || 0);
 }
 export function createTilt({onPose,onReady,onUnavailable}){
   let generation=0,origin=null,timer=0;
