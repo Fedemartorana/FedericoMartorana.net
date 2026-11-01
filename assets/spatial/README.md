@@ -18,6 +18,10 @@ Reduced-motion users receive a static field and no camera prompt. Touch scrollin
 
 ## Data and future imports
 
+Active runtime assets live in `assets/point-clouds/<id>/`. To add a cloud, put its `.bin` and `.json` in a new uniquely named folder and add `{ "id": "new-cloud", "metadata": "new-cloud/new-cloud.json", "binary": "new-cloud/new-cloud.bin", "motionScale": 1 }` to the `clouds` array in `assets/point-clouds/manifest.json`. Maintain the metadata's source reference and checksums. To hide a cloud, remove only its manifest entry; the files can remain available for later. If deleting the default entry, update `default` to an existing ID. Keep at least one cloud. Uploaded ZIP manifests are inventories and must not replace this runtime manifest verbatim.
+
+Mobile scroll stability: the decorative canvas uses `100lvh` on narrow/touch screens, so browser toolbar animation does not change its framing. GPU dimensions and projection follow the canvas CSS bounds; unchanged buffer dimensions skip resizing, while actual layout/rotation changes resize correctly. The viewport regression test simulates toolbar-height changes and rotation; a physical-phone scroll check remains necessary.
+
 1. Inspect ZIP entries before extraction (reject traversal, absolute paths and symlinks); extract into a separate staging folder. Preserve uploaded sources.
 2. Validate every cloud: metadata schema, width × height = count, exactly count × 8 bytes, four little-endian uint16 channels (u,v,inverse-depth,luminance). Inspect depth/preview quality and orientation. Do not execute uploaded scripts automatically.
 3. Copy runtime `.bin` and `.json` files into `assets/point-clouds/`; maintain correct relative `source` paths for provenance, or copy sources to an appropriate separate source directory. Preview PNGs and build dependencies are not required by the runtime.

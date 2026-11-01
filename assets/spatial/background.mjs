@@ -1,5 +1,5 @@
 import {loadCloud} from './cloud-data.mjs';
-import {createPointField} from './point-field.mjs';
+import {createPointField} from './point-field.mjs?v=20261101-4';
 import {createTilt} from './tilt.mjs';
 
 const canvas = document.querySelector('#fm-point-background');

@@ -29,7 +29,7 @@ export function createPointField(canvas, {meta, bytes, motionScale = 1}, {onFail
   const gl = canvas.getContext('webgl', {alpha:false,antialias:false,powerPreference:'low-power'});
   if (!gl) throw new Error('WebGL unavailable');
   const resources = [], uniforms = {};
-  let frame = 0, lastTime = 0, target = [0,0], eye = [0,0], stopped = false;
+  let frame = 0, lastTime = 0, target = [0,0], eye = [0,0], stopped = false, sized = false;
   function dispose() {
     stopped = true; cancelAnimationFrame(frame); frame = 0;
     for (const [kind, resource] of resources) gl[kind](resource);
@@ -72,10 +72,17 @@ export function createPointField(canvas, {meta, bytes, motionScale = 1}, {onFail
   }
   function resize() {
     if (stopped) return;
+    const rect=canvas.getBoundingClientRect();
+    const width=Math.max(1,rect.width),height=Math.max(1,rect.height);
     const ratio = Math.min(devicePixelRatio || 1,1.75);
-    gl.uniform1f(uniforms.motionScale,motionScale*(innerWidth<600 ? .6 : 1));
-    canvas.width = Math.round(innerWidth*ratio); canvas.height = Math.round(innerHeight*ratio);
-    gl.viewport(0,0,canvas.width,canvas.height); gl.uniform2f(uniforms.viewport,innerWidth,innerHeight); gl.uniform1f(uniforms.pixelRatio,ratio);
+    const bufferWidth=Math.round(width*ratio),bufferHeight=Math.round(height*ratio);
+    // Setting either attribute clears the GPU buffer, even if the value is unchanged.
+    if(sized && canvas.width===bufferWidth && canvas.height===bufferHeight)return;
+    sized=true;
+    gl.uniform1f(uniforms.motionScale,motionScale*(width<600 ? .6 : 1));
+    if(canvas.width!==bufferWidth)canvas.width=bufferWidth;
+    if(canvas.height!==bufferHeight)canvas.height=bufferHeight;
+    gl.viewport(0,0,canvas.width,canvas.height); gl.uniform2f(uniforms.viewport,width,height); gl.uniform1f(uniforms.pixelRatio,ratio);
     wake();
   }
   resize();
