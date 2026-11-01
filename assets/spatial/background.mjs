@@ -31,8 +31,8 @@ function positionFace() {
   if (!tracked) {face.hidden = true; return;}
   // Persistent foreground portrait; only loss of tracking or camera-off hides it.
   face.hidden = false;
-  face.style.left='auto';
-  face.style.right='max(18px, env(safe-area-inset-right))';
+  face.style.left='max(18px, env(safe-area-inset-left))';
+  face.style.right='auto';
   face.style.top='max(74px, calc(env(safe-area-inset-top) + 54px))';
 }
 function schedulePosition() {if (!positioning) positioning = requestAnimationFrame(positionFace);}
