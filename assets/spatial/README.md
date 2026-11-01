@@ -2,7 +2,7 @@
 
 The production home markup (`index.html`) mounts a fixed, decorative grayscale point field behind its existing content. Nine render-derived clouds from the supplied `point-clouds.zip` are integrated. No prototype titles, status labels, sliders or view controls are added to the home. This development commit is prepared for the owner to push; preparation is not deployment.
 
-The active background uses a near-black page, denser grayscale points and white typography, as requested after reviewing the first integration. Large type sits directly over the points; small labels use a flat dark backing for legibility. Pointer/head parallax is bounded. The face is a transparent 120 × 128 px overlay (84 × 90 px on narrow screens), preferring the upper right and moving to another clear corner or hiding when foreground content would overlap. It never blocks navigation or scrolling. Existing UNIT00 remains part of the existing site.
+The active background uses a near-black page, denser grayscale points and white typography, as requested after reviewing the first integration. All existing home text and labels sit directly over the points, without background rectangles. Pointer/head parallax is bounded. The face is a transparent 120 × 128 px overlay (84 × 90 px on narrow screens), preferring the upper right and moving to another clear corner or hiding when foreground content would overlap. It never blocks navigation or scrolling. Existing UNIT00 remains part of the existing site.
 
 ## Camera
 
