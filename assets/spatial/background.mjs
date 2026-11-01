@@ -50,7 +50,7 @@ document.addEventListener('keydown', event => {
 accept.addEventListener('click', async () => {
   const id = ++request;
   camera = true; accept.disabled = true; message.hidden = false;
-  message.textContent = 'Consenti l’accesso alla webcam nella richiesta del browser.';
+  message.textContent = 'Allow camera access in your browser. Your move.';
   try {
     const {createHeadTracker} = await import('./tracking.mjs');
     if (id !== request || document.hidden) return;
@@ -72,11 +72,11 @@ accept.addEventListener('click', async () => {
           // start() first clears any earlier session. Only errors are shown in the existing dialog.
           if (dialog.open && detail !== 'Camera off · use the mouse') {
             camera = false; message.hidden = false;
-            message.textContent = 'Webcam non disponibile. Controlla il permesso nel browser, riprova oppure continua senza webcam.';
+            message.textContent = 'Camera unavailable. Check browser permissions, retry, or use the mouse.';
             accept.disabled = false;
           }
         } else if (state === 'loading') {
-          message.textContent = 'Preparazione del riconoscimento sul dispositivo…';
+          message.textContent = 'Setting up head tracking…';
         } else {
           accept.disabled = false; if (dialog.open) dialog.close();
         }
@@ -86,7 +86,7 @@ accept.addEventListener('click', async () => {
   } catch (error) {
     if (id !== request) return;
     stopCamera(); message.hidden = false;
-    message.textContent = 'Webcam non disponibile. Puoi continuare senza webcam.';
+    message.textContent = 'Camera unavailable. The mouse still works.';
   } finally {if (id === request) accept.disabled = false;}
 });
 window.addEventListener('pointermove', event => {
